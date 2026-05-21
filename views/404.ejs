@@ -1,0 +1,11 @@
+<%- include('partials/compliance-banner') %>
+<%- include('partials/nav') %>
+<main class="section not-found">
+  <div class="container narrow center">
+    <p class="eyebrow">404</p>
+    <h1><%= t.notFound.title %></h1>
+    <p class="muted"><%= t.notFound.message %></p>
+    <a class="btn-primary" href="/<%= lang %>"><%= t.notFound.cta %></a>
+  </div>
+</main>
+<%- include('partials/footer') %>

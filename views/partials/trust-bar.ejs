@@ -1,0 +1,10 @@
+<section class="trust-section" aria-label="TP Club trust metrics">
+  <div class="container trust-grid">
+    <% t.trust.forEach((item) => { %>
+      <div class="trust-item">
+        <strong><%= item.n %></strong>
+        <span><%= item.l %></span>
+      </div>
+    <% }) %>
+  </div>
+</section>

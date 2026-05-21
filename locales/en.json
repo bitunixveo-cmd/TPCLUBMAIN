@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "title": "TP Club | Crypto Education Community for Chinese Australians",
+    "description": "Join TP Club — Australia's #1 Mandarin crypto education community. Free bundle, daily market analysis, 1-on-1 sessions & 500+ active learners. Join free today.",
+    "ogLocale": "en_AU",
+    "lang": "en"
+  },
+  "compliance": "For Educational Purposes Only — All content is for learning. Not financial or investment advice.",
+  "nav": {
+    "cta": "Join Free",
+    "join": "Join Free",
+    "menu": "Menu",
+    "close": "Close",
+    "links": {
+      "about": "About",
+      "how": "How It Works",
+      "bundle": "Bundle",
+      "faq": "FAQ",
+      "admin": "Admin"
+    }
+  },
+  "hero": {
+    "badge": "500+ Active Learners Across Australia",
+    "h1a": "Learn Crypto.",
+    "h1b": "Build Your Future.",
+    "sub": "Join a Mandarin-first crypto education room built for Chinese Australians: daily BTC/USDT context, risk-first lessons, Bitunix onboarding support, and a private Telegram community that learns together.",
+    "cta1": "Join Telegram Group Free →",
+    "cta2": "Request a Free 1-on-1 After Joining",
+    "caption": "Educational community · Free bundle with Bitunix sign-up · No monthly fee",
+    "chartTitle": "BTC/USDT Live Learning Desk",
+    "chartSub": "Community Learning",
+    "live": "Telegram education room open now",
+    "priceLabel": "BTC/USDT",
+    "priceFallback": "Live price unavailable",
+    "updated": "Updates automatically",
+    "deskTitle": "What members learn this week",
+    "deskItems": [
+      "How to read trend structure before entering a trade",
+      "How funding, volatility, and risk limits affect beginners",
+      "How to set up Bitunix without giving anyone account access"
+    ],
+    "proof": ["Mandarin + English", "Australia focused", "Education only"]
+  },
+  "trust": [
+    { "n": "500+", "l": "Active Learners" },
+    { "n": "1,200+", "l": "Analyses Shared" },
+    { "n": "4.9/5", "l": "Member Rating" },
+    { "n": "100%", "l": "Free to Join" }
+  ],
+  "how": {
+    "title": "How to Get Started",
+    "sub": "Three simple steps to join our education community",
+    "accountCta": "Create Your Account",
+    "steps": [
+      { "n": "01", "t": "Create Your Free Bitunix Account", "d": "Click our exclusive referral link to open a free account on Bitunix — our trusted partner exchange. Takes less than 5 minutes. Zero experience needed." },
+      { "n": "02", "t": "Fund Your Personal Account", "d": "Deposit to your own Bitunix account to activate your trading access. This is your money, in your own account — we never access or manage it." },
+      { "n": "03", "t": "Send Screenshot & Get Instant Access", "d": "Screenshot your Bitunix sign-up confirmation and send it to our Telegram team. We verify and add you to the private education group immediately." }
+    ]
+  },
+  "bundle": {
+    "title": "Your Complete Member Bundle",
+    "sub": "Everything below is included FREE when you join via our Bitunix referral link",
+    "items": [
+      { "icon": "TP", "t": "Exclusive Custom Indicator", "d": "TP Club's proprietary market indicator built to help members learn how to read trends and market conditions." },
+      { "icon": "Chart", "t": "Premium Educational Analysis", "d": "Daily market breakdowns from our educator — learn to understand what's happening in crypto and why." },
+      { "icon": "Chat", "t": "1-on-1 Private Chat", "d": "After joining the Telegram group, members can request direct instructor guidance for personalized learning support." },
+      { "icon": "Group", "t": "Private Telegram Community", "d": "Join 500+ active learners sharing insights, market observations, and educational discussions." },
+      { "icon": "Learn", "t": "Education Content Library", "d": "Video lessons, walkthroughs, and step-by-step guides to build your crypto knowledge from absolute beginner level." },
+      { "icon": "Risk", "t": "Risk Management Education", "d": "Learn how to protect your capital, size positions responsibly, and develop safe trading habits from day one." }
+    ]
+  },
+  "instructor": {
+    "label": "Meet Your Educator",
+    "name": "TP Club Instructor",
+    "role": "Lead Educator & Community Founder · TP Club",
+    "bio": "With years of hands-on experience in crypto markets, our lead educator has helped hundreds of Chinese-Australian investors understand the crypto space confidently. Teaching complex market concepts in plain Mandarin and English — no jargon, no hype.",
+    "photo": "Instructor photo placeholder",
+    "stats": [
+      { "n": "5+", "l": "Years in Crypto" },
+      { "n": "500+", "l": "Students Guided" },
+      { "n": "Bilingual", "l": "中文 & English" }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Community Proof",
+    "title": "What Members Say",
+    "sub": "Real learners, real community",
+    "items": [
+      { "name": "Li Wei", "role": "Member since 2024", "rating": 5, "text": "加入TP Club是我做过最好的决定。老师讲解得非常清楚，即使是零基础也能理解。Bitunix注册也很简单，五分钟就搞定了。强烈推荐！" },
+      { "name": "Zhang Mei", "role": "Member since 2023", "rating": 5, "text": "澳大利亚很难找到中文的加密货币教育资源，TP Club完美填补了这个空白。老师的分析让我真正明白了市场是怎么运作的。" },
+      { "name": "David Chen", "role": "Member since 2024", "rating": 5, "text": "I was new to crypto and had no idea where to start. The step-by-step Bitunix setup guide was super clear, and the education group is incredibly helpful. Great community!" }
+    ]
+  },
+  "youtube": {
+    "eyebrow": "YouTube Updates",
+    "title": "Subscribe for TP Club Lessons",
+    "sub": "Watch market education clips, beginner walkthroughs, and community updates before your next Telegram discussion.",
+    "cta": "Subscribe on YouTube"
+  },
+  "cta": {
+    "title": "Ready to Start Learning?",
+    "sub": "Join 500+ learners in Telegram first, then request your free 1-on-1 introduction from inside the group.",
+    "cta1": "Join Telegram Group Free →",
+    "cta2": "Request Free 1-on-1 After Joining",
+    "note": "No monthly fee. Free bundle included with Bitunix sign-up."
+  },
+  "faq": {
+    "title": "Common Questions",
+    "items": [
+      { "q": "Is this free? What do I need to pay?", "a": "Joining TP Club is completely free. To receive the full education bundle, you register on Bitunix via our referral link and fund your own personal account. There are no monthly fees charged by us." },
+      { "q": "Is this a scam? Is it safe?", "a": "We operate with full transparency — our educator shares market analysis live in the group, you keep full control of your own Bitunix account at all times, and we never ask for your login credentials or access to your funds." },
+      { "q": "Why do I need to register on Bitunix?", "a": "Bitunix is our partner exchange. When you sign up via our referral link, Bitunix pays us a small referral commission — this is how we can offer all education resources free to you." },
+      { "q": "Is this financial advice?", "a": "No. TP Club is an educational community. All market analysis, indicators, and content are for learning purposes only. We do not provide personalised financial advice. Please trade only what you can afford to lose." },
+      { "q": "I'm completely new to crypto. Can I still join?", "a": "Absolutely — beginners are welcome! Our content is designed for people with zero prior experience. We explain everything from how to set up your account to understanding basic market concepts." },
+      { "q": "Can I book a 1-on-1 session?", "a": "Yes. Join the Telegram group first, then request a free 30-minute introduction with our educator from inside the community." }
+    ]
+  },
+  "footer": {
+    "disclaimer": "Important: TP Club is an educational community. All market analysis and content shared are for educational purposes only and do not constitute financial advice, investment recommendations, or brokerage services. Cryptocurrency trading involves significant risk of loss. Past educational content is not indicative of future market results. Please only trade with money you can afford to lose.",
+    "copyright": "© 2025 TP Club. All rights reserved. · Educational content only.",
+    "links": ["About", "How It Works", "FAQ", "Privacy Policy", "Contact"],
+    "admin": "Admin"
+  },
+  "pages": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "TP Club keeps data collection minimal. This page explains what we collect when you contact us, book a session, or join through our education onboarding flow.",
+      "sections": [
+        { "title": "Information we collect", "body": "We may receive your name, Telegram handle, email address, booking details, and screenshots you voluntarily send for Bitunix referral verification. We do not ask for exchange passwords, seed phrases, private keys, or access to your funds." },
+        { "title": "How we use it", "body": "We use this information to respond to enquiries, confirm community access, provide education support, improve our onboarding, and maintain records for referral attribution." },
+        { "title": "Third-party services", "body": "Telegram, booking tools, hosting providers, and Bitunix may process information under their own privacy policies. Future tracking or analytics integrations will be managed from the admin area before being enabled." },
+        { "title": "Educational disclaimer", "body": "TP Club provides education only. We do not provide personalised financial advice, brokerage services, or fund management." },
+        { "title": "Contact", "body": "For privacy questions, contact hello@tpclub.com.au." }
+      ]
+    },
+    "contact": {
+      "title": "Contact TP Club",
+      "intro": "Have a question before joining? Reach out through Telegram first, then request a free 1-on-1 introduction from inside the group.",
+      "telegram": "Message us on Telegram",
+      "channel": "Follow our Telegram channel",
+      "booking": "Request a free 1-on-1 after joining",
+      "email": "Email hello@tpclub.com.au",
+      "note": "Never send passwords, private keys, seed phrases, or exchange login details."
+    },
+    "admin": {
+      "title": "Admin Area",
+      "status": "Coming soon",
+      "intro": "This private area is reserved for the single TP Club admin account. Management tools are planned but not enabled yet.",
+      "cards": [
+        { "title": "Tracking Setup", "body": "Connect or disconnect analytics, pixels, and campaign tracking tools from one place." },
+        { "title": "Third-Party Integrations", "body": "Manage Telegram, booking, exchange referral, email, and future CRM integrations." },
+        { "title": "Blog Management", "body": "Draft, publish, and localize education articles for English and Chinese learners." },
+        { "title": "Access Control", "body": "Single-admin login and audit history will be added before this area becomes active." }
+      ]
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you requested does not exist.",
+    "cta": "Back to home"
+  }
+}

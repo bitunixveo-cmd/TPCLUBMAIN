@@ -1,0 +1,253 @@
+@media (max-width: 1023px) {
+  .hero-grid,
+  .instructor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bundle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-grid::before {
+    top: 0;
+    bottom: 0;
+    left: 32px;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(180deg, transparent, var(--neon-border), transparent);
+  }
+
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    width: min(100% - 28px, 1160px);
+  }
+
+  .section {
+    padding: 60px 0;
+  }
+
+  .compliance-banner .container {
+    min-height: 40px;
+    font-size: 0.78rem;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .nav-shell {
+    gap: 10px;
+  }
+
+  .brand {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .brand img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mobile-language-switcher {
+    display: inline-flex;
+    flex: 0 0 auto;
+    padding: 3px;
+  }
+
+  .mobile-language-switcher a {
+    min-height: 44px;
+    padding: 10px 11px;
+    font-size: 0.82rem;
+  }
+
+  .nav-menu {
+    position: fixed;
+    inset: 64px 0 auto 0;
+    display: grid;
+    align-content: start;
+    justify-items: stretch;
+    gap: 8px;
+    min-height: auto;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(3, 5, 3, 0.98);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .site-header.is-open .nav-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nav-menu > a {
+    width: 100%;
+  }
+
+  .nav-menu > a:not(.btn-primary) {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+  }
+
+  .nav-menu .language-switcher {
+    display: none;
+  }
+
+  .nav-cta {
+    margin-top: 6px;
+    width: 100%;
+  }
+
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-title {
+    letter-spacing: -0.06em;
+  }
+
+  .button-row,
+  .button-row .btn-primary,
+  .button-row .btn-ghost {
+    width: 100%;
+  }
+
+  .chart-card {
+    display: none;
+  }
+
+  .chart-head {
+    display: grid;
+    gap: 14px;
+  }
+
+  .chart-live-badge {
+    width: max-content;
+  }
+
+  .chart-gain-pill {
+    right: 28px;
+    top: 136px;
+  }
+
+  .sparkline {
+    min-height: 180px;
+  }
+
+  .hero-proof-row {
+    gap: 8px;
+  }
+
+  .hero-proof-row span {
+    font-size: 0.8rem;
+  }
+
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-item {
+    min-height: 104px;
+  }
+
+  .trust-item + .trust-item {
+    border-left: 0;
+  }
+
+  .trust-item:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+
+  .trust-item:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+
+  .bundle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-photo {
+    width: min(100%, 280px);
+    max-height: 280px;
+    margin-inline: auto;
+  }
+
+  .testimonial-grid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    margin-inline: -14px;
+    padding-bottom: 12px;
+    padding-inline: 14px;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .testimonial-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex: 0 0 min(80vw, 340px);
+    scroll-snap-align: start;
+  }
+
+  .youtube-card {
+    display: grid;
+    gap: 18px;
+  }
+
+  .youtube-cta {
+    width: 100%;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-shell h1 {
+    letter-spacing: -0.05em;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

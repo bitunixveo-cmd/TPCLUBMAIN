@@ -1,0 +1,23 @@
+<section class="section" id="faq">
+  <div class="container narrow">
+    <div class="section-head center">
+      <p class="eyebrow">FAQ</p>
+      <h2><%= t.faq.title %></h2>
+    </div>
+    <div class="faq-list">
+      <% t.faq.items.forEach((item, index) => { %>
+        <article class="faq-item">
+          <h3>
+            <button class="faq-trigger" type="button" aria-expanded="<%= index === 0 ? 'true' : 'false' %>" aria-controls="faq-panel-<%= index %>">
+              <span><%= item.q %></span>
+              <span aria-hidden="true">+</span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-panel-<%= index %>" <%= index === 0 ? '' : 'hidden' %>>
+            <p><%= item.a %></p>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>

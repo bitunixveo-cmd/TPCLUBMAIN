@@ -1,0 +1,18 @@
+<section class="section section-alt" id="bundle">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Free Bundle</p>
+      <h2><%= t.bundle.title %></h2>
+      <p class="muted"><%= t.bundle.sub %></p>
+    </div>
+    <div class="bundle-grid">
+      <% t.bundle.items.forEach((item) => { %>
+        <article class="card bundle-card">
+          <span class="bundle-icon" aria-hidden="true"><%= item.icon %></span>
+          <h3><%= item.t %></h3>
+          <p><%= item.d %></p>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>

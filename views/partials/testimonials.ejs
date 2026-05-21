@@ -1,0 +1,21 @@
+<section class="section section-alt" id="testimonials">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow"><%= t.testimonials.eyebrow %></p>
+      <h2><%= t.testimonials.title %></h2>
+      <p class="muted"><%= t.testimonials.sub %></p>
+    </div>
+    <div class="testimonial-grid" aria-label="<%= t.testimonials.title %>">
+      <% t.testimonials.items.forEach((item) => { %>
+        <article class="card testimonial-card">
+          <div class="stars" aria-label="<%= item.rating %> out of 5 stars"><%= item.rating %>/5</div>
+          <p>“<%= item.text %>”</p>
+          <div>
+            <strong><%= item.name %></strong>
+            <span><%= item.role %></span>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>

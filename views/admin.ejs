@@ -1,0 +1,21 @@
+<%- include('partials/compliance-banner') %>
+<%- include('partials/nav') %>
+<main class="section page-shell admin-shell">
+  <div class="container">
+    <div class="section-head">
+      <p class="badge"><%= page.status %></p>
+      <h1><%= page.title %></h1>
+      <p class="page-intro"><%= page.intro %></p>
+    </div>
+    <div class="admin-grid">
+      <% page.cards.forEach((card) => { %>
+        <article class="card admin-card">
+          <span class="admin-status"><%= page.status %></span>
+          <h2><%= card.title %></h2>
+          <p><%= card.body %></p>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</main>
+<%- include('partials/footer') %>

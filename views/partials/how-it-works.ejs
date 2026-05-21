@@ -1,0 +1,21 @@
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Bitunix Access</p>
+      <h2><%= t.how.title %></h2>
+      <p class="muted"><%= t.how.sub %></p>
+    </div>
+    <div class="steps-grid">
+      <% t.how.steps.forEach((step) => { %>
+        <article class="card step-card">
+          <span class="step-number"><%= step.n %></span>
+          <h3><%= step.t %></h3>
+          <p><%= step.d %></p>
+          <% if (step.n === '01') { %>
+            <a class="text-link" href="<%= bitunixUrl %>" target="_blank" rel="noopener noreferrer"><%= t.how.accountCta %></a>
+          <% } %>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
