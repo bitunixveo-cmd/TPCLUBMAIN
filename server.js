@@ -123,6 +123,8 @@ app.use(attachSeo, (req, res) => {
   res.status(404).render('layout', { view: '404' });
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`TP Club landing page running on port ${port}`);
 });
+
+module.exports = app;
