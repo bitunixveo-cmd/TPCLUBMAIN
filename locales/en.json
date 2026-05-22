@@ -130,7 +130,7 @@
         { "title": "How we use it", "body": "We use this information to respond to enquiries, confirm community access, provide education support, improve our onboarding, and maintain records for referral attribution." },
         { "title": "Third-party services", "body": "Telegram, booking tools, hosting providers, and Bitunix may process information under their own privacy policies. Future tracking or analytics integrations will be managed from the admin area before being enabled." },
         { "title": "Educational disclaimer", "body": "TP Club provides education only. We do not provide personalised financial advice, brokerage services, or fund management." },
-        { "title": "Contact", "body": "For privacy questions, contact hello@tpclub.com.au." }
+        { "title": "Contact", "body": "For privacy questions, contact hello@tpclub.co." }
       ]
     },
     "contact": {
@@ -139,7 +139,7 @@
       "telegram": "Message us on Telegram",
       "channel": "Follow our Telegram channel",
       "booking": "Request a free 1-on-1 after joining",
-      "email": "Email hello@tpclub.com.au",
+      "email": "Email hello@tpclub.co",
       "note": "Never send passwords, private keys, seed phrases, or exchange login details."
     },
     "admin": {

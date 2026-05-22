@@ -1,26 +1,21 @@
 {
   "name": "tpclub",
   "version": "1.0.0",
-  "description": "Production-ready Express landing page for TP Club.",
-  "main": "app.js",
+  "description": "Production-ready static landing page for TP Club.",
   "type": "commonjs",
   "scripts": {
-    "start": "node app.js",
-    "build": "node -e \"console.log('TP Club Express build complete')\"",
-    "predev": "node scripts/free-port.js",
-    "dev": "nodemon server.js"
+    "dev": "npm run build && vite dist --host 0.0.0.0",
+    "build": "node scripts/build-static.js",
+    "preview": "vite preview --host 0.0.0.0"
   },
   "engines": {
     "node": "20.x"
   },
   "dependencies": {
-    "compression": "^1.7.4",
     "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "helmet": "^7.1.0"
+    "ejs": "^3.1.10"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "vite": "^8.0.14"
   }
 }

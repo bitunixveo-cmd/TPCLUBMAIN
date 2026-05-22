@@ -130,7 +130,7 @@
         { "title": "信息用途", "body": "这些信息用于回复咨询、确认社群权限、提供教育支持、优化加入流程，以及维护推荐归因记录。" },
         { "title": "第三方服务", "body": "Telegram、预约工具、托管服务商和 Bitunix 可能会根据各自隐私政策处理信息。未来的追踪或分析工具会在后台管理区统一启用或关闭。" },
         { "title": "教育声明", "body": "TP Club 仅提供教育内容，不提供个性化金融建议、经纪服务或资金管理。" },
-        { "title": "联系我们", "body": "如有隐私相关问题，请联系 hello@tpclub.com.au。" }
+        { "title": "联系我们", "body": "如有隐私相关问题，请联系 hello@tpclub.co。" }
       ]
     },
     "contact": {
@@ -139,7 +139,7 @@
       "telegram": "通过 Telegram 联系",
       "channel": "关注 Telegram 频道",
       "booking": "加入后申请免费一对一",
-      "email": "发送邮件至 hello@tpclub.com.au",
+      "email": "发送邮件至 hello@tpclub.co",
       "note": "请不要发送密码、私钥、助记词或交易所登录信息。"
     },
     "admin": {

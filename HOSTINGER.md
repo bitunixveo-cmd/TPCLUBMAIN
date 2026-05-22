@@ -1,19 +1,17 @@
 # Hostinger deployment (TPCLUBMAIN)
 
-If auto-detection fails, use these settings in hPanel:
+This repository builds as a static Vite site. The build renders real HTML files for every public page, so search engines can crawl the bilingual pages without JavaScript rendering.
 
-- **Framework:** Express.js (or **Other** if needed)
+- **Framework:** Vite
 - **Node.js version:** 20.x
-- **Entry file:** `app.js`
-- **Start command:** `npm start`
+- **Build command:** `npm run build`
+- **Output directory:** `dist`
 - **Root directory:** `/` (repository root)
-- **Output directory:** leave empty for Express backend apps
 
 ## Required environment variables
 
 ```
-PORT=3000
-SITE_URL=https://your-domain.com
+SITE_URL=https://tpclub.co
 TELEGRAM_URL=https://t.me/+VEugRODM7y5iNGY0
 TELEGRAM_CHANNEL_URL=https://t.me/OfficialTPClub
 BOOKING_URL=https://calendly.com/YOUR_BOOKING_LINK
