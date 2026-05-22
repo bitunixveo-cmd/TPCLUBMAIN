@@ -194,8 +194,8 @@
   }
 
   .instructor-photo {
-    width: min(100%, 280px);
-    max-height: 280px;
+    width: min(100%, 420px);
+    min-height: 360px;
     margin-inline: auto;
   }
 

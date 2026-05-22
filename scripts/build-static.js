@@ -18,7 +18,6 @@ const config = {
   siteUrl: (process.env.SITE_URL || 'https://tpclub.co').replace(/\/$/, ''),
   telegramUrl: process.env.TELEGRAM_URL || 'https://t.me/+VEugRODM7y5iNGY0',
   telegramChannelUrl: process.env.TELEGRAM_CHANNEL_URL || 'https://t.me/OfficialTPClub',
-  bookingUrl: process.env.BOOKING_URL || 'https://calendly.com/YOUR_BOOKING_LINK',
   bitunixUrl: process.env.BITUNIX_REFERRAL_URL || 'https://www.bitunix.com/register?vipCode=TPclubJackman',
   youtubeUrl: process.env.YOUTUBE_URL || 'https://www.youtube.com/@TPClub'
 };
@@ -109,7 +108,6 @@ async function renderPage({ lang, view, outputPath, pageKey, pagePath = '' }) {
       siteUrl: config.siteUrl,
       telegramUrl: config.telegramUrl,
       telegramChannelUrl: config.telegramChannelUrl,
-      bookingUrl: config.bookingUrl,
       bitunixUrl: config.bitunixUrl,
       youtubeUrl: config.youtubeUrl
     },

@@ -14,7 +14,6 @@ This repository builds as a static Vite site. The build renders real HTML files 
 SITE_URL=https://tpclub.co
 TELEGRAM_URL=https://t.me/+VEugRODM7y5iNGY0
 TELEGRAM_CHANNEL_URL=https://t.me/OfficialTPClub
-BOOKING_URL=https://calendly.com/YOUR_BOOKING_LINK
 BITUNIX_REFERRAL_URL=https://www.bitunix.com/register?vipCode=TPclubJackman
 YOUTUBE_URL=https://www.youtube.com/@TPClub
 ```

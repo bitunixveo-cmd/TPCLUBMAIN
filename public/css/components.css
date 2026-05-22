@@ -171,8 +171,8 @@
 .instructor-photo {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  aspect-ratio: 4 / 5;
+  gap: 20px;
+  min-height: clamp(420px, 46vw, 560px);
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -189,10 +189,10 @@
 }
 
 .instructor-photo img {
-  width: min(58%, 220px);
+  width: min(86%, 420px);
   height: auto;
-  border-radius: 24px;
-  filter: drop-shadow(0 0 28px rgba(170, 255, 0, 0.36));
+  border-radius: 32px;
+  filter: drop-shadow(0 0 38px rgba(170, 255, 0, 0.44));
 }
 
 .role {

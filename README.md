@@ -27,5 +27,4 @@ The static site is generated into `dist/`.
 - `SITE_URL` - Public production origin for canonical, sitemap, and social metadata
 - `TELEGRAM_URL` - Primary Telegram CTA URL
 - `TELEGRAM_CHANNEL_URL` - Telegram channel URL for contact and social metadata
-- `BOOKING_URL` - Free 1-on-1 booking CTA URL
 - `BITUNIX_REFERRAL_URL` - Partner exchange referral URL

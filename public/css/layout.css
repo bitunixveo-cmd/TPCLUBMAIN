@@ -327,8 +327,8 @@
 
 .instructor-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 0.78fr) 1fr;
-  gap: clamp(34px, 7vw, 90px);
+  grid-template-columns: minmax(340px, 0.95fr) 1fr;
+  gap: clamp(34px, 6vw, 72px);
   align-items: center;
 }
 
