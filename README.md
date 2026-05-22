@@ -26,6 +26,8 @@ The static site is generated into `dist/`.
 
 - `SITE_URL` - Public production origin for canonical, sitemap, and social metadata
 - `VITE_GTM_ID` - Google Tag Manager container ID
+- `VITE_N8N_WEBHOOK` - n8n webhook URL for Telegram click tracking
+- `VITE_TELEGRAM_URL` - Telegram group URL used by the tracked `/go` redirect
 - `TELEGRAM_URL` - Primary Telegram CTA URL
 - `TELEGRAM_CHANNEL_URL` - Telegram channel URL for contact and social metadata
 - `BITUNIX_REFERRAL_URL` - Partner exchange referral URL

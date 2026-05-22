@@ -4,7 +4,7 @@
   "description": "Production-ready static landing page for TP Club.",
   "type": "commonjs",
   "scripts": {
-    "dev": "npm run build && vite dist --host 0.0.0.0",
+    "dev": "npm run build && vite preview --host 0.0.0.0",
     "build": "node scripts/build-static.js && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
@@ -13,7 +13,10 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "ejs": "^3.1.10"
+    "ejs": "^3.1.10",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1"
   },
   "devDependencies": {
     "vite": "^8.0.14"

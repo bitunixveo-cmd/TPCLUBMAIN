@@ -18,6 +18,7 @@ const config = {
   siteUrl: (process.env.SITE_URL || 'https://tpclub.co').replace(/\/$/, ''),
   gtmId: process.env.VITE_GTM_ID || '',
   telegramUrl: process.env.TELEGRAM_URL || 'https://t.me/+VEugRODM7y5iNGY0',
+  telegramRedirectPath: '/go/',
   telegramChannelUrl: process.env.TELEGRAM_CHANNEL_URL || 'https://t.me/OfficialTPClub',
   bitunixUrl: process.env.BITUNIX_REFERRAL_URL || 'https://www.bitunix.com/register?vipCode=TPclubJackman',
   youtubeUrl: process.env.YOUTUBE_URL || 'https://www.youtube.com/@TPClub'
@@ -108,7 +109,7 @@ async function renderPage({ lang, view, outputPath, pageKey, pagePath = '' }) {
       seo: buildSeo({ lang, t, pagePath }),
       siteUrl: config.siteUrl,
       gtmId: config.gtmId,
-      telegramUrl: config.telegramUrl,
+      telegramUrl: config.telegramRedirectPath,
       telegramChannelUrl: config.telegramChannelUrl,
       bitunixUrl: config.bitunixUrl,
       youtubeUrl: config.youtubeUrl
@@ -129,6 +130,56 @@ function writeTextFile(outputPath, content) {
   const fullOutputPath = path.join(distDir, outputPath);
   fs.mkdirSync(path.dirname(fullOutputPath), { recursive: true });
   fs.writeFileSync(fullOutputPath, content);
+}
+
+function buildGtmHead() {
+  if (!config.gtmId) return '';
+
+  return `    <script>window.dataLayer = window.dataLayer || [];</script>
+    <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','${config.gtmId}');
+    </script>`;
+}
+
+function buildGtmNoScript() {
+  if (!config.gtmId) return '';
+
+  return `    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${config.gtmId}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`;
+}
+
+function buildGoPage() {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+${buildGtmHead()}
+    <title>Redirecting to Telegram | TP Club</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#9be11a">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <style>
+      :root { color-scheme: dark; font-family: Arial, Helvetica, sans-serif; background: #030503; color: #f6fff2; }
+      body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 50% 20%, rgba(170, 255, 0, 0.18), transparent 28rem), #030503; }
+      .go-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+      .go-card { width: min(100%, 460px); border: 1px solid rgba(170, 255, 0, 0.22); border-radius: 24px; background: rgba(8, 18, 10, 0.92); padding: 34px; text-align: center; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38); }
+      .go-card img { border-radius: 20px; box-shadow: 0 0 34px rgba(170, 255, 0, 0.28); }
+      .go-eyebrow { margin: 20px 0 8px; color: #aaff00; font-size: 0.78rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+      h1 { margin: 0; font-size: clamp(2rem, 7vw, 3.4rem); line-height: 0.98; letter-spacing: -0.06em; }
+      p { color: #bfd3b7; font-size: 1rem; line-height: 1.6; }
+    </style>
+  </head>
+  <body>
+${buildGtmNoScript()}
+    <div id="root"></div>
+    <script src="/assets/go.js" type="module"></script>
+  </body>
+</html>`;
 }
 
 function buildSitemap() {
@@ -154,6 +205,7 @@ async function build() {
   await renderPage({ lang: 'en', view: 'index', outputPath: 'index.html' });
   await renderPage({ lang: 'en', view: 'index', outputPath: 'en/index.html' });
   await renderPage({ lang: 'zh', view: 'index', outputPath: 'zh/index.html' });
+  writeTextFile('go/index.html', buildGoPage());
 
   for (const lang of ['en', 'zh']) {
     await renderPage({ lang, view: 'privacy', outputPath: `${lang}/privacy/index.html`, pageKey: 'privacy', pagePath: '/privacy' });
@@ -169,7 +221,9 @@ Allow: /
 
 Sitemap: ${config.siteUrl}/sitemap.xml
 `);
-  writeTextFile('.htaccess', `DirectoryIndex index.html
+  writeTextFile('.htaccess', `RewriteEngine On
+RewriteRule ^go$ /go/ [R=302,L]
+DirectoryIndex index.html
 ErrorDocument 404 /404.html
 `);
 
