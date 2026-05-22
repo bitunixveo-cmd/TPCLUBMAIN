@@ -25,6 +25,7 @@ The static site is generated into `dist/`.
 ## Environment
 
 - `SITE_URL` - Public production origin for canonical, sitemap, and social metadata
+- `VITE_GTM_ID` - Google Tag Manager container ID
 - `TELEGRAM_URL` - Primary Telegram CTA URL
 - `TELEGRAM_CHANNEL_URL` - Telegram channel URL for contact and social metadata
 - `BITUNIX_REFERRAL_URL` - Partner exchange referral URL

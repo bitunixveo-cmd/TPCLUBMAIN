@@ -3,13 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <% if (gtmId) { %>
+    <script>window.dataLayer = window.dataLayer || [];</script>
+    <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MXWHXVKS');</script>
-    <!-- End Google Tag Manager -->
+    })(window,document,'script','dataLayer','<%= gtmId %>');
+    </script>
+    <% } %>
     <title><%= typeof pageTitle !== 'undefined' ? `${pageTitle} | TP Club` : t.meta.title %></title>
     <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : t.meta.description %>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -59,13 +62,14 @@
     <% }) %>
   </head>
   <body class="<%= lang === 'zh' ? 'locale-zh' : 'locale-en' %>">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXWHXVKS"
+    <% if (gtmId) { %>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<%= gtmId %>"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <% } %>
     <%- include(view) %>
     <script src="/js/nav.js" type="module" defer></script>
     <script src="/js/faq.js" type="module" defer></script>
     <script src="/js/price.js" type="module" defer></script>
+    <script src="/assets/main.js" type="module" defer></script>
   </body>
 </html>
