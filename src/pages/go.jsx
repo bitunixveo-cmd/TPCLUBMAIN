@@ -9,14 +9,16 @@ function redirectToTelegram() {
   window.location.replace(telegramUrl);
 }
 
-async function sendWebhook(payload) {
+async function sendWebhook() {
   const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK || '';
   if (!webhookUrl) return;
 
   await fetch(webhookUrl, {
     method: 'POST',
-    mode: 'no-cors',
-    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(getTrackingData()),
     keepalive: true
   });
 }
@@ -30,10 +32,6 @@ function waitForTimeout() {
 export default function GoPage() {
   useEffect(() => {
     const trackingData = getTrackingData();
-    const payload = {
-      tracking_data: trackingData,
-      event: 'telegram_click'
-    };
 
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -49,7 +47,7 @@ export default function GoPage() {
     };
 
     Promise.race([
-      sendWebhook(payload).catch(() => undefined),
+      sendWebhook().catch(() => undefined),
       waitForTimeout()
     ]).finally(redirectOnce);
 
