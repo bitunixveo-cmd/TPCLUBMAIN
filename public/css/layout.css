@@ -124,6 +124,30 @@
   align-self: center;
 }
 
+.hero-mockup {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: center;
+}
+
+.hero-mockup::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(170, 255, 0, 0.18), transparent 68%);
+  filter: blur(26px);
+}
+
+.hero-mockup img {
+  width: min(100%, 560px);
+  height: auto;
+  border-radius: 28px;
+  filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.55));
+}
+
 .chart-card {
   min-height: 318px;
   overflow: hidden;

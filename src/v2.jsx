@@ -124,28 +124,27 @@ function MiniChart() {
   );
 }
 
-function HeroPhoneImage() {
+function HeroCommunityMockup() {
   return (
     <motion.div
-      className="relative mx-auto flex justify-center"
+      className="relative mx-auto w-full max-w-[560px]"
       aria-label="Telegram community preview with educational BTC updates and learner discussions"
       initial={{ opacity: 0, y: 36, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="absolute inset-8 rounded-[3rem] bg-lime-300/18 blur-3xl" />
-      <div className="absolute -inset-6 rounded-[4rem] border border-lime-300/10 bg-gradient-to-br from-lime-300/8 via-white/[0.025] to-transparent blur-sm" />
+      <div className="absolute inset-10 rounded-[3rem] bg-lime-300/18 blur-3xl" />
       <motion.div
-        className="relative rounded-[3rem] shadow-[0_34px_100px_rgba(0,0,0,0.72)]"
-        animate={{ y: [0, -8, 0] }}
+        className="relative overflow-hidden rounded-[2rem] border border-lime-300/14 bg-white/[0.025] shadow-[0_34px_100px_rgba(0,0,0,0.72)]"
+        animate={{ y: [0, -6, 0] }}
         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
         <img
-          src="/images/v2-hero-phone-cutout.png"
+          src="/images/hero-community-mockup.png"
           alt="TP Club Education Telegram community preview with BTC market update and Chinese learner discussions"
-          width="453"
-          height="979"
-          className="relative z-10 h-auto w-auto max-w-[250px] select-none drop-shadow-[0_28px_60px_rgba(0,0,0,0.72)] sm:max-w-[270px] lg:max-w-[290px] xl:max-w-[305px]"
+          width="1024"
+          height="1024"
+          className="relative z-10 h-auto w-full select-none"
           loading="eager"
           decoding="async"
         />
@@ -210,33 +209,35 @@ function App() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_58%_8%,rgba(170,255,0,0.16),transparent_30rem),radial-gradient(circle_at_12%_34%,rgba(0,160,82,0.10),transparent_24rem),linear-gradient(180deg,#020503,#020503)]" />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:72px_72px] opacity-30" />
 
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+      <header className="sticky top-0 z-50 border-b border-white/8 bg-[#020503]/82 backdrop-blur-2xl">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
         <a href="/en/" className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center rounded-xl border border-lime-300/25 bg-lime-300/10 text-[0.62rem] font-black text-lime-300">TP</span>
+          <span className="grid h-9 w-9 place-items-center rounded-xl border border-lime-300/30 bg-lime-300/12 text-[0.62rem] font-black text-lime-300 shadow-[0_0_24px_rgba(170,255,0,0.16)]">TP</span>
           <span className="text-sm font-bold tracking-tight">TP Club</span>
         </a>
-        <nav className="hidden items-center gap-7 text-[0.72rem] font-semibold text-white/70 lg:flex">
-          <a href="#proof" className="transition hover:text-lime-300">About</a>
-          <a href="#how" className="transition hover:text-lime-300">How It Works</a>
-          <a href="#education" className="transition hover:text-lime-300">What You’ll Learn</a>
-          <a href="#community" className="transition hover:text-lime-300">Community</a>
-          <a href="#faq" className="transition hover:text-lime-300">FAQ</a>
+        <nav className="hidden items-center rounded-full border border-white/10 bg-white/[0.045] p-1 text-[0.72rem] font-semibold text-white/72 lg:flex">
+          <a href="#proof" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">About</a>
+          <a href="#how" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">How It Works</a>
+          <a href="#education" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">Learn</a>
+          <a href="#community" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">Community</a>
+          <a href="/en/#faq" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">FAQ</a>
         </nav>
         <a href="/go/" className="rounded-full bg-lime-300 px-4 py-2.5 text-[0.7rem] font-black text-black shadow-[0_0_28px_rgba(170,255,0,0.24)] transition hover:-translate-y-0.5 hover:bg-lime-200 sm:px-5">
           Join Free Community
         </a>
+        </div>
       </header>
 
-      <section className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-10 pt-8 sm:px-8 lg:min-h-[610px] lg:grid-cols-[0.92fr_1.08fr]">
+      <section className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-12 pt-10 sm:px-8 lg:min-h-[650px] lg:grid-cols-[0.86fr_1.14fr]">
         <motion.div className="relative z-10" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <p className="mb-5 inline-flex rounded-full border border-lime-300/20 bg-lime-300/8 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.22em] text-lime-300">
             Mandarin-first · Education-only · Australia
           </p>
-          <h1 className="max-w-xl text-[clamp(2.35rem,5.1vw,4.35rem)] font-black leading-[0.98] tracking-[-0.055em] text-white">
-            The Beginner-Friendly <span className="text-lime-300">Crypto Community</span> Built For Chinese Australians
+          <h1 className="max-w-xl text-[clamp(2.35rem,5.1vw,4.15rem)] font-black leading-[0.98] tracking-[-0.055em] text-white">
+            The Beginner-Friendly <span className="text-lime-300">Crypto Community</span>
           </h1>
           <p className="mt-5 max-w-lg text-sm leading-7 text-white/76 sm:text-base">
-            Daily BTC market education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
+            Built for Chinese Australians. Daily BTC market education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a href="/go/" className="group inline-flex items-center justify-center rounded-2xl bg-lime-300 px-6 py-4 text-sm font-black text-black shadow-[0_18px_55px_rgba(170,255,0,0.22)] transition hover:-translate-y-1 hover:bg-lime-200">
@@ -255,9 +256,8 @@ function App() {
           </div>
         </motion.div>
 
-        <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none" id="community">
-          <FloatingCards />
-          <HeroPhoneImage />
+        <div className="relative mx-auto w-full max-w-[620px] lg:max-w-none" id="community">
+          <HeroCommunityMockup />
           <MobileFeatureCards />
         </div>
       </section>
@@ -269,7 +269,7 @@ function App() {
           </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {safeSpace.map(([icon, title, text]) => (
-              <div key={title} className="rounded-2xl border border-white/8 bg-black/22 p-4">
+              <div key={title} className="rounded-2xl border border-white/8 bg-black/28 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:-translate-y-1 hover:border-lime-300/24 hover:bg-lime-300/[0.045]">
                 <div className="mb-3 grid h-9 w-9 place-items-center rounded-xl bg-lime-300/10 text-lime-300">
                   <Icon type={icon} />
                 </div>
@@ -294,7 +294,7 @@ function App() {
           {lessons.map(([title, text], index) => (
             <motion.article
               key={title}
-              className="rounded-2xl border border-white/10 bg-white/[0.045] p-5 transition hover:-translate-y-1 hover:border-lime-300/24 hover:bg-lime-300/[0.06]"
+              className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-[0_18px_52px_rgba(0,0,0,0.22)] transition hover:-translate-y-1 hover:border-lime-300/24 hover:bg-lime-300/[0.06]"
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
@@ -318,7 +318,7 @@ function App() {
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
             {steps.map(([icon, title, text], index) => (
-              <div key={title} className="relative rounded-2xl border border-white/10 bg-black/25 p-5">
+              <div key={title} className="relative rounded-3xl border border-white/10 bg-black/28 p-5 shadow-[0_18px_52px_rgba(0,0,0,0.22)]">
                 <div className="mb-4 grid h-12 w-12 place-items-center rounded-full bg-lime-300 text-black">
                   <Icon type={icon} />
                 </div>

@@ -139,8 +139,12 @@
     width: 100%;
   }
 
-  .chart-card {
-    display: none;
+  .hero-mockup {
+    margin-top: 10px;
+  }
+
+  .hero-mockup img {
+    width: min(100%, 480px);
   }
 
   .chart-head {

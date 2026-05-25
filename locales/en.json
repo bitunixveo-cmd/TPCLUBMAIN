@@ -20,10 +20,11 @@
     }
   },
   "hero": {
-    "badge": "500+ Active Learners Across Australia",
-    "h1a": "Learn Crypto.",
-    "h1b": "Build Your Future.",
-    "sub": "Join a Mandarin-first crypto education room built for Chinese Australians: daily BTC/USDT context, risk-first lessons, Bitunix onboarding support, and a private Telegram community that learns together.",
+    "badge": "Mandarin-first · Education-only · Australia",
+    "h1a": "The Beginner-Friendly ",
+    "h1b": "Crypto Community",
+    "h1c": "",
+    "sub": "Built for Chinese Australians. Daily BTC market education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.",
     "cta1": "Join Telegram Group Free →",
     "cta2": "Join the Telegram Learning Room",
     "caption": "Educational community · Telegram-first support · No monthly fee",
@@ -41,7 +42,8 @@
     ],
     "proof": ["Mandarin + English", "Australia focused", "Education only"],
     "liveBadge": "LIVE",
-    "chartMonths": ["Jan", "May", "Now"]
+    "chartMonths": ["Jan", "May", "Now"],
+    "mockupAlt": "TP Club Telegram education community preview"
   },
   "brand": "TP Club",
   "trust": {
@@ -56,12 +58,12 @@
   "how": {
     "eyebrow": "Bitunix Access",
     "title": "How to Get Started",
-    "sub": "Three simple steps to join our education community",
+    "sub": "Three simple steps to join TP Club and unlock your Bitunix rewards and free education resources",
     "accountCta": "Create Your Account",
     "steps": [
-      { "n": "01", "t": "Create Your Free Bitunix Account", "d": "Click our exclusive referral link to open a free account on Bitunix — our trusted partner exchange. Takes less than 5 minutes. Zero experience needed." },
-      { "n": "02", "t": "Fund Your Personal Account", "d": "Deposit to your own Bitunix account to activate your trading access. This is your money, in your own account — we never access or manage it." },
-      { "n": "03", "t": "Send Screenshot & Get Instant Access", "d": "Screenshot your Bitunix sign-up confirmation and send it to our Telegram team. We verify and add you to the private education group immediately." }
+      { "n": "01", "t": "Create Your Free Bitunix Account", "d": "Click our exclusive referral link to register on Bitunix for free. No credit card required, takes less than 5 minutes, and beginners can follow easily. Register to receive VIP3 low-fee benefits and a fee discount card. Limited-time offer, first come first served." },
+      { "n": "02", "t": "Send Your UID on Telegram and Unlock Rewards", "d": "Join our Telegram community and send your Bitunix UID to the official team. After verification, we will send the rewards to your account.", "telegramCta": "Join the Telegram Community" },
+      { "n": "03", "t": "Start Your Trading Education Journey", "d": "Follow the instructor's guidance, learn step by step, and build your own trading system through practice. Our education is completely free, and any deposits stay in your own account. We never access or manage your funds." }
     ]
   },
   "bundle": {
