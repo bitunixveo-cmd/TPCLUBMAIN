@@ -1,14 +1,24 @@
+<%
+  const bundleIcons = {
+    TP: '<svg viewBox="0 0 24 24"><path d="M12 3v3"></path><path d="M12 18v3"></path><path d="M3 12h3"></path><path d="M18 12h3"></path><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>',
+    Chart: '<svg viewBox="0 0 24 24"><path d="M4 19h16"></path><path d="M6 15l4-4 3 3 5-7"></path><path d="M18 7h-4M18 7v4"></path></svg>',
+    Chat: '<svg viewBox="0 0 24 24"><path d="M5 6.75A2.75 2.75 0 0 1 7.75 4h8.5A2.75 2.75 0 0 1 19 6.75v5.5A2.75 2.75 0 0 1 16.25 15H11l-4.5 4v-4.25A2.75 2.75 0 0 1 5 12.25v-5.5Z"></path><path d="M9 8.5h6M9 11.5h4"></path></svg>',
+    Group: '<svg viewBox="0 0 24 24"><path d="M9.5 12a3.25 3.25 0 1 0 0-6.5 3.25 3.25 0 0 0 0 6.5Z"></path><path d="M3.75 19a5.75 5.75 0 0 1 11.5 0"></path><path d="M16 10.5a2.5 2.5 0 1 0 0-5"></path><path d="M17 14a4.5 4.5 0 0 1 3.25 4.35"></path></svg>',
+    Learn: '<svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v15H6.5A2.5 2.5 0 0 0 4 21V6.5Z"></path><path d="M20 6.5A2.5 2.5 0 0 0 17.5 4H13v15h4.5A2.5 2.5 0 0 1 20 21V6.5Z"></path></svg>',
+    Risk: '<svg viewBox="0 0 24 24"><path d="M12 3.5 19 6v5.25c0 4.2-2.8 7.95-7 9.25-4.2-1.3-7-5.05-7-9.25V6l7-2.5Z"></path><path d="m9 12 2 2 4-5"></path></svg>'
+  };
+%>
 <section class="section section-alt" id="bundle">
   <div class="container">
     <div class="section-head">
-      <p class="eyebrow">Free Bundle</p>
+      <p class="eyebrow"><%= t.bundle.eyebrow %></p>
       <h2><%= t.bundle.title %></h2>
       <p class="muted"><%= t.bundle.sub %></p>
     </div>
     <div class="bundle-grid">
       <% t.bundle.items.forEach((item) => { %>
         <article class="card bundle-card">
-          <span class="bundle-icon" aria-hidden="true"><%= item.icon %></span>
+          <span class="bundle-icon" aria-hidden="true"><%- bundleIcons[item.icon] || bundleIcons.Learn %></span>
           <h3><%= item.t %></h3>
           <p><%= item.d %></p>
         </article>

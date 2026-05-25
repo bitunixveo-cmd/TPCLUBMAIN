@@ -157,15 +157,24 @@
   width: 46px;
   height: 46px;
   place-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
   border: 1px solid var(--neon-border);
-  border-radius: 14px;
-  background: var(--neon-glow);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(170, 255, 0, 0.24), transparent 58%),
+    rgba(170, 255, 0, 0.08);
   color: var(--neon);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.bundle-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .instructor-photo {

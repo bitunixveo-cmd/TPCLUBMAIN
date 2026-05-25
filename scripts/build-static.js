@@ -179,6 +179,31 @@ ${buildGtmNoScript()}
 </html>`;
 }
 
+function buildV2Page() {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+${buildGtmHead()}
+    <title>TP Club V2 Landing Test</title>
+    <meta name="description" content="Premium test landing page for TP Club's crypto education community.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#9be11a">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="/assets/v2.css">
+  </head>
+  <body>
+${buildGtmNoScript()}
+    <div id="root"></div>
+    <script src="/assets/v2.js" type="module"></script>
+  </body>
+</html>`;
+}
+
 function buildSitemap() {
   const today = new Date().toISOString().slice(0, 10);
   const paths = ['/en', '/zh', '/en/privacy', '/zh/privacy', '/en/contact', '/zh/contact', '/en/admin', '/zh/admin'];
@@ -203,6 +228,7 @@ async function build() {
   await renderPage({ lang: 'en', view: 'index', outputPath: 'en/index.html' });
   await renderPage({ lang: 'zh', view: 'index', outputPath: 'zh/index.html' });
   writeTextFile('go/index.html', buildGoPage());
+  writeTextFile('v2/index.html', buildV2Page());
 
   for (const lang of ['en', 'zh']) {
     await renderPage({ lang, view: 'privacy', outputPath: `${lang}/privacy/index.html`, pageKey: 'privacy', pagePath: '/privacy' });
@@ -220,6 +246,9 @@ Sitemap: ${config.siteUrl}/sitemap.xml
 `);
   writeTextFile('.htaccess', `RewriteEngine On
 RewriteRule ^go$ /go/ [R=302,L]
+RewriteRule ^zh$ /zh/ [R=301,L]
+RewriteRule ^en$ /en/ [R=301,L]
+RewriteRule ^v2$ /v2/ [R=301,L]
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 `);

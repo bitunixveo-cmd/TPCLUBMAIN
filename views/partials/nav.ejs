@@ -2,11 +2,11 @@
   <nav class="container nav-shell" aria-label="Primary navigation">
     <a class="brand" href="/<%= lang %>#hero" aria-label="TP Club home">
       <img src="/images/logo.png" alt="TP Club Logo" width="44" height="44">
-      <span>TP Club</span>
+      <span><%= t.brand %></span>
     </a>
     <div class="language-switcher mobile-language-switcher" aria-label="Mobile language switcher">
-      <a class="<%= lang === 'en' ? 'active' : '' %>" href="/en">EN</a>
-      <a class="<%= lang === 'zh' ? 'active' : '' %>" href="/zh">中文</a>
+      <a class="<%= lang === 'en' ? 'active' : '' %>" href="/en/">EN</a>
+      <a class="<%= lang === 'zh' ? 'active' : '' %>" href="/zh/">中文</a>
     </div>
     <button class="nav-toggle" type="button" aria-label="<%= t.nav.menu %>" aria-expanded="false" aria-controls="mobile-menu" data-nav-toggle>
       <span></span>
@@ -19,8 +19,8 @@
       <a href="/<%= lang %>#bundle"><%= t.nav.links.bundle %></a>
       <a href="/<%= lang %>#faq"><%= t.nav.links.faq %></a>
       <div class="language-switcher" aria-label="Language switcher">
-        <a class="<%= lang === 'en' ? 'active' : '' %>" href="/en">English</a>
-        <a class="<%= lang === 'zh' ? 'active' : '' %>" href="/zh">中文</a>
+        <a class="<%= lang === 'en' ? 'active' : '' %>" href="/en/">English</a>
+        <a class="<%= lang === 'zh' ? 'active' : '' %>" href="/zh/">中文</a>
       </div>
       <a class="btn-primary nav-cta" href="<%= telegramUrl %>"><%= t.nav.cta %></a>
     </div>

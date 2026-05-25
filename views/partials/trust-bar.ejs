@@ -1,6 +1,6 @@
-<section class="trust-section" aria-label="TP Club trust metrics">
+<section class="trust-section" aria-label="<%= t.trust.ariaLabel %>">
   <div class="container trust-grid">
-    <% t.trust.forEach((item) => { %>
+    <% t.trust.items.forEach((item) => { %>
       <div class="trust-item">
         <strong><%= item.n %></strong>
         <span><%= item.l %></span>

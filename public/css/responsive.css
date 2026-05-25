@@ -4,6 +4,10 @@
     grid-template-columns: 1fr;
   }
 
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .bundle-grid {
     grid-template-columns: repeat(2, 1fr);
   }

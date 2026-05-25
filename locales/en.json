@@ -39,15 +39,22 @@
       "How funding, volatility, and risk limits affect beginners",
       "How to set up Bitunix without giving anyone account access"
     ],
-    "proof": ["Mandarin + English", "Australia focused", "Education only"]
+    "proof": ["Mandarin + English", "Australia focused", "Education only"],
+    "liveBadge": "LIVE",
+    "chartMonths": ["Jan", "May", "Now"]
   },
-  "trust": [
-    { "n": "500+", "l": "Active Learners" },
-    { "n": "1,200+", "l": "Analyses Shared" },
-    { "n": "4.9/5", "l": "Member Rating" },
-    { "n": "100%", "l": "Free to Join" }
-  ],
+  "brand": "TP Club",
+  "trust": {
+    "ariaLabel": "TP Club trust metrics",
+    "items": [
+      { "n": "500+", "l": "Active Learners" },
+      { "n": "1,200+", "l": "Analyses Shared" },
+      { "n": "4.9/5", "l": "Member Rating" },
+      { "n": "100%", "l": "Free to Join" }
+    ]
+  },
   "how": {
+    "eyebrow": "Bitunix Access",
     "title": "How to Get Started",
     "sub": "Three simple steps to join our education community",
     "accountCta": "Create Your Account",
@@ -58,6 +65,7 @@
     ]
   },
   "bundle": {
+    "eyebrow": "Free Bundle",
     "title": "Your Complete Member Bundle",
     "sub": "Everything below is included FREE when you join via our Bitunix referral link",
     "items": [
@@ -98,6 +106,7 @@
     "cta": "Subscribe on YouTube"
   },
   "cta": {
+    "eyebrow": "TP Club",
     "title": "Ready to Start Learning?",
     "sub": "Join 500+ learners in Telegram for market education, beginner support, and community discussions.",
     "cta1": "Join Telegram Group Free →",
@@ -105,6 +114,7 @@
     "note": "No monthly fee. Education only. Free bundle included with Bitunix sign-up."
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Common Questions",
     "items": [
       { "q": "Is this free? What do I need to pay?", "a": "Joining TP Club is completely free. To receive the full education bundle, you register on Bitunix via our referral link and fund your own personal account. There are no monthly fees charged by us." },

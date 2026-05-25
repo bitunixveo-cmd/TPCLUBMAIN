@@ -12,7 +12,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open `http://localhost:5173/en` or `http://localhost:5173/zh`.
+Open `http://localhost:4173/en/` or `http://localhost:4173/zh/` (use the trailing slash, or click **中文** in the nav). `npm run dev` runs a full build then `vite preview`; the preview port may be `4174` if `4173` is busy.
 
 ## Build
 

@@ -22,7 +22,7 @@
             <strong class="price" data-btc-price data-fallback="<%= t.hero.priceFallback %>">$68,420</strong>
             <span class="chart-change">&uarr; +2.4%</span>
           </div>
-          <span class="chart-live-badge">LIVE</span>
+          <span class="chart-live-badge"><%= t.hero.liveBadge %></span>
         </div>
         <svg class="sparkline" viewBox="0 0 560 260" role="img" aria-label="<%= t.hero.chartTitle %>">
           <defs>
@@ -52,9 +52,9 @@
             <circle class="chart-endpoint" cx="532" cy="14" r="8"></circle>
           </g>
           <g class="chart-labels">
-            <text x="28" y="252">Jan</text>
-            <text x="258" y="252">May</text>
-            <text x="506" y="252">Now</text>
+            <text x="28" y="252"><%= t.hero.chartMonths[0] %></text>
+            <text x="258" y="252"><%= t.hero.chartMonths[1] %></text>
+            <text x="506" y="252"><%= t.hero.chartMonths[2] %></text>
           </g>
         </svg>
         <span class="chart-gain-pill">+42.8%</span>
