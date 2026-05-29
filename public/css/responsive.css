@@ -129,6 +129,10 @@
     min-height: auto;
   }
 
+  .hero-grid {
+    gap: 28px;
+  }
+
   .hero-title {
     letter-spacing: -0.06em;
   }
@@ -140,11 +144,14 @@
   }
 
   .hero-mockup {
-    margin-top: 10px;
+    width: min(100%, 360px);
+    margin: 28px auto 0;
+    transform: none;
   }
 
   .hero-mockup img {
-    width: min(100%, 480px);
+    width: 100%;
+    border-radius: 22px;
   }
 
   .chart-head {

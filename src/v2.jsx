@@ -11,9 +11,9 @@ window.tpclubTrackEvent = trackEvent;
 window.getTrackingData = getTrackingData;
 
 const features = [
-  { label: 'Daily BTC Insights', detail: 'Calm market context', icon: 'book', side: 'right', top: '20%' },
+  { label: 'Daily Education', detail: 'Calm learning context', icon: 'book', side: 'right', top: '20%' },
   { label: 'Mandarin Support', detail: '中文 + English learning', icon: 'chat', side: 'right', top: '50%' },
-  { label: 'Beginner Help', detail: 'Ask before you trade', icon: 'users', side: 'left', top: '43%' },
+  { label: 'Beginner Help', detail: 'Ask before decisions', icon: 'users', side: 'left', top: '43%' },
   { label: 'Risk-First', detail: 'Safety before setups', icon: 'shield', side: 'right', top: '80%' }
 ];
 
@@ -26,12 +26,12 @@ const pillars = [
 ];
 
 const lessons = [
-  ['Understanding Bitcoin & Market Cycles', 'What BTC moves mean for beginners.'],
-  ['Risk Management & Capital Protection', 'Position size, stop thinking, and patience.'],
-  ['Reading Charts & Market Sentiment', 'Trend, support, resistance, and context.'],
+  ['Understanding Crypto Education Basics', 'Clear concepts for beginners.'],
+  ['Risk Education & Personal Responsibility', 'Build patience and safer learning habits.'],
+  ['Reading Market Education Context', 'Trend, support, resistance, and context.'],
   ['Avoiding Beginner Mistakes', 'No FOMO, no signal chasing, no gambling mindset.'],
-  ['Exchange Setup & Security Guides', 'Step-by-step setup without giving access.'],
-  ['Trading Psychology & Mindset', 'Build discipline before increasing risk.']
+  ['Security Awareness Guides', 'Learn account safety without sharing access.'],
+  ['Learning Psychology & Mindset', 'Build discipline before taking risk.']
 ];
 
 const safeSpace = [
@@ -44,22 +44,22 @@ const safeSpace = [
 
 const steps = [
   ['send', 'Join The Free Education Community', 'Click the button below to join our Telegram group. It is free and takes 10 seconds.'],
-  ['book', 'Learn & Grow Every Day', 'Access daily market context, structured lessons, and helpful discussions in Mandarin.'],
+  ['book', 'Learn & Grow Every Day', 'Access daily education context, structured lessons, and helpful discussions in Mandarin.'],
   ['chat', 'Get Support When You Need It', 'Ask questions, get guidance, and learn with a community that actually cares.']
 ];
 
 const communityCards = [
-  ['Market Discussion', 'Teacher TP', 'BTC关键位置，先观察确认。'],
+  ['Education Discussion', 'Teacher TP', '今天重点：先理解概念，再做判断。'],
   ['Member Question', 'Alice', '请问新手应该如何控制仓位？'],
-  ['BTC Update', 'Teacher TP', 'No chasing. Wait for confirmation.'],
+  ['Learning Note', 'Teacher TP', 'No hype. Learn the framework first.'],
   ['Study Notes', 'Admin TP', '今日学习重点：风险管理。']
 ];
 
 const chatMessages = [
   {
     author: 'Teacher TP',
-    role: 'BTC Daily Market Update',
-    text: 'Market is showing early signs of strength above the key level. Manage your risk and stay patient.',
+    role: 'Daily Education Update',
+    text: 'Today we focus on understanding the framework first. Manage your risk and stay patient.',
     chart: true,
     reactions: ['24', '12', '9']
   },
@@ -75,7 +75,7 @@ const chatMessages = [
   },
   {
     author: 'James',
-    text: '行情回调是机会，耐心等待确认信号。',
+    text: '先学习框架，再根据自己的情况做判断。',
     reactions: ['6']
   }
 ];
@@ -103,7 +103,7 @@ function MiniChart() {
   return (
     <div className="mt-4 rounded-2xl border border-white/10 bg-black/35 p-3">
       <div className="mb-2 flex items-center justify-between text-[0.58rem] uppercase tracking-[0.16em] text-white/35">
-        <span>BTC/USDT · 4h</span>
+        <span>Education Desk · 4h</span>
         <span>Education View</span>
       </div>
       <svg viewBox="0 0 320 120" className="h-28 w-full overflow-visible">
@@ -128,7 +128,7 @@ function HeroCommunityMockup() {
   return (
     <motion.div
       className="relative mx-auto w-full max-w-[560px]"
-      aria-label="Telegram community preview with educational BTC updates and learner discussions"
+      aria-label="Telegram community preview with education updates and learner discussions"
       initial={{ opacity: 0, y: 36, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -141,7 +141,7 @@ function HeroCommunityMockup() {
       >
         <img
           src="/images/hero-community-mockup.png"
-          alt="TP Club Education Telegram community preview with BTC market update and Chinese learner discussions"
+          alt="TP Club Education Telegram community preview with education updates and Chinese learner discussions"
           width="1024"
           height="1024"
           className="relative z-10 h-auto w-full select-none"
@@ -212,7 +212,7 @@ function App() {
       <header className="sticky top-0 z-50 border-b border-white/8 bg-[#020503]/82 backdrop-blur-2xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
         <a href="/en/" className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-xl border border-lime-300/30 bg-lime-300/12 text-[0.62rem] font-black text-lime-300 shadow-[0_0_24px_rgba(170,255,0,0.16)]">TP</span>
+          <img src="/images/logo.png" alt="TP Club logo" width="36" height="36" className="h-9 w-9 rounded-xl shadow-[0_0_24px_rgba(170,255,0,0.18)]" />
           <span className="text-sm font-bold tracking-tight">TP Club</span>
         </a>
         <nav className="hidden items-center rounded-full border border-white/10 bg-white/[0.045] p-1 text-[0.72rem] font-semibold text-white/72 lg:flex">
@@ -222,7 +222,7 @@ function App() {
           <a href="#community" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">Community</a>
           <a href="/en/#faq" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">FAQ</a>
         </nav>
-        <a href="/go/" className="rounded-full bg-lime-300 px-4 py-2.5 text-[0.7rem] font-black text-black shadow-[0_0_28px_rgba(170,255,0,0.24)] transition hover:-translate-y-0.5 hover:bg-lime-200 sm:px-5">
+        <a href="/go/" className="rounded-full bg-lime-300 px-4 py-2.5 text-[0.7rem] font-black text-black shadow-[0_0_34px_rgba(170,255,0,0.36)] transition hover:-translate-y-0.5 hover:bg-lime-200 hover:shadow-[0_0_46px_rgba(170,255,0,0.5)] sm:px-5">
           Join Free Community
         </a>
         </div>
@@ -234,13 +234,13 @@ function App() {
             Mandarin-first · Education-only · Australia
           </p>
           <h1 className="max-w-xl text-[clamp(2.35rem,5.1vw,4.15rem)] font-black leading-[0.98] tracking-[-0.055em] text-white">
-            The Beginner-Friendly <span className="text-lime-300">Crypto Community</span>
+            The Beginner-Friendly <span className="text-lime-300">Crypto Education Community</span>
           </h1>
           <p className="mt-5 max-w-lg text-sm leading-7 text-white/76 sm:text-base">
-            Built for Chinese Australians. Daily BTC market education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
+            Built for Chinese Australians. Daily crypto education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <a href="/go/" className="group inline-flex items-center justify-center rounded-2xl bg-lime-300 px-6 py-4 text-sm font-black text-black shadow-[0_18px_55px_rgba(170,255,0,0.22)] transition hover:-translate-y-1 hover:bg-lime-200">
+            <a href="/go/" className="group inline-flex items-center justify-center rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black shadow-[0_18px_58px_rgba(170,255,0,0.34)] transition hover:-translate-y-1 hover:bg-lime-200 hover:shadow-[0_24px_72px_rgba(170,255,0,0.46)]">
               Join Free Telegram Community
               <span className="ml-3 transition group-hover:translate-x-1">→</span>
             </a>
@@ -285,7 +285,7 @@ function App() {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.22em] text-lime-300">What You Learn</p>
           <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.045em] sm:text-5xl">Practical Crypto Education For Real Life</h2>
-          <p className="mt-5 text-white/58">Our lessons are designed for beginners who want to understand crypto the right way, step by step.</p>
+          <p className="mt-5 text-white/58">Our lessons are designed for beginners who want education-first guidance, step by step.</p>
           <a href="/go/" className="mt-8 inline-flex rounded-2xl border border-lime-300/28 bg-lime-300/8 px-5 py-3 text-sm font-bold text-lime-300 transition hover:bg-lime-300 hover:text-black">
             Join & Start Learning
           </a>
@@ -335,7 +335,7 @@ function App() {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.22em] text-lime-300">Real Community · Real People</p>
           <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.045em]">You’re Not Alone On This Journey</h2>
-          <p className="mt-5 text-white/58">Join hundreds of Chinese Australian learners sharing questions and building their future in crypto together.</p>
+          <p className="mt-5 text-white/58">Join hundreds of Chinese Australian learners sharing questions and building confidence through education together.</p>
           <div className="mt-7">
             <AvatarStack />
             <p className="mt-4 text-sm font-bold text-lime-300">500+ Active Members</p>
@@ -370,7 +370,7 @@ function App() {
           </div>
           <div className="flex flex-col justify-center p-2 lg:p-10">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-lime-300">Take the first step</p>
-            <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.05em] sm:text-5xl">Ready to Start Your Crypto Learning Journey?</h2>
+            <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.05em] sm:text-5xl">Ready to Start Your Education Journey?</h2>
             <p className="mt-5 max-w-xl text-white/58">Join TP Club today, ask beginner questions, and access education designed for a supportive community.</p>
             <a href="/go/" className="mt-8 inline-flex w-fit rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black transition hover:-translate-y-1 hover:bg-lime-200">
               Join Free Telegram Community →
@@ -383,10 +383,10 @@ function App() {
       <footer className="mx-auto grid max-w-6xl gap-8 border-t border-white/8 px-5 py-8 text-sm text-white/48 sm:px-8 lg:grid-cols-[1.2fr_1fr_1fr_1.1fr]">
         <div>
           <div className="mb-4 flex items-center gap-2.5 text-white">
-            <span className="grid h-8 w-8 place-items-center rounded-xl border border-lime-300/25 bg-lime-300/10 text-[0.62rem] font-black text-lime-300">TP</span>
+            <img src="/images/logo.png" alt="TP Club logo" width="32" height="32" className="h-8 w-8 rounded-xl" />
             <span className="font-bold">TP Club</span>
           </div>
-          <p className="max-w-xs leading-6">A Mandarin-first crypto education community for Chinese Australians. Learn together. Grow smarter.</p>
+          <p className="max-w-xs leading-6">A Mandarin-first education community for Chinese Australians. Learn together. Grow smarter.</p>
         </div>
         <div>
           <p className="mb-3 font-bold text-white">Community</p>
