@@ -174,7 +174,7 @@ ${buildGtmHead()}
   <body>
 ${buildGtmNoScript()}
     <div id="root"></div>
-    <script src="/assets/go.js" type="module"></script>
+    <script src="/assets/go.js?v=tg-5715" type="module"></script>
   </body>
 </html>`;
 }
