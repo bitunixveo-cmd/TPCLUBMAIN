@@ -17,7 +17,7 @@ const locales = {
 const config = {
   siteUrl: (process.env.SITE_URL || 'https://tpclub.co').replace(/\/$/, ''),
   gtmId: process.env.VITE_GTM_ID || '',
-  telegramUrl: process.env.TELEGRAM_URL || 'https://t.me/+VEugRODM7y5iNGY0',
+  telegramUrl: process.env.TELEGRAM_URL || 'https://t.me/+5715hMkkOso3ZGY8',
   telegramRedirectPath: '/go/',
   telegramChannelUrl: process.env.TELEGRAM_CHANNEL_URL || 'https://t.me/OfficialTPClub',
   bitunixUrl: process.env.BITUNIX_REFERRAL_URL || 'https://www.bitunix.com/register?vipCode=TPclubJackman',

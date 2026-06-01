@@ -14,8 +14,8 @@ This repository builds as a static Vite site. The build renders real HTML files 
 SITE_URL=https://tpclub.co
 VITE_GTM_ID=GTM-MXWHXVKS
 VITE_N8N_WEBHOOK=
-VITE_TELEGRAM_URL=https://t.me/+VEugRODM7y5iNGY0
-TELEGRAM_URL=https://t.me/+VEugRODM7y5iNGY0
+VITE_TELEGRAM_URL=https://t.me/+5715hMkkOso3ZGY8
+TELEGRAM_URL=https://t.me/+5715hMkkOso3ZGY8
 TELEGRAM_CHANNEL_URL=https://t.me/OfficialTPClub
 BITUNIX_REFERRAL_URL=https://www.bitunix.com/register?vipCode=TPclubJackman
 YOUTUBE_URL=https://www.youtube.com/@TPClub

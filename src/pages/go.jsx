@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { getTrackingData } from '../utils/tracking.js';
 
 const MAX_WEBHOOK_WAIT_MS = 1000;
-const DEFAULT_TELEGRAM_URL = 'https://t.me/+VEugRODM7y5iNGY0';
+const DEFAULT_TELEGRAM_URL = 'https://t.me/+5715hMkkOso3ZGY8';
 
 function redirectToTelegram() {
   const telegramUrl = import.meta.env.VITE_TELEGRAM_URL || DEFAULT_TELEGRAM_URL;
