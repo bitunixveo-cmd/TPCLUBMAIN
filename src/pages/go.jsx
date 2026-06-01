@@ -5,8 +5,7 @@ const MAX_WEBHOOK_WAIT_MS = 1000;
 const DEFAULT_TELEGRAM_URL = 'https://t.me/+5715hMkkOso3ZGY8';
 
 function redirectToTelegram() {
-  const telegramUrl = import.meta.env.VITE_TELEGRAM_URL || DEFAULT_TELEGRAM_URL;
-  window.location.replace(telegramUrl);
+  window.location.replace(DEFAULT_TELEGRAM_URL);
 }
 
 async function sendWebhook() {
