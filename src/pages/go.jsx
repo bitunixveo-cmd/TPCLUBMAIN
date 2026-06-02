@@ -8,7 +8,18 @@ function redirectToTelegram() {
   window.location.replace(DEFAULT_TELEGRAM_URL);
 }
 
-async function sendWebhook() {
+function getRedirectContext() {
+  const redirectPath = window.location.pathname || '/go/';
+  const locale = redirectPath.startsWith('/zh/') ? 'zh' : 'en';
+
+  return {
+    redirect_path: redirectPath,
+    redirect_locale: locale,
+    redirect_target: DEFAULT_TELEGRAM_URL
+  };
+}
+
+async function sendWebhook(trackingData) {
   const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK || '';
   if (!webhookUrl) return;
 
@@ -17,7 +28,7 @@ async function sendWebhook() {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(getTrackingData()),
+    body: JSON.stringify(trackingData),
     keepalive: true
   });
 }
@@ -29,8 +40,13 @@ function waitForTimeout() {
 }
 
 export default function GoPage() {
+  const isChineseRedirect = window.location.pathname.startsWith('/zh/');
+
   useEffect(() => {
-    const trackingData = getTrackingData();
+    const trackingData = {
+      ...getTrackingData(),
+      ...getRedirectContext()
+    };
 
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -46,7 +62,7 @@ export default function GoPage() {
     };
 
     Promise.race([
-      sendWebhook().catch(() => undefined),
+      sendWebhook(trackingData).catch(() => undefined),
       waitForTimeout()
     ]).finally(redirectOnce);
 
@@ -60,8 +76,8 @@ export default function GoPage() {
       <div className="go-card">
         <img src="/images/logo.png" alt="TP Club" width="96" height="96" />
         <p className="go-eyebrow">TP Club</p>
-        <h1>Redirecting to Telegram...</h1>
-        <p>Please wait while we open the Telegram learning group.</p>
+        <h1>{isChineseRedirect ? '正在跳转到 Telegram...' : 'Redirecting to Telegram...'}</h1>
+        <p>{isChineseRedirect ? '请稍候，我们正在打开 Telegram 学习社群。' : 'Please wait while we open the Telegram learning group.'}</p>
       </div>
     </main>
   );

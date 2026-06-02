@@ -109,7 +109,7 @@ async function renderPage({ lang, view, outputPath, pageKey, pagePath = '' }) {
       seo: buildSeo({ lang, t, pagePath }),
       siteUrl: config.siteUrl,
       gtmId: config.gtmId,
-      telegramUrl: config.telegramRedirectPath,
+      telegramUrl: lang === 'zh' ? '/zh/go/' : config.telegramRedirectPath,
       telegramChannelUrl: config.telegramChannelUrl,
       bitunixUrl: config.bitunixUrl,
       youtubeUrl: config.youtubeUrl
@@ -149,14 +149,17 @@ function buildGtmNoScript() {
     <!-- End Google Tag Manager (noscript) -->`;
 }
 
-function buildGoPage() {
+function buildGoPage(lang = 'en') {
+  const htmlLang = lang === 'zh' ? 'zh-Hans' : 'en';
+  const title = lang === 'zh' ? '正在跳转到 Telegram | TP Club' : 'Redirecting to Telegram | TP Club';
+
   return `<!doctype html>
-<html lang="en">
+<html lang="${htmlLang}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 ${buildGtmHead()}
-    <title>Redirecting to Telegram | TP Club</title>
+    <title>${title}</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#9be11a">
     <link rel="icon" type="image/png" href="/images/logo.png">
@@ -227,7 +230,8 @@ async function build() {
   await renderPage({ lang: 'en', view: 'index', outputPath: 'index.html' });
   await renderPage({ lang: 'en', view: 'index', outputPath: 'en/index.html' });
   await renderPage({ lang: 'zh', view: 'index', outputPath: 'zh/index.html' });
-  writeTextFile('go/index.html', buildGoPage());
+  writeTextFile('go/index.html', buildGoPage('en'));
+  writeTextFile('zh/go/index.html', buildGoPage('zh'));
   writeTextFile('v2/index.html', buildV2Page());
 
   for (const lang of ['en', 'zh']) {
@@ -245,6 +249,7 @@ Allow: /
 Sitemap: ${config.siteUrl}/sitemap.xml
 `);
   writeTextFile('.htaccess', `RewriteEngine On
+RewriteRule ^zh/go$ /zh/go/ [R=302,L]
 RewriteRule ^go$ /go/ [R=302,L]
 RewriteRule ^zh$ /zh/ [R=301,L]
 RewriteRule ^en$ /en/ [R=301,L]

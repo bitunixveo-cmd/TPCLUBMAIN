@@ -27,6 +27,12 @@ function routeRewritePlugin() {
       return;
     }
 
+    if (url === '/zh/go' || url.startsWith('/zh/go?')) {
+      req.url = `/zh/go/${url.slice(6)}`;
+      next();
+      return;
+    }
+
     if (
       rewriteTrailingIndex(req, '/zh', '/zh') ||
       rewriteTrailingIndex(req, '/en', '/en') ||

@@ -130,11 +130,37 @@
   }
 
   .hero-grid {
-    gap: 28px;
+    gap: 20px;
   }
 
   .hero-title {
     letter-spacing: -0.06em;
+  }
+
+  .hero .badge {
+    gap: 6px;
+    max-width: 88%;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+
+  .hero .text-icon {
+    font-size: 0.7em;
+  }
+
+  .hero-trust-card {
+    margin-top: 12px;
+    padding: 13px;
+  }
+
+  .hero-trust-card p {
+    font-size: 0.8rem;
+  }
+
+  .hero-trust-card li {
+    padding: 6px 9px;
+    font-size: 0.7rem;
   }
 
   .button-row,
@@ -144,8 +170,8 @@
   }
 
   .hero-mockup {
-    width: min(100%, 360px);
-    margin: 28px auto 0;
+    width: min(100%, 318px);
+    margin: 18px auto 0;
     transform: none;
   }
 
@@ -254,6 +280,21 @@
 
   .admin-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-mockup {
+    width: min(100%, 292px);
+  }
+
+  .hero-proof-row {
+    gap: 6px;
+  }
+
+  .hero-proof-row span {
+    padding: 7px 10px;
+    font-size: 0.74rem;
   }
 }
 

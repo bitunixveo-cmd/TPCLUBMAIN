@@ -25,9 +25,12 @@
     "h1b": "Crypto Education Community",
     "h1c": "",
     "sub": "Built for Chinese Australians. Daily crypto education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.",
-    "cta1": "Join Telegram Group Free →",
+    "cta1": "Join the Free Telegram Community →",
     "cta2": "Join the Telegram Learning Room",
-    "caption": "Educational community · Telegram-first support · No monthly fee",
+    "caption": "After clicking, Telegram opens and you can join the free TP Club education group with pinned beginner guides first.",
+    "trustTitle": "Before you join",
+    "trustItems": ["Free to join", "Beginner friendly", "Education only"],
+    "telegramProof": "TP Club_止盈社 · 1,000+ members · Active learning group",
     "chartTitle": "Education Learning Desk",
     "chartSub": "Community Learning",
     "live": "Telegram education room open now",
@@ -43,7 +46,11 @@
     "proof": ["Mandarin + English", "Australia focused", "Education only"],
     "liveBadge": "LIVE",
     "chartMonths": ["Jan", "May", "Now"],
-    "mockupAlt": "TP Club Telegram education community preview"
+    "mockupAlt": "TP Club Telegram education community preview",
+    "modalTitle": "Join Telegram to unlock the full learning room",
+    "modalText": "Join Telegram to view the full community, pinned guides, chart education, market insights, beginner lessons, and all education content in one place.",
+    "modalCta": "Join Telegram Community",
+    "modalClose": "Close"
   },
   "brand": "TP Club",
   "trust": {
@@ -61,8 +68,8 @@
     "sub": "Three simple steps to join TP Club and access beginner-friendly education resources",
     "accountCta": "Create Your Account",
     "steps": [
-      { "n": "01", "t": "Join the Free Education Community", "d": "Start with the private Telegram education group. No experience required, no pressure, and no financial advice." },
-      { "n": "02", "t": "Ask Questions and Get Learning Support", "d": "Join our Telegram community, introduce your learning goals, and ask beginner questions inside the group.", "telegramCta": "Join the Telegram Community" },
+      { "n": "01", "t": "Join the Free Education Community", "d": "Start with the private Telegram education group. No experience required, no pressure, and no financial advice.", "telegramCta": "Join the Telegram Community" },
+      { "n": "02", "t": "Ask Questions and Get Learning Support", "d": "Introduce your learning goals, ask beginner questions, and get support inside the group." },
       { "n": "03", "t": "Build Your Crypto Education Foundation", "d": "Follow the instructor's education guidance, learn step by step, and develop a clearer understanding of crypto education concepts. We never access or manage your funds." }
     ]
   },
