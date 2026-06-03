@@ -1,8 +1,30 @@
 import { useEffect } from 'react';
 import { getTrackingData } from '../utils/tracking.js';
 
-const MAX_WEBHOOK_WAIT_MS = 1000;
+const MAX_WEBHOOK_WAIT_MS = 1500;
+const IP_LOOKUP_TIMEOUT_MS = 600;
 const DEFAULT_TELEGRAM_URL = 'https://t.me/+5715hMkkOso3ZGY8';
+
+async function fetchIpData() {
+  try {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), IP_LOOKUP_TIMEOUT_MS);
+    const res = await fetch('https://ipwho.is/', { signal: controller.signal });
+    window.clearTimeout(timer);
+    if (!res.ok) return {};
+    const data = await res.json();
+    return {
+      visitor_ip: data.ip || '',
+      visitor_country: data.country || '',
+      visitor_country_code: data.country_code || '',
+      visitor_city: data.city || '',
+      visitor_region: data.region || '',
+      visitor_timezone: data.timezone?.id || ''
+    };
+  } catch {
+    return {};
+  }
+}
 
 function redirectToTelegram() {
   window.location.replace(DEFAULT_TELEGRAM_URL);
@@ -43,16 +65,10 @@ export default function GoPage() {
   const isChineseRedirect = window.location.pathname.startsWith('/zh/');
 
   useEffect(() => {
-    const trackingData = {
+    const baseData = {
       ...getTrackingData(),
       ...getRedirectContext()
     };
-
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: 'telegram_click',
-      tracking_data: trackingData
-    });
 
     let redirected = false;
     const redirectOnce = () => {
@@ -61,8 +77,21 @@ export default function GoPage() {
       redirectToTelegram();
     };
 
+    async function track() {
+      const ipData = await fetchIpData();
+      const trackingData = { ...baseData, ...ipData };
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'telegram_click',
+        tracking_data: trackingData
+      });
+
+      await sendWebhook(trackingData).catch(() => undefined);
+    }
+
     Promise.race([
-      sendWebhook(trackingData).catch(() => undefined),
+      track(),
       waitForTimeout()
     ]).finally(redirectOnce);
 
