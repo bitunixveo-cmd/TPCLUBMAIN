@@ -45,12 +45,17 @@ async function sendWebhook(trackingData) {
   const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK || '';
   if (!webhookUrl) return;
 
+  const body = JSON.stringify(trackingData);
+
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(webhookUrl, new Blob([body], { type: 'application/json' }));
+    return;
+  }
+
   await fetch(webhookUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(trackingData),
+    headers: { 'Content-Type': 'application/json' },
+    body,
     keepalive: true
   });
 }
@@ -79,7 +84,11 @@ export default function GoPage() {
 
     async function track() {
       const ipData = await fetchIpData();
-      const trackingData = { ...baseData, ...ipData };
+      const trackingData = {
+        event: 'telegram_click',
+        ...baseData,
+        ...ipData
+      };
 
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({

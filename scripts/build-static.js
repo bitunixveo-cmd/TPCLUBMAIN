@@ -249,11 +249,11 @@ Allow: /
 Sitemap: ${config.siteUrl}/sitemap.xml
 `);
   writeTextFile('.htaccess', `RewriteEngine On
-RewriteRule ^zh/go$ /zh/go/ [R=302,L]
-RewriteRule ^go$ /go/ [R=302,L]
-RewriteRule ^zh$ /zh/ [R=301,L]
-RewriteRule ^en$ /en/ [R=301,L]
-RewriteRule ^v2$ /v2/ [R=301,L]
+RewriteRule ^zh/go$ /zh/go/ [R=302,L,QSA]
+RewriteRule ^go$ /go/ [R=302,L,QSA]
+RewriteRule ^zh$ /zh/ [R=301,L,QSA]
+RewriteRule ^en$ /en/ [R=301,L,QSA]
+RewriteRule ^v2$ /v2/ [R=301,L,QSA]
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 `);

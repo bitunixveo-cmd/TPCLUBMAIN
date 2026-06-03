@@ -7,7 +7,8 @@ const ATTRIBUTION_KEYS = [
   'utm_campaign',
   'utm_term',
   'utm_content',
-  'fbclid'
+  'fbclid',
+  'ttclid'
 ];
 
 function isBrowser() {
