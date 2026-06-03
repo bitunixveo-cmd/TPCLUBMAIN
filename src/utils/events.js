@@ -279,3 +279,51 @@ export function trackPopupDismiss(popupId, extraData = {}) {
     ...extraData
   }, { allowDuplicates: true });
 }
+
+// ── Dev-only globals ──────────────────────────────────────────────────────────
+// Exposed on window in development mode so QA can manually fire and inspect
+// events from the browser console. Stripped entirely from production bundles
+// by Vite's dead-code elimination on the import.meta.env.DEV constant.
+
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  window.trackEvent = trackEvent;
+  window.trackTelegramClick = trackTelegramClick;
+  window.trackCTA = trackCTA;
+  window.trackLeadSubmit = trackLeadSubmit;
+  window.trackModalOpen = trackModalOpen;
+  window.trackModalClose = trackModalClose;
+  window.trackModalCTA = trackModalCTA;
+  window.trackPopupView = trackPopupView;
+  window.trackPopupClose = trackPopupClose;
+  window.trackPopupCTA = trackPopupCTA;
+  window.trackPopupDismiss = trackPopupDismiss;
+  window.registerPlugin = registerPlugin;
+
+  window.debugTracking = () => ({
+    localStorage: (() => {
+      try {
+        return JSON.parse(localStorage.getItem('tpclub_tracking') || '{}');
+      } catch {
+        return null;
+      }
+    })(),
+    sessionStorage: (() => {
+      try {
+        return {
+          tracking: JSON.parse(sessionStorage.getItem('tpclub_tracking') || '{}'),
+          landing_page: sessionStorage.getItem('tpclub_landing_page'),
+          seen_events: JSON.parse(sessionStorage.getItem('tpclub_seen_events') || '[]')
+        };
+      } catch {
+        return null;
+      }
+    })(),
+    dataLayer: window.dataLayer || []
+  });
+
+  console.info(
+    '%c[TP Tracking] Dev mode active — globals exposed on window.',
+    'color: #aaff00; font-weight: bold;'
+  );
+  console.info('  trackEvent(name, extra, opts)  trackTelegramClick()  debugTracking()');
+}
