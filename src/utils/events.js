@@ -164,13 +164,14 @@ export async function trackEvent(eventName, extraData = {}, options = {}) {
     markSeenInSession(dedupKey);
   }
 
-  // Build payload
+  // Build payload — event and timestamp come last so they can never be
+  // silently overwritten by stale storage data or extra fields.
   const ipData = options.includeIp ? await fetchIpData() : {};
   const payload = {
-    event: eventName,
     ...getTrackingData(),
     ...extraData,
     ...ipData,
+    event: eventName,
     timestamp: new Date().toISOString()
   };
 

@@ -4,6 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const ejs = require('ejs');
 
+// Unique per build — forces browsers and CDNs to fetch fresh JS after every deploy.
+const BUILD_VERSION = Date.now();
+
 const rootDir = path.join(__dirname, '..');
 const viewsDir = path.join(rootDir, 'views');
 const publicDir = path.join(rootDir, 'public');
@@ -109,6 +112,7 @@ async function renderPage({ lang, view, outputPath, pageKey, pagePath = '' }) {
       seo: buildSeo({ lang, t, pagePath }),
       siteUrl: config.siteUrl,
       gtmId: config.gtmId,
+      mainScriptUrl: `/assets/main.js?v=${BUILD_VERSION}`,
       telegramUrl: lang === 'zh' ? '/zh/go/' : config.telegramRedirectPath,
       telegramChannelUrl: config.telegramChannelUrl,
       bitunixUrl: config.bitunixUrl,
@@ -177,7 +181,7 @@ ${buildGtmHead()}
   <body>
 ${buildGtmNoScript()}
     <div id="root"></div>
-    <script src="/assets/go.js?v=tg-5715" type="module"></script>
+    <script src="/assets/go.js?v=${BUILD_VERSION}" type="module"></script>
   </body>
 </html>`;
 }
@@ -202,7 +206,7 @@ ${buildGtmHead()}
   <body>
 ${buildGtmNoScript()}
     <div id="root"></div>
-    <script src="/assets/v2.js" type="module"></script>
+    <script src="/assets/v2.js?v=${BUILD_VERSION}" type="module"></script>
   </body>
 </html>`;
 }
