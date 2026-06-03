@@ -8,7 +8,6 @@ function isBrowser() {
 
 function getDataLayer() {
   if (!isBrowser()) return [];
-
   window.dataLayer = window.dataLayer || [];
   return window.dataLayer;
 }
@@ -23,15 +22,5 @@ export function pageView(overrides = {}) {
     page_path: window.location.pathname,
     ...getTrackingData(),
     ...overrides
-  });
-}
-
-export function trackEvent(eventName, eventParams = {}) {
-  if (!isBrowser() || !GTM_ID || !eventName) return;
-
-  getDataLayer().push({
-    event: eventName,
-    ...getTrackingData(),
-    ...eventParams
   });
 }

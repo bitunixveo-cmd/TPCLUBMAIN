@@ -5,7 +5,7 @@
       <h1 class="hero-title"><%= t.hero.h1a %><span><%= t.hero.h1b %></span></h1>
       <p class="hero-sub"><%= t.hero.sub %></p>
       <div class="button-row">
-        <a class="btn-primary" href="<%= telegramUrl %>"><%= t.hero.cta1 %></a>
+        <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.hero.cta1 %>"><%= t.hero.cta1 %></a>
       </div>
       <p class="microcopy"><%= t.hero.caption %></p>
       <div class="hero-trust-card" aria-label="<%= t.hero.trustTitle %>">
@@ -38,7 +38,7 @@
       <p class="eyebrow"><%= t.hero.badge %></p>
       <h2 id="hero-modal-title"><%= t.hero.modalTitle %></h2>
       <p><%= t.hero.modalText %></p>
-      <a class="btn-primary" href="<%= telegramUrl %>"><%= t.hero.modalCta %></a>
+      <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.hero.modalCta %>"><%= t.hero.modalCta %></a>
     </div>
   </div>
 </section>

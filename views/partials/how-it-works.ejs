@@ -12,7 +12,7 @@
           <h3><%= step.t %></h3>
           <p><%= step.d %></p>
           <% if (step.telegramCta) { %>
-            <a class="text-link" href="<%= telegramUrl %>"><%= step.telegramCta %></a>
+            <a class="text-link" href="<%= telegramUrl %>" data-track-cta="<%= step.telegramCta %>"><%= step.telegramCta %></a>
           <% } %>
         </article>
       <% }) %>

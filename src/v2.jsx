@@ -2,7 +2,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion } from 'framer-motion';
 import './v2.css';
-import { pageView, trackEvent } from './utils/gtm.js';
+import { pageView } from './utils/gtm.js';
+import { trackEvent } from './utils/events.js';
 import { getTrackingData, initTracking } from './utils/tracking.js';
 
 initTracking();
