@@ -57,24 +57,24 @@ async function fetchIpData() {
 
 // ── Transport ─────────────────────────────────────────────────────────────────
 
-function dispatchWebhook(payload) {
-  if (!WEBHOOK_URL) return Promise.resolve();
+async function dispatchWebhook(payload) {
+  if (!WEBHOOK_URL) return;
 
-  const body = JSON.stringify(payload);
-
-  if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-    navigator.sendBeacon(WEBHOOK_URL, new Blob([body], { type: 'application/json' }));
-    return Promise.resolve();
+  if (IS_DEV) {
+    console.log('WEBHOOK_URL', WEBHOOK_URL);
+    console.log('WEBHOOK_PAYLOAD', payload);
   }
 
-  return fetch(WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body,
-    keepalive: true
-  }).catch((err) => {
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+  } catch (err) {
     if (IS_DEV) console.warn('[TP tracking] webhook fetch failed:', err);
-  });
+  }
 }
 
 // ── GTM dataLayer ─────────────────────────────────────────────────────────────
