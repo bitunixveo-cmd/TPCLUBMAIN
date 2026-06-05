@@ -1,8 +1,18 @@
 <section class="section" id="instructor">
   <div class="container instructor-grid">
-    <div class="instructor-photo" role="img" aria-label="<%= t.instructor.photo %>">
-      <img src="/images/logo.png" alt="<%= t.instructor.name %>" width="220" height="220" loading="lazy">
-      <span><%= t.brand %></span>
+    <div class="founder-card" role="img" aria-label="<%= t.instructor.photo %>">
+      <div class="founder-emblem">
+        <img src="/images/logo.png" alt="<%= t.instructor.founderName %>" width="148" height="148" loading="lazy">
+      </div>
+      <div>
+        <h3><%= t.instructor.founderName %></h3>
+        <p><%= t.instructor.founderRole %></p>
+      </div>
+      <ul>
+        <% t.instructor.founderPoints.forEach((point) => { %>
+          <li><%= point %></li>
+        <% }) %>
+      </ul>
     </div>
     <div class="instructor-copy">
       <p class="eyebrow"><%= t.instructor.label %></p>

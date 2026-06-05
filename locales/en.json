@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "TP Club | Crypto Education Community for Chinese Australians",
-    "description": "Join TP Club — Australia's Mandarin crypto education community. Free Telegram access, beginner-friendly education, and 500+ active learners.",
+    "title": "TP Club | Chinese Crypto Learning & Market Analysis Community",
+    "description": "Join TP Club — a Chinese-first crypto learning and market analysis community with daily analysis, live sessions, beginner guides, and free Telegram access.",
     "ogLocale": "en_AU",
     "lang": "en"
   },
@@ -14,22 +14,22 @@
     "links": {
       "about": "About",
       "how": "How It Works",
-      "bundle": "Bundle",
+      "bundle": "Free Resources",
       "faq": "FAQ",
       "admin": "Admin"
     }
   },
   "hero": {
-    "badge": "Mandarin-first · Education-only · Australia",
-    "h1a": "The Beginner-Friendly ",
-    "h1b": "Crypto Education Community",
+    "badge": "100% Free · Educational Community",
+    "h1a": "Join the Leading Chinese Crypto ",
+    "h1b": "Learning & Market Analysis Community",
     "h1c": "",
-    "sub": "Built for Chinese Australians. Daily crypto education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.",
-    "cta1": "Join the Free Telegram Community →",
-    "cta2": "Join the Telegram Learning Room",
-    "caption": "After clicking, Telegram opens and you can join the free TP Club education group with pinned beginner guides first.",
+    "sub": "Daily market analysis, live sessions, beginner guidance, and an active Chinese-speaking Telegram community. Free to join.",
+    "cta1": "Join Telegram Free →",
+    "cta2": "View Community Preview",
+    "caption": "Click to join our free Telegram learning group and get access to beginner guides and pinned resources.",
     "trustTitle": "Before you join",
-    "trustItems": ["Free to join", "Beginner friendly", "Education only"],
+    "trustItems": ["Newbie Friendly", "Education Only", "Chinese + English", "Australia Focused"],
     "telegramProof": "TP Club_止盈社 · 1,000+ members · Active learning group",
     "chartTitle": "Education Learning Desk",
     "chartSub": "Community Learning",
@@ -43,7 +43,15 @@
       "How volatility and risk concepts affect beginners",
       "How to ask safer questions before making personal decisions"
     ],
-    "proof": ["Mandarin + English", "Australia focused", "Education only"],
+    "proof": ["Newbie Friendly", "Education Only", "Chinese + English", "Australia Focused"],
+    "featurePills": [
+      { "t": "Daily Analysis", "d": "Every Day" },
+      { "t": "Beginner Guides", "d": "Step by Step" },
+      { "t": "Live Sessions", "d": "Daily" },
+      { "t": "Active Discussions", "d": "24/7" },
+      { "t": "Chinese Community", "d": "Worldwide" },
+      { "t": "100% Free", "d": "No Hidden Fees" }
+    ],
     "liveBadge": "LIVE",
     "chartMonths": ["Jan", "May", "Now"],
     "mockupAlt": "TP Club Telegram education community preview",
@@ -56,8 +64,8 @@
   "trust": {
     "ariaLabel": "TP Club trust metrics",
     "items": [
-      { "n": "500+", "l": "Active Learners" },
-      { "n": "1,200+", "l": "Analyses Shared" },
+      { "n": "1,000+", "l": "Community Members" },
+      { "n": "Daily", "l": "Market Analysis" },
       { "n": "4.9/5", "l": "Member Rating" },
       { "n": "100%", "l": "Free to Join" }
     ]
@@ -74,28 +82,63 @@
     ]
   },
   "bundle": {
-    "eyebrow": "Free Bundle",
-    "title": "Your Complete Member Bundle",
-    "sub": "Everything below is included free when you join the education community",
+    "eyebrow": "Member Benefits",
+    "title": "What You'll Get as a Member",
+    "sub": "Everything you need to learn, grow, and stay updated in the crypto market.",
     "items": [
-      { "icon": "TP", "t": "Educational Market Framework", "d": "A structured learning framework that helps members understand trends and market education concepts." },
-      { "icon": "Chart", "t": "Premium Education Analysis", "d": "Daily education breakdowns from our educator — learn to understand what's happening in crypto education and why." },
-      { "icon": "Chat", "t": "Telegram Learning Support", "d": "Ask questions inside the Telegram group and learn from instructor updates, member discussions, and shared market context." },
-      { "icon": "Group", "t": "Private Telegram Community", "d": "Join 500+ active learners sharing insights, market observations, and educational discussions." },
-      { "icon": "Learn", "t": "Education Content Library", "d": "Video lessons, walkthroughs, and step-by-step guides to build your crypto education knowledge from absolute beginner level." },
-      { "icon": "Risk", "t": "Risk Education", "d": "Learn risk concepts, personal responsibility, and safer education habits from day one." }
+      { "icon": "Chart", "t": "Daily Market Analysis", "d": "Get daily breakdowns of major coins and market trends." },
+      { "icon": "Chat", "t": "Live Community Sessions", "d": "Join live discussions and learn from experienced traders." },
+      { "icon": "Learn", "t": "Beginner Learning Path", "d": "Step-by-step resources designed for newcomers." },
+      { "icon": "Group", "t": "Telegram Community", "d": "Access an active Chinese-speaking community worldwide." },
+      { "icon": "TP", "t": "Educational Resources", "d": "Guides, videos, tutorials, and market explanations regularly." },
+      { "icon": "Risk", "t": "Risk Management Education", "d": "Learn why discipline, personal responsibility, and safer habits matter." }
+    ]
+  },
+  "communityPreview": {
+    "eyebrow": "Community Preview",
+    "title": "Inside Our Telegram Community",
+    "sub": "Real conversations, real analysis, real community.",
+    "openLabel": "Click to view",
+    "modalTitle": "Community screenshot",
+    "modalCta": "Join Telegram Free →",
+    "modalClose": "Close screenshot",
+    "items": [
+      { "t": "Active Discussions", "d": "Member chats, shared ideas, and team support.", "type": "chat", "image": "/images/community/active-discussions.png" },
+      { "t": "Daily Market Analysis", "d": "Educational breakdowns every single day.", "type": "chart", "image": "/images/community/daily-market-analysis.png" },
+      { "t": "Live Sessions", "d": "Daily live streams and Q&A discussions.", "type": "live", "image": "/images/community/live-sessions.png" },
+      { "t": "Beginner Resources", "d": "Real files, PDFs, and learning resources shared inside the Telegram group.", "type": "files", "image": "/images/community/beginner-resources.png" }
     ]
   },
   "instructor": {
-    "label": "Meet Your Educator",
-    "name": "TP Club Instructor",
-    "role": "Lead Educator & Community Founder · TP Club",
-    "bio": "With years of hands-on experience in crypto education, our lead educator has helped hundreds of Chinese-Australian learners understand the space more confidently. Teaching complex education concepts in plain Mandarin and English — no jargon, no hype.",
-    "photo": "Instructor photo placeholder",
+    "label": "About Our Founder",
+    "name": "Why Learn with TP Club?",
+    "role": "Jackman · Founder & Head Educator",
+    "bio": "We focus on education, market understanding, and responsible learning. Our goal is to help Chinese learners understand more informed market participation.",
+    "photo": "Jackman founder card",
+    "founderName": "Jackman",
+    "founderRole": "Founder & Head Educator",
+    "founderPoints": [
+      "5+ Years Crypto Market Experience",
+      "1,000+ Community Members",
+      "Daily Live Sessions",
+      "Chinese-Speaking Support",
+      "Education First Approach"
+    ],
     "stats": [
-      { "n": "5+", "l": "Years in Education" },
-      { "n": "500+", "l": "Students Guided" },
-      { "n": "Bilingual", "l": "中文 & English" }
+      { "n": "5+", "l": "Years Experience" },
+      { "n": "24/7", "l": "Community Support" },
+      { "n": "Education", "l": "Focused" }
+    ]
+  },
+  "weeklyBenefits": {
+    "eyebrow": "Weekly Member Benefits",
+    "title": "This Week's Member Benefits",
+    "items": [
+      "Daily market analysis updates",
+      "Beginner learning roadmap",
+      "Live session recordings",
+      "Community discussions",
+      "Special educational resources"
     ]
   },
   "testimonials": {
@@ -115,12 +158,13 @@
     "cta": "Subscribe on YouTube"
   },
   "cta": {
-    "eyebrow": "TP Club",
-    "title": "Ready to Start Learning?",
-    "sub": "Join 500+ learners in Telegram for market education, beginner support, and community discussions.",
-    "cta1": "Join Telegram Group Free →",
+    "eyebrow": "Ready To Start?",
+    "title": "Start Your Crypto Journey Today",
+    "sub": "Join over 1,000 members already learning, discussing markets, and building crypto knowledge together.",
+    "cta1": "Join Telegram Free →",
     "cta2": "Join the Telegram Learning Room",
-    "note": "No monthly fee. Education only. Free education bundle included."
+    "benefits": ["Daily Analysis", "Community Support", "Live Sessions", "Beginner Friendly", "100% Free"],
+    "note": "No monthly fee. Education only. Free resources included."
   },
   "faq": {
     "eyebrow": "FAQ",

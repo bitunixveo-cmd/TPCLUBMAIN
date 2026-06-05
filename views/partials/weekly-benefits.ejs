@@ -1,0 +1,18 @@
+<section class="section weekly-benefits" id="weekly-benefits">
+  <div class="container benefits-grid">
+    <article class="card benefits-card">
+      <p class="eyebrow"><%= t.weeklyBenefits.eyebrow %></p>
+      <h2><%= t.weeklyBenefits.title %></h2>
+      <ul class="benefits-list">
+        <% t.weeklyBenefits.items.forEach((item) => { %>
+          <li><%= item %></li>
+        <% }) %>
+      </ul>
+    </article>
+    <article class="card benefits-gift-card" aria-label="Free weekly member benefits">
+      <div class="gift-box" aria-hidden="true">
+        <span></span>
+      </div>
+    </article>
+  </div>
+</section>

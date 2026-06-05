@@ -1,7 +1,7 @@
 <header class="site-header" data-nav>
   <nav class="container nav-shell" aria-label="Primary navigation">
     <a class="brand" href="/<%= lang %>#hero" aria-label="TP Club home">
-      <img src="/images/logo.png" alt="TP Club Logo" width="44" height="44">
+      <img src="/images/logo.png" alt="" width="44" height="44">
       <span><%= t.brand %></span>
     </a>
     <div class="language-switcher mobile-language-switcher" aria-label="Mobile language switcher">
@@ -15,7 +15,7 @@
     </button>
     <div class="nav-menu" id="mobile-menu" data-nav-menu>
       <a href="/<%= lang %>#instructor"><%= t.nav.links.about %></a>
-      <a href="/<%= lang %>#how"><%= t.nav.links.how %></a>
+      <a href="/<%= lang %>#<%= lang === 'en' ? 'telegram-preview' : 'how' %>"><%= t.nav.links.how %></a>
       <a href="/<%= lang %>#bundle"><%= t.nav.links.bundle %></a>
       <a href="/<%= lang %>#faq"><%= t.nav.links.faq %></a>
       <div class="language-switcher" aria-label="Language switcher">

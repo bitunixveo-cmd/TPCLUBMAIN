@@ -12,6 +12,15 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .locale-en .bundle-grid,
+  .preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
   .steps-grid {
     grid-template-columns: 1fr;
   }
@@ -170,9 +179,32 @@
   }
 
   .hero-mockup {
-    width: min(100%, 318px);
+    width: min(100%, 360px);
     margin: 18px auto 0;
     transform: none;
+  }
+
+  .hero-phone-wrap {
+    min-height: auto;
+    padding-top: 8px;
+  }
+
+  .hero-feature-pill {
+    position: static;
+    width: auto;
+    padding: 9px 10px;
+  }
+
+  .hero-phone-wrap {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .hero-image-frame {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    width: min(100%, 318px);
   }
 
   .hero-mockup img {
@@ -228,6 +260,20 @@
 
   .bundle-grid {
     grid-template-columns: 1fr;
+  }
+
+  .locale-en .bundle-grid,
+  .preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-card,
+  .preview-image-link {
+    min-height: 520px;
+  }
+
+  .preview-image-link img {
+    height: 520px;
   }
 
   .instructor-stats {

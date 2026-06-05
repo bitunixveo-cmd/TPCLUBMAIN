@@ -1,0 +1,33 @@
+<section class="section section-alt telegram-preview" id="telegram-preview">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow"><%= t.communityPreview.eyebrow %></p>
+      <h2><%= t.communityPreview.title %></h2>
+      <p class="muted"><%= t.communityPreview.sub %></p>
+    </div>
+    <div class="preview-grid">
+      <% t.communityPreview.items.forEach((item) => { %>
+        <article class="card preview-card preview-card-<%= item.type %>">
+          <button class="preview-image-link" type="button" data-community-modal-open data-community-image="<%= item.image %>" data-community-title="<%= item.t %>" aria-label="<%= t.communityPreview.openLabel %> <%= item.t %>">
+            <img src="<%= item.image %>" alt="<%= item.t %> screenshot from TP Club Telegram community" loading="lazy" decoding="async">
+            <span class="preview-overlay">
+              <span class="preview-open"><%= t.communityPreview.openLabel %></span>
+              <strong><%= item.t %></strong>
+              <span><%= item.d %></span>
+            </span>
+          </button>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+  <div class="community-modal" id="community-image-modal" role="dialog" aria-modal="true" aria-labelledby="community-modal-title" hidden data-community-modal>
+    <button class="community-modal-backdrop" type="button" aria-label="<%= t.communityPreview.modalClose %>" data-community-modal-close></button>
+    <div class="community-modal-card" role="document" tabindex="-1" data-community-modal-card>
+      <button class="community-modal-close" type="button" aria-label="<%= t.communityPreview.modalClose %>" data-community-modal-close>&times;</button>
+      <p class="eyebrow"><%= t.communityPreview.eyebrow %></p>
+      <h2 id="community-modal-title" data-community-modal-title><%= t.communityPreview.modalTitle %></h2>
+      <img src="" alt="" data-community-modal-image>
+      <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.communityPreview.modalCta %>"><%= t.communityPreview.modalCta %></a>
+    </div>
+  </div>
+</section>

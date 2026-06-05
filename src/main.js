@@ -72,3 +72,70 @@ if (heroModal && heroModalOpen && heroModalCard) {
     }
   });
 }
+
+// ── Community screenshot modal ────────────────────────────────────────────────
+
+const communityModal = document.querySelector('[data-community-modal]');
+const communityModalCard = document.querySelector('[data-community-modal-card]');
+const communityModalImage = document.querySelector('[data-community-modal-image]');
+const communityModalTitle = document.querySelector('[data-community-modal-title]');
+const communityModalCloseButtons = document.querySelectorAll('[data-community-modal-close]');
+const communityModalOpenButtons = document.querySelectorAll('[data-community-modal-open]');
+let lastCommunityModalTrigger = null;
+
+if (communityModal && communityModalCard && communityModalImage && communityModalTitle) {
+  const openCommunityModal = (button) => {
+    const imageSrc = button.dataset.communityImage;
+    const imageTitle = button.dataset.communityTitle || 'Community screenshot';
+
+    if (!imageSrc) return;
+
+    lastCommunityModalTrigger = button;
+    communityModalImage.src = imageSrc;
+    communityModalImage.alt = imageTitle;
+    communityModalTitle.textContent = imageTitle;
+    communityModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    communityModalCard.focus();
+    trackModalOpen('community_image_modal', {
+      image_title: imageTitle,
+      path: window.location.pathname
+    });
+  };
+
+  const closeCommunityModal = () => {
+    communityModal.hidden = true;
+    communityModalImage.src = '';
+    document.body.style.overflow = '';
+    if (lastCommunityModalTrigger) {
+      lastCommunityModalTrigger.focus();
+    }
+    trackModalClose('community_image_modal', {
+      path: window.location.pathname
+    });
+  };
+
+  communityModalOpenButtons.forEach((button) => {
+    button.addEventListener('click', () => openCommunityModal(button));
+  });
+
+  communityModalCloseButtons.forEach((button) => {
+    button.addEventListener('click', closeCommunityModal);
+  });
+
+  const communityModalCta = communityModal.querySelector('.btn-primary');
+  if (communityModalCta) {
+    communityModalCta.addEventListener('click', () => {
+      trackModalCTA('community_image_modal', {
+        button_text: communityModalCta.textContent?.trim() || 'Join Telegram',
+        path: window.location.pathname
+      });
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !communityModal.hidden) {
+      closeCommunityModal();
+    }
+  });
+}

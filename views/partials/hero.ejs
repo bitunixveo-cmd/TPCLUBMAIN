@@ -6,19 +6,11 @@
       <p class="hero-sub"><%= t.hero.sub %></p>
       <div class="button-row">
         <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.hero.cta1 %>"><%= t.hero.cta1 %></a>
+        <% if (t.hero.cta2) { %>
+          <a class="btn-ghost" href="#telegram-preview"><%= t.hero.cta2 %></a>
+        <% } %>
       </div>
       <p class="microcopy"><%= t.hero.caption %></p>
-      <div class="hero-trust-card" aria-label="<%= t.hero.trustTitle %>">
-        <div>
-          <strong><%= t.hero.trustTitle %></strong>
-          <p><%= t.hero.telegramProof %></p>
-        </div>
-        <ul>
-          <% t.hero.trustItems.forEach((item) => { %>
-            <li><%= item %></li>
-          <% }) %>
-        </ul>
-      </div>
       <div class="hero-proof-row" aria-label="TP Club proof points">
         <% t.hero.proof.forEach((item) => { %>
           <span><%= item %></span>
@@ -26,9 +18,17 @@
       </div>
     </div>
     <div class="hero-mockup" aria-label="<%= t.hero.mockupAlt %>">
-      <button class="hero-mockup-trigger" type="button" data-hero-modal-open aria-haspopup="dialog" aria-controls="hero-image-modal">
-        <img src="<%= lang === 'zh' ? '/images/hero-community-mockup-zh.png' : '/images/hero-community-mockup.png' %>" alt="<%= t.hero.mockupAlt %>" width="1024" height="1024" loading="eager" decoding="async">
-      </button>
+      <div class="hero-phone-wrap">
+        <% (t.hero.featurePills || []).forEach((pill, index) => { %>
+          <div class="hero-feature-pill pill-<%= index + 1 %>">
+            <strong><%= pill.t %></strong>
+            <span><%= pill.d %></span>
+          </div>
+        <% }) %>
+        <button class="hero-image-frame hero-mockup-trigger" type="button" data-hero-modal-open aria-haspopup="dialog" aria-controls="hero-image-modal">
+          <img src="<%= lang === 'zh' ? '/images/hero-community-mockup-zh.png' : '/images/hero-community-mockup.png' %>" alt="<%= t.hero.mockupAlt %>" width="1024" height="1024" loading="eager" decoding="async">
+        </button>
+      </div>
     </div>
   </div>
   <div class="hero-modal" id="hero-image-modal" role="dialog" aria-modal="true" aria-labelledby="hero-modal-title" hidden data-hero-modal>

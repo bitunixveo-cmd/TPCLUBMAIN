@@ -41,6 +41,10 @@
 }
 
 .brand img {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  object-fit: contain;
   border-radius: 12px;
   background: var(--bg-2);
   box-shadow: 0 0 28px var(--neon-glow);
