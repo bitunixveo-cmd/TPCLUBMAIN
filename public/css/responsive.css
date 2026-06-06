@@ -212,24 +212,6 @@
     border-radius: 22px;
   }
 
-  .chart-head {
-    display: grid;
-    gap: 14px;
-  }
-
-  .chart-live-badge {
-    width: max-content;
-  }
-
-  .chart-gain-pill {
-    right: 28px;
-    top: 136px;
-  }
-
-  .sparkline {
-    min-height: 180px;
-  }
-
   .hero-proof-row {
     gap: 8px;
   }
@@ -317,12 +299,6 @@
 
   .instructor-stats {
     grid-template-columns: 1fr;
-  }
-
-  .instructor-photo {
-    width: min(100%, 420px);
-    min-height: 360px;
-    margin-inline: auto;
   }
 
   .testimonial-grid {
