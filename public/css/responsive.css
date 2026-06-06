@@ -262,18 +262,57 @@
     grid-template-columns: 1fr;
   }
 
-  .locale-en .bundle-grid,
-  .preview-grid {
+  .locale-en .bundle-grid {
     grid-template-columns: 1fr;
   }
 
-  .preview-card,
+  /* ── Preview grid → horizontal scroll carousel on mobile ── */
+  .preview-grid {
+    display: flex;
+    grid-template-columns: unset;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    margin-inline: -18px;
+    padding-inline: 18px;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+  }
+
+  .preview-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .preview-card {
+    flex: 0 0 78vw;
+    min-height: unset;
+    scroll-snap-align: start;
+  }
+
   .preview-image-link {
-    min-height: 520px;
+    min-height: 300px;
   }
 
   .preview-image-link img {
-    height: 520px;
+    height: 300px;
+  }
+
+  /* ── Community modal — fix height on mobile ── */
+  .community-modal {
+    padding: 12px;
+    align-items: center;
+  }
+
+  .community-modal-card {
+    max-height: 90dvh;
+    border-radius: 20px;
+    padding: 16px;
+    gap: 12px;
+    overscroll-behavior: contain;
+  }
+
+  .community-modal-card img {
+    max-height: 52dvh;
   }
 
   .instructor-stats {
