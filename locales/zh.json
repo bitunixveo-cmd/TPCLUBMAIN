@@ -23,6 +23,7 @@
     "badge": "100% 免费 · 教育社群",
     "h1a": "加入领先的中文加密货币",
     "h1b": "学习与市场分析社区",
+    "h1c": "",
     "sub": "每日市场分析、直播互动、新手指导，以及活跃的中文 Telegram 社群。免费加入。",
     "cta1": "免费加入 Telegram →",
     "cta2": "查看社群预览",
@@ -60,6 +61,13 @@
     "modalClose": "关闭"
   },
   "brand": "TP止盈社",
+  "a11y": {
+    "home": "TP止盈社 首页",
+    "proofPoints": "TP止盈社 社群数据",
+    "openModal": "预览 TP止盈社 Telegram 社群",
+    "benefits": "TP止盈社 会员福利",
+    "weeklyBenefits": "每周免费会员福利"
+  },
   "trust": {
     "ariaLabel": "TP止盈社信任数据",
     "items": [

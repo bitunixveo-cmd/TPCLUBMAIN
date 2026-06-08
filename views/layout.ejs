@@ -55,8 +55,6 @@
       .hero .button-row { margin-top: 22px; }
       .hero .microcopy { margin-top: 12px; }
       .hero .hero-proof-row { margin-top: 16px; }
-      .hero .chart-card { min-height: 286px; }
-      .hero .sparkline { margin-top: 16px; min-height: 176px; }
       @media (max-width: 767px) { .hero-grid { grid-template-columns: 1fr; } }
     </style>
     <% seo.structuredData.forEach((schema) => { %>
@@ -71,7 +69,6 @@
     <%- include(view) %>
     <script src="/js/nav.js" type="module" defer></script>
     <script src="/js/faq.js" type="module" defer></script>
-    <script src="/js/price.js" type="module" defer></script>
     <script src="<%= mainScriptUrl %>" type="module" defer></script>
   </body>
 </html>

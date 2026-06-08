@@ -61,6 +61,13 @@
     "modalClose": "Close"
   },
   "brand": "TP Club",
+  "a11y": {
+    "home": "TP Club home",
+    "proofPoints": "TP Club proof points",
+    "openModal": "Preview the TP Club Telegram community",
+    "benefits": "TP Club member benefits",
+    "weeklyBenefits": "Free weekly member benefits"
+  },
   "trust": {
     "ariaLabel": "TP Club trust metrics",
     "items": [
@@ -174,7 +181,7 @@
       { "q": "Is this a scam? Is it safe?", "a": "We operate with full transparency — our educator shares education content inside the group, you keep full control of your own accounts and funds, and we never ask for login credentials or access to your funds." },
       { "q": "Is this financial advice?", "a": "No. TP Club is an educational community. All content is for learning purposes only. We do not provide personalised financial advice, investment recommendations, account management, or guaranteed results." },
       { "q": "I'm completely new to crypto education. Can I still join?", "a": "Absolutely — beginners are welcome! Our content is designed for people with zero prior experience. We explain beginner concepts, learning methods, market structure, and risk education step by step." },
-      { "q": "How do I ask questions?", "a": "Join the Telegram group and ask inside the community. The group is the main place for TP Club updates, beginner support, and education discussions." }
+      { "q": "Can I ask questions before joining?", "a": "Yes! You can message us on Telegram before joining. We're happy to answer questions, explain what the community is about, and help you decide if TP Club is the right fit for you." }
     ]
   },
   "footer": {
