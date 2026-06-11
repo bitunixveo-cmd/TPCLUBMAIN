@@ -7,3 +7,10 @@ dist/
 npm-debug.log*
 coverage/
 .DS_Store
+
+# Local Elementor landing page widgets (not part of TP Club repo)
+landingpage abu/
+itt-hero.html
+itt-cta.html
+*.patch
+PUSH-WORKAROUND.md

@@ -213,7 +213,7 @@ ${buildGtmNoScript()}
 
 function buildSitemap() {
   const today = new Date().toISOString().slice(0, 10);
-  const paths = ['/en', '/zh', '/en/privacy', '/zh/privacy', '/en/contact', '/zh/contact', '/en/admin', '/zh/admin'];
+  const paths = ['/en', '/zh', '/en/meta', '/zh/meta', '/en/privacy', '/zh/privacy', '/en/contact', '/zh/contact', '/en/admin', '/zh/admin'];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -221,7 +221,7 @@ ${paths.map((urlPath) => `  <url>
     <loc>${config.siteUrl}${urlPath}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${urlPath === '/en' || urlPath === '/zh' ? '1.0' : '0.7'}</priority>
+    <priority>${urlPath === '/en' || urlPath === '/zh' ? '1.0' : urlPath === '/en/meta' || urlPath === '/zh/meta' ? '0.8' : '0.7'}</priority>
   </url>`).join('\n')}
 </urlset>`;
 }
@@ -239,6 +239,7 @@ async function build() {
   writeTextFile('v2/index.html', buildV2Page());
 
   for (const lang of ['en', 'zh']) {
+    await renderPage({ lang, view: 'meta', outputPath: `${lang}/meta/index.html`, pageKey: 'meta', pagePath: '/meta' });
     await renderPage({ lang, view: 'privacy', outputPath: `${lang}/privacy/index.html`, pageKey: 'privacy', pagePath: '/privacy' });
     await renderPage({ lang, view: 'contact', outputPath: `${lang}/contact/index.html`, pageKey: 'contact', pagePath: '/contact' });
     await renderPage({ lang, view: 'admin', outputPath: `${lang}/admin/index.html`, pageKey: 'admin', pagePath: '/admin' });
@@ -253,8 +254,11 @@ Allow: /
 Sitemap: ${config.siteUrl}/sitemap.xml
 `);
   writeTextFile('.htaccess', `RewriteEngine On
+RewriteRule ^meta$ /zh/meta/ [R=301,L,QSA]
 RewriteRule ^zh/go$ /zh/go/ [R=302,L,QSA]
 RewriteRule ^go$ /go/ [R=302,L,QSA]
+RewriteRule ^zh/meta$ /zh/meta/ [R=301,L,QSA]
+RewriteRule ^en/meta$ /en/meta/ [R=301,L,QSA]
 RewriteRule ^zh$ /zh/ [R=301,L,QSA]
 RewriteRule ^en$ /en/ [R=301,L,QSA]
 RewriteRule ^v2$ /v2/ [R=301,L,QSA]

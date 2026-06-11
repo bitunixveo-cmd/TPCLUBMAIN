@@ -1,7 +1,7 @@
 const { defineConfig } = require('vite');
 const tailwindcss = require('@tailwindcss/vite').default;
 
-function rewriteTrailingIndex(req, fromPrefix, toPrefix) {
+function rewriteTrailingIndex(req, fromPrefix, toPrefix = fromPrefix) {
   const url = req.url || '';
 
   if (url === fromPrefix) {
@@ -33,10 +33,17 @@ function routeRewritePlugin() {
       return;
     }
 
+    if (rewriteTrailingIndex(req, '/meta', '/zh/meta')) {
+      next();
+      return;
+    }
+
     if (
-      rewriteTrailingIndex(req, '/zh', '/zh') ||
-      rewriteTrailingIndex(req, '/en', '/en') ||
-      rewriteTrailingIndex(req, '/v2', '/v2')
+      rewriteTrailingIndex(req, '/en/meta') ||
+      rewriteTrailingIndex(req, '/zh/meta') ||
+      rewriteTrailingIndex(req, '/zh') ||
+      rewriteTrailingIndex(req, '/en') ||
+      rewriteTrailingIndex(req, '/v2')
     ) {
       next();
       return;

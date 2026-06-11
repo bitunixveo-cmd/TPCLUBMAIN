@@ -41,6 +41,19 @@
   .admin-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .meta-steps-grid,
+  .meta-benefits-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meta-slider .meta-slide {
+    flex: 0 0 calc((100% - 18px) / 2);
+  }
+
+  .meta-trust-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767px) {
@@ -341,6 +354,62 @@
 
   .admin-grid {
     grid-template-columns: 1fr;
+  }
+
+  .meta-header .language-switcher {
+    display: none;
+  }
+
+  .meta-steps-grid,
+  .meta-benefits-grid,
+  .meta-trust-grid,
+  .meta-testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-sticky-cta {
+    display: flex;
+  }
+
+  .meta-footer {
+    padding-bottom: 84px;
+  }
+
+  .meta-slider {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-slider-arrow {
+    display: none;
+  }
+
+  .meta-slider .meta-slide {
+    flex: 0 0 100%;
+  }
+
+  .meta-slider .preview-card {
+    min-height: unset;
+  }
+
+  .meta-testimonial-grid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    margin-inline: -14px;
+    padding-bottom: 12px;
+    padding-inline: 14px;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .meta-testimonial-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .meta-testimonial-grid .testimonial-card {
+    flex: 0 0 min(80vw, 340px);
+    scroll-snap-align: start;
   }
 }
 

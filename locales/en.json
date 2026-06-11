@@ -190,7 +190,79 @@
     "links": ["About", "How It Works", "FAQ", "Privacy Policy", "Contact"],
     "admin": "Admin"
   },
+  "metaAds": {
+    "navCta": "Join Chinese Community",
+    "hero": {
+      "badge": "Chinese Crypto Community · Live Training Daily",
+      "title": "Join the Chinese crypto community learning live trades ",
+      "titleAccent": "every day",
+      "sub": "TP Club is built for Chinese-speaking traders who want daily market analysis, live trading education, beginner support, and a real Telegram community to learn with.",
+      "cta": "Join the Telegram Community →",
+      "note": "Free access · Live training · Daily education · No hidden fees",
+      "chips": ["Chinese Community", "Live Trade Training", "Daily Market Analysis", "Beginner Friendly"],
+      "mediaAlt": "TP Club crypto trading education community chart preview"
+    },
+    "steps": {
+      "eyebrow": "Join in 30 Seconds",
+      "title": "Get inside the community and start learning today",
+      "items": [
+        { "n": "01", "t": "Join Telegram", "d": "Tap the button and enter the Chinese-speaking TP Club learning room." },
+        { "n": "02", "t": "Follow Live Training", "d": "Watch daily market education, trade walkthroughs, and live Q&A." },
+        { "n": "03", "t": "Ask and Improve", "d": "Use the group to ask questions, review ideas, and learn with other members." }
+      ]
+    },
+    "benefits": {
+      "eyebrow": "Why Join Now",
+      "title": "Everything happens inside our Chinese Telegram group",
+      "items": [
+        { "n": "01", "t": "Daily Trade Education", "d": "Learn how the team reads market structure, volatility, and key levels." },
+        { "n": "02", "t": "Live Training Sessions", "d": "Join live explanations, Q&A, and trade walkthroughs in Chinese." },
+        { "n": "03", "t": "Market Analysis Updates", "d": "Follow daily educational updates for crypto and major market moves." },
+        { "n": "04", "t": "Chinese Community Support", "d": "Ask questions in Chinese and learn with members who understand your goals." },
+        { "n": "05", "t": "Beginner Learning Path", "d": "Use pinned guides and simple lessons to build your foundation step by step." },
+        { "n": "06", "t": "Free Telegram Access", "d": "Enter now with no monthly fee and no hidden charge from TP Club." }
+      ]
+    },
+    "proof": [
+      { "n": "1,000+", "l": "Community Members" },
+      { "n": "Live", "l": "Training Sessions" },
+      { "n": "100%", "l": "Free to Join" },
+      { "n": "中文", "l": "Chinese Community" }
+    ],
+    "preview": {
+      "eyebrow": "Community Preview",
+      "title": "This is what you unlock after joining",
+      "prev": "Previous screenshot",
+      "next": "Next screenshot",
+      "hint": "Swipe or use arrows to see more →",
+      "items": [
+        { "t": "Active Discussions", "d": "Member chats, shared ideas, and team support.", "type": "chat", "image": "/images/community/active-discussions.png" },
+        { "t": "Daily Market Analysis", "d": "Educational breakdowns every single day.", "type": "chart", "image": "/images/community/daily-market-analysis.png" },
+        { "t": "Live Sessions", "d": "Daily live streams and Q&A discussions.", "type": "live", "image": "/images/community/live-sessions.png" },
+        { "t": "Beginner Resources", "d": "Real files, PDFs, and learning resources shared inside the group.", "type": "files", "image": "/images/community/beginner-resources.png" }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Member Feedback",
+      "title": "Real learners, real community",
+      "items": [
+        { "name": "Li Wei", "role": "Member since 2024", "rating": 5, "text": "Joining TP Club was the best decision I made. The explanations are clear, even for complete beginners. Highly recommended!" },
+        { "name": "Zhang Mei", "role": "Member since 2023", "rating": 5, "text": "Hard to find quality Chinese crypto education in Australia. TP Club fills that gap perfectly." }
+      ]
+    },
+    "cta": {
+      "title": "Do not learn alone - join TP Club today",
+      "sub": "Join the Chinese-speaking Telegram room where members follow daily training, market education, and live community discussions.",
+      "cta": "Join Telegram Free →",
+      "note": "Free access · Education only · You stay in control of your own funds"
+    },
+    "footerNote": "Educational content only. Not financial advice."
+  },
   "pages": {
+    "meta": {
+      "title": "Join TP Club Chinese Crypto Community",
+      "intro": "Join TP Club's Chinese-speaking Telegram community for daily crypto education, live trade training, market analysis, and beginner support."
+    },
     "privacy": {
       "title": "Privacy Policy",
       "intro": "TP Club keeps data collection minimal. This page explains what we collect when you contact us, join Telegram, or complete the education onboarding flow.",
