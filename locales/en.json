@@ -191,36 +191,43 @@
     "admin": "Admin"
   },
   "metaAds": {
-    "navCta": "Join Chinese Community",
+    "navCta": "Join Free",
     "hero": {
-      "badge": "Chinese Crypto Community · Live Training Daily",
-      "title": "Join the Chinese crypto community learning live trades ",
-      "titleAccent": "every day",
-      "sub": "TP Club is built for Chinese-speaking traders who want daily market analysis, live trading education, beginner support, and a real Telegram community to learn with.",
-      "cta": "Join the Telegram Community →",
-      "note": "Free access · Live training · Daily education · No hidden fees",
-      "chips": ["Chinese Community", "Live Trade Training", "Daily Market Analysis", "Beginner Friendly"],
-      "mediaAlt": "TP Club crypto trading education community chart preview"
-    },
-    "steps": {
-      "eyebrow": "Join in 30 Seconds",
-      "title": "Get inside the community and start learning today",
-      "items": [
-        { "n": "01", "t": "Join Telegram", "d": "Tap the button and enter the Chinese-speaking TP Club learning room." },
-        { "n": "02", "t": "Follow Live Training", "d": "Watch daily market education, trade walkthroughs, and live Q&A." },
-        { "n": "03", "t": "Ask and Improve", "d": "Use the group to ask questions, review ideas, and learn with other members." }
+      "badge": "100% Free · Chinese Crypto Community",
+      "title": "Join 1,000+ Chinese traders learning ",
+      "titleAccent": "live every day",
+      "sub": "Daily market breakdowns, live training, and real community support — all inside our free Telegram group.",
+      "cta": "Join Telegram Free →",
+      "note": "Takes 30 seconds · No credit card · Education only",
+      "trustBullets": [
+        "Daily live training in Chinese",
+        "Real screenshots from inside the group",
+        "Beginner-friendly · 100% free to join"
       ]
     },
-    "benefits": {
-      "eyebrow": "Why Join Now",
-      "title": "Everything happens inside our Chinese Telegram group",
+    "heroProof": {
+      "channel": "TP Club · Telegram",
+      "live": "Live",
+      "caption": "Real content shared inside the group",
+      "images": [
+        {
+          "src": "/images/community/daily-market-analysis.png",
+          "alt": "Daily market analysis screenshot from TP Club Telegram"
+        },
+        {
+          "src": "/images/community/live-sessions.png",
+          "alt": "Live training session screenshot from TP Club Telegram"
+        }
+      ]
+    },
+    "unlocks": {
+      "eyebrow": "What you get",
+      "title": "Everything inside the free Telegram group",
       "items": [
-        { "n": "01", "t": "Daily Trade Education", "d": "Learn how the team reads market structure, volatility, and key levels." },
-        { "n": "02", "t": "Live Training Sessions", "d": "Join live explanations, Q&A, and trade walkthroughs in Chinese." },
-        { "n": "03", "t": "Market Analysis Updates", "d": "Follow daily educational updates for crypto and major market moves." },
-        { "n": "04", "t": "Chinese Community Support", "d": "Ask questions in Chinese and learn with members who understand your goals." },
-        { "n": "05", "t": "Beginner Learning Path", "d": "Use pinned guides and simple lessons to build your foundation step by step." },
-        { "n": "06", "t": "Free Telegram Access", "d": "Enter now with no monthly fee and no hidden charge from TP Club." }
+        { "icon": "live", "t": "Live Trade Training", "d": "Watch daily live sessions and Q&A in Chinese." },
+        { "icon": "chart", "t": "Daily Market Analysis", "d": "Educational breakdowns posted every single day." },
+        { "icon": "chat", "t": "Active Chinese Community", "d": "Ask questions and learn with 1,000+ members." },
+        { "icon": "free", "t": "Free Access Forever", "d": "No monthly fee from TP Club. Just tap and join." }
       ]
     },
     "proof": [
@@ -251,7 +258,8 @@
       ]
     },
     "cta": {
-      "title": "Do not learn alone - join TP Club today",
+      "eyebrow": "Ready to join?",
+      "title": "Tap below and enter the group in 30 seconds",
       "sub": "Join the Chinese-speaking Telegram room where members follow daily training, market education, and live community discussions.",
       "cta": "Join Telegram Free →",
       "note": "Free access · Education only · You stay in control of your own funds"

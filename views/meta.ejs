@@ -16,67 +16,42 @@
   <section class="section meta-hero" id="hero">
     <div class="container meta-hero-grid">
       <div class="meta-hero-copy">
-        <p class="badge"><span class="text-icon" aria-hidden="true">TP</span> <%= t.metaAds.hero.badge %></p>
+        <p class="badge meta-hero-badge"><span class="text-icon" aria-hidden="true">TP</span> <%= t.metaAds.hero.badge %></p>
         <h1 class="meta-hero-title"><%= t.metaAds.hero.title %><% if (t.metaAds.hero.titleAccent) { %> <span><%= t.metaAds.hero.titleAccent %></span><% } %></h1>
         <p class="meta-hero-sub"><%= t.metaAds.hero.sub %></p>
-        <a class="btn-primary meta-hero-cta" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.hero.cta %>"><%= t.metaAds.hero.cta %></a>
-        <p class="meta-hero-note"><%= t.metaAds.hero.note %></p>
-        <div class="meta-hero-chips" aria-label="<%= t.a11y.proofPoints %>">
-          <% t.metaAds.hero.chips.forEach((chip) => { %>
-            <span><%= chip %></span>
+        <ul class="meta-hero-trust" aria-label="<%= t.a11y.proofPoints %>">
+          <% t.metaAds.hero.trustBullets.forEach((bullet) => { %>
+            <li><%= bullet %></li>
           <% }) %>
+        </ul>
+        <div class="meta-hero-action">
+          <a class="btn-primary meta-hero-cta meta-cta-xl" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.hero.cta %>"><%= t.metaAds.hero.cta %></a>
+          <p class="meta-hero-note"><%= t.metaAds.hero.note %></p>
         </div>
       </div>
-      <div class="meta-hero-media">
-        <img src="/images/meta-hero-trading.png" alt="<%= t.metaAds.hero.mediaAlt %>" width="1024" height="683" loading="eager" decoding="async">
+      <div class="meta-hero-proof" aria-label="<%= t.metaAds.heroProof.caption %>">
+        <div class="meta-proof-phone">
+          <div class="meta-proof-topbar">
+            <span class="meta-proof-channel"><%= t.metaAds.heroProof.channel %></span>
+            <span class="meta-proof-live"><%= t.metaAds.heroProof.live %></span>
+          </div>
+          <div class="meta-proof-screens">
+            <% t.metaAds.heroProof.images.forEach((image, index) => { %>
+              <figure class="meta-proof-shot<%= index === 0 ? ' is-primary' : '' %>">
+                <img src="<%= image.src %>" alt="<%= image.alt %>" width="390" height="520" loading="<%= index === 0 ? 'eager' : 'lazy' %>" decoding="async">
+              </figure>
+            <% }) %>
+          </div>
+          <p class="meta-proof-caption"><%= t.metaAds.heroProof.caption %></p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt meta-steps">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow"><%= t.metaAds.steps.eyebrow %></p>
-        <h2><%= t.metaAds.steps.title %></h2>
-      </div>
-      <div class="meta-steps-grid">
-        <% t.metaAds.steps.items.forEach((item) => { %>
-          <article class="card meta-step-card">
-            <span><%= item.n %></span>
-            <h3><%= item.t %></h3>
-            <p><%= item.d %></p>
-          </article>
-        <% }) %>
-      </div>
-    </div>
-  </section>
-
-  <section class="section meta-benefits" id="benefits">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow"><%= t.metaAds.benefits.eyebrow %></p>
-        <h2><%= t.metaAds.benefits.title %></h2>
-      </div>
-      <div class="meta-benefits-grid" aria-label="<%= t.a11y.benefits %>">
-        <% t.metaAds.benefits.items.forEach((item) => { %>
-          <article class="card meta-benefit-card">
-            <span class="meta-benefit-number"><%= item.n %></span>
-            <h3><%= item.t %></h3>
-            <p><%= item.d %></p>
-          </article>
-        <% }) %>
-      </div>
-      <div class="meta-benefits-cta">
-        <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
-        <p class="meta-hero-note"><%= t.metaAds.cta.note %></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section meta-trust">
-    <div class="container trust-grid meta-trust-grid" aria-label="<%= t.trust.ariaLabel %>">
+  <section class="section meta-trust-strip" aria-label="<%= t.trust.ariaLabel %>">
+    <div class="container meta-trust-strip-grid">
       <% t.metaAds.proof.forEach((item) => { %>
-        <div class="card trust-item">
+        <div class="meta-trust-pill">
           <strong><%= item.n %></strong>
           <span><%= item.l %></span>
         </div>
@@ -84,9 +59,31 @@
     </div>
   </section>
 
-  <section class="section section-alt meta-preview" id="preview">
+  <section class="section section-alt meta-unlocks" id="benefits">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head center">
+        <p class="eyebrow"><%= t.metaAds.unlocks.eyebrow %></p>
+        <h2><%= t.metaAds.unlocks.title %></h2>
+      </div>
+      <div class="meta-unlock-grid" aria-label="<%= t.a11y.benefits %>">
+        <% t.metaAds.unlocks.items.forEach((item) => { %>
+          <article class="meta-unlock-card meta-unlock-<%= item.icon %>">
+            <span class="meta-unlock-icon" aria-hidden="true"></span>
+            <h3><%= item.t %></h3>
+            <p><%= item.d %></p>
+          </article>
+        <% }) %>
+      </div>
+      <div class="meta-inline-cta">
+        <a class="btn-primary meta-cta-xl" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
+        <p class="meta-hero-note"><%= t.metaAds.cta.note %></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section meta-preview" id="preview">
+    <div class="container">
+      <div class="section-head center">
         <p class="eyebrow"><%= t.metaAds.preview.eyebrow %></p>
         <h2><%= t.metaAds.preview.title %></h2>
       </div>
@@ -127,9 +124,10 @@
 
   <section class="section section-alt meta-final-cta" id="join">
     <div class="container meta-final-cta-inner">
+      <p class="eyebrow"><%= t.metaAds.cta.eyebrow %></p>
       <h2><%= t.metaAds.cta.title %></h2>
       <p class="muted"><%= t.metaAds.cta.sub %></p>
-      <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
+      <a class="btn-primary meta-cta-xl" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
       <p class="meta-hero-note"><%= t.metaAds.cta.note %></p>
     </div>
   </section>

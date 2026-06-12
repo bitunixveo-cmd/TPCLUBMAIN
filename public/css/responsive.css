@@ -42,17 +42,24 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .meta-steps-grid,
-  .meta-benefits-grid {
+  .meta-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-proof-phone {
+    width: min(100%, 320px);
+  }
+
+  .meta-unlock-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meta-trust-strip-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .meta-slider .meta-slide {
     flex: 0 0 calc((100% - 18px) / 2);
-  }
-
-  .meta-trust-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -360,11 +367,99 @@
     display: none;
   }
 
-  .meta-steps-grid,
-  .meta-benefits-grid,
-  .meta-trust-grid,
-  .meta-testimonial-grid {
+  .meta-header .brand span {
+    font-size: 0.92rem;
+  }
+
+  .meta-nav-cta {
+    min-height: 38px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+
+  .meta-hero {
+    padding-top: 28px;
+    padding-bottom: 20px;
+  }
+
+  .meta-hero-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .meta-hero-proof {
+    order: 0;
+  }
+
+  .meta-hero-title {
+    max-width: none;
+    font-size: clamp(1.95rem, 8.2vw, 2.6rem);
+  }
+
+  .meta-hero-sub {
+    font-size: 0.96rem;
+  }
+
+  .meta-hero-trust li {
+    font-size: 0.86rem;
+  }
+
+  .meta-hero-action,
+  .meta-hero-action .meta-cta-xl {
+    width: 100%;
+  }
+
+  .meta-proof-phone {
+    width: min(100%, 300px);
+  }
+
+  .meta-proof-screens {
+    min-height: 260px;
+  }
+
+  .meta-proof-shot:not(.is-primary) {
+    right: -4%;
+    bottom: -4%;
+    width: 68%;
+  }
+
+  .meta-trust-strip {
+    padding-bottom: 24px;
+  }
+
+  .meta-trust-strip-grid,
+  .meta-unlock-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .meta-trust-pill {
+    padding: 12px 8px;
+  }
+
+  .meta-trust-pill strong {
+    font-size: 1.1rem;
+  }
+
+  .meta-trust-pill span {
+    font-size: 0.72rem;
+  }
+
+  .meta-unlock-card {
+    padding: 16px 14px;
+  }
+
+  .meta-unlock-card h3 {
+    font-size: 0.94rem;
+  }
+
+  .meta-unlock-card p {
+    font-size: 0.82rem;
+  }
+
+  .meta-inline-cta .meta-cta-xl,
+  .meta-final-cta-inner .meta-cta-xl {
+    width: 100%;
   }
 
   .meta-sticky-cta {
@@ -391,25 +486,12 @@
     min-height: unset;
   }
 
-  .meta-testimonial-grid {
-    display: flex;
-    gap: 14px;
-    overflow-x: auto;
-    margin-inline: -14px;
-    padding-bottom: 12px;
-    padding-inline: 14px;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+  .meta-slider .preview-image-link {
+    min-height: 280px;
   }
 
-  .meta-testimonial-grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .meta-testimonial-grid .testimonial-card {
-    flex: 0 0 min(80vw, 340px);
-    scroll-snap-align: start;
+  .meta-slider .preview-image-link img {
+    height: 280px;
   }
 }
 
