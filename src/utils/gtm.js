@@ -1,4 +1,4 @@
-import { getTrackingData } from './tracking.js';
+import { getTrackingData, isLikelyBot } from './tracking.js';
 
 const GTM_ID = import.meta.env.VITE_GTM_ID || '';
 
@@ -14,6 +14,7 @@ function getDataLayer() {
 
 export function pageView(overrides = {}) {
   if (!isBrowser() || !GTM_ID) return;
+  if (isLikelyBot()) return;
 
   getDataLayer().push({
     event: 'page_view',

@@ -1,5 +1,10 @@
 import { pageView } from './utils/gtm.js';
-import { getTrackingData, initTracking } from './utils/tracking.js';
+import {
+  decorateInternalLinks,
+  decorateLinkWithTracking,
+  getTrackingData,
+  initTracking
+} from './utils/tracking.js';
 import {
   trackEvent,
   trackCTA,
@@ -9,6 +14,7 @@ import {
 } from './utils/events.js';
 
 initTracking();
+decorateInternalLinks();
 pageView();
 
 // Expose on window for inline EJS onclick hooks and admin tooling
@@ -19,6 +25,7 @@ window.getTrackingData = getTrackingData;
 // Any element with data-track-cta fires cta_click with its visible text.
 document.querySelectorAll('[data-track-cta]').forEach((el) => {
   el.addEventListener('click', () => {
+    decorateLinkWithTracking(el);
     const label = el.dataset.trackCta || el.textContent?.trim() || 'CTA';
     trackCTA(label, { cta_href: el.href || '' });
   });

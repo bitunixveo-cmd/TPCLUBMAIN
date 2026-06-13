@@ -1,4 +1,4 @@
-import { getTrackingData } from './tracking.js';
+import { getTrackingData, isLikelyBot } from './tracking.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -141,6 +141,11 @@ function markSeenInSession(key) {
 export async function trackEvent(eventName, extraData = {}, options = {}) {
   if (typeof window === 'undefined' || !eventName) {
     if (IS_DEV && !eventName) console.warn('[TP tracking] trackEvent called without eventName');
+    return;
+  }
+
+  if (isLikelyBot()) {
+    if (IS_DEV) console.info('[TP tracking] suppressed bot event:', eventName);
     return;
   }
 

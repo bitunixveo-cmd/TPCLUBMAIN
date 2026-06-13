@@ -3,13 +3,24 @@ import { createRoot } from 'react-dom/client';
 import { motion } from 'framer-motion';
 import './v2.css';
 import { pageView } from './utils/gtm.js';
-import { trackEvent } from './utils/events.js';
-import { getTrackingData, initTracking } from './utils/tracking.js';
+import { trackCTA, trackEvent } from './utils/events.js';
+import {
+  decorateInternalLinks,
+  decorateLinkWithTracking,
+  getTrackingData,
+  initTracking
+} from './utils/tracking.js';
 
 initTracking();
+decorateInternalLinks();
 pageView();
 window.tpclubTrackEvent = trackEvent;
 window.getTrackingData = getTrackingData;
+
+function handleTelegramClick(event, label) {
+  decorateLinkWithTracking(event.currentTarget);
+  trackCTA(label, { cta_href: event.currentTarget.href });
+}
 
 const features = [
   { label: 'Daily Education', detail: 'Calm learning context', icon: 'book', side: 'right', top: '20%' },
@@ -223,7 +234,7 @@ function App() {
           <a href="#community" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">Community</a>
           <a href="/en/#faq" className="rounded-full px-4 py-2 transition hover:bg-lime-300/10 hover:text-lime-300">FAQ</a>
         </nav>
-        <a href="/go/" className="rounded-full bg-lime-300 px-4 py-2.5 text-[0.7rem] font-black text-black shadow-[0_0_34px_rgba(170,255,0,0.36)] transition hover:-translate-y-0.5 hover:bg-lime-200 hover:shadow-[0_0_46px_rgba(170,255,0,0.5)] sm:px-5">
+        <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Join Free Community')} className="rounded-full bg-lime-300 px-4 py-2.5 text-[0.7rem] font-black text-black shadow-[0_0_34px_rgba(170,255,0,0.36)] transition hover:-translate-y-0.5 hover:bg-lime-200 hover:shadow-[0_0_46px_rgba(170,255,0,0.5)] sm:px-5">
           Join Free Community
         </a>
         </div>
@@ -241,7 +252,7 @@ function App() {
             Built for Chinese Australians. Daily crypto education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <a href="/go/" className="group inline-flex items-center justify-center rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black shadow-[0_18px_58px_rgba(170,255,0,0.34)] transition hover:-translate-y-1 hover:bg-lime-200 hover:shadow-[0_24px_72px_rgba(170,255,0,0.46)]">
+            <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Join Free Telegram Community')} className="group inline-flex items-center justify-center rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black shadow-[0_18px_58px_rgba(170,255,0,0.34)] transition hover:-translate-y-1 hover:bg-lime-200 hover:shadow-[0_24px_72px_rgba(170,255,0,0.46)]">
               Join Free Telegram Community
               <span className="ml-3 transition group-hover:translate-x-1">→</span>
             </a>
@@ -287,7 +298,7 @@ function App() {
           <p className="text-xs font-black uppercase tracking-[0.22em] text-lime-300">What You Learn</p>
           <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.045em] sm:text-5xl">Practical Crypto Education For Real Life</h2>
           <p className="mt-5 text-white/58">Our lessons are designed for beginners who want education-first guidance, step by step.</p>
-          <a href="/go/" className="mt-8 inline-flex rounded-2xl border border-lime-300/28 bg-lime-300/8 px-5 py-3 text-sm font-bold text-lime-300 transition hover:bg-lime-300 hover:text-black">
+          <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Join & Start Learning')} className="mt-8 inline-flex rounded-2xl border border-lime-300/28 bg-lime-300/8 px-5 py-3 text-sm font-bold text-lime-300 transition hover:bg-lime-300 hover:text-black">
             Join & Start Learning
           </a>
         </div>
@@ -373,7 +384,7 @@ function App() {
             <p className="text-xs font-black uppercase tracking-[0.22em] text-lime-300">Take the first step</p>
             <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.05em] sm:text-5xl">Ready to Start Your Education Journey?</h2>
             <p className="mt-5 max-w-xl text-white/58">Join TP Club today, ask beginner questions, and access education designed for a supportive community.</p>
-            <a href="/go/" className="mt-8 inline-flex w-fit rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black transition hover:-translate-y-1 hover:bg-lime-200">
+            <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Join Free Telegram Community')} className="mt-8 inline-flex w-fit rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black transition hover:-translate-y-1 hover:bg-lime-200">
               Join Free Telegram Community →
             </a>
             <p className="mt-4 text-xs text-white/38">100% free. No scam. Education only.</p>
@@ -391,7 +402,7 @@ function App() {
         </div>
         <div>
           <p className="mb-3 font-bold text-white">Community</p>
-          <a href="/go/" className="block py-1 hover:text-lime-300">Telegram Group</a>
+          <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Telegram Group')} className="block py-1 hover:text-lime-300">Telegram Group</a>
           <a href="#community" className="block py-1 hover:text-lime-300">Learning Support</a>
           <a href="#proof" className="block py-1 hover:text-lime-300">Community Rules</a>
         </div>
@@ -404,7 +415,7 @@ function App() {
         <div>
           <p className="mb-3 font-bold text-white">Follow & Join</p>
           <p className="leading-6">Join our Telegram community and start learning today.</p>
-          <a href="/go/" className="mt-4 inline-flex rounded-full bg-lime-300 px-4 py-2 text-xs font-black text-black">Join Free</a>
+          <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Join Free')} className="mt-4 inline-flex rounded-full bg-lime-300 px-4 py-2 text-xs font-black text-black">Join Free</a>
         </div>
       </footer>
     </main>
