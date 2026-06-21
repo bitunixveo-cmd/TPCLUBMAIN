@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ads Performance Dashboard | TP Club</title>
+    <meta name="description" content="Local ads performance dashboard for Google Ads and Meta Ads conversion reporting.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#101B0D">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+  </head>
+  <body class="dashboard-locked">
+    <section id="dashboardAuth" class="dashboard-auth" aria-label="Dashboard password required">
+      <form id="dashboardAuthForm" class="dashboard-auth-card">
+        <p class="report-eyebrow">Private reporting</p>
+        <h1>TP Club Ads Dashboard</h1>
+        <p>Enter the dashboard password to view private Google Ads and Meta Ads reporting.</p>
+        <label>
+          <span>Password</span>
+          <input id="dashboardPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="reset-button" type="submit">Unlock Dashboard</button>
+        <small id="dashboardAuthError" role="alert"></small>
+      </form>
+    </section>
+    <main id="dashboardApp" class="report-shell" hidden>
+      <section class="report-hero">
+        <div>
+          <p class="report-eyebrow">Local ads intelligence</p>
+          <h1>Conversion dashboard for Google Ads & Meta Ads.</h1>
+          <p class="report-intro">Track AED spend, impressions, clicks, conversions, CTR, CPC, account performance, campaigns, keywords, countries, and locations from one responsive dashboard.</p>
+        </div>
+        <div class="sync-card">
+          <span class="sync-dot" aria-hidden="true"></span>
+          <div>
+            <strong id="syncStatus">Loading reporting data</strong>
+            <span id="syncSubtext">Checking Google Ads and Meta Ads sync output.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="filter-panel" aria-label="Dashboard filters">
+        <label>
+          <span>Platform</span>
+          <select id="platformFilter">
+            <option value="all">All platforms</option>
+          </select>
+        </label>
+        <label>
+          <span>Date Preset</span>
+          <select id="datePresetFilter">
+            <option value="last30">Last 30 days</option>
+            <option value="last7">Last 7 days</option>
+            <option value="thisMonth">This month</option>
+            <option value="previousMonth">Previous month</option>
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+        <label>
+          <span>Account</span>
+          <select id="accountFilter">
+            <option value="all">All accounts</option>
+          </select>
+        </label>
+        <label>
+          <span>Status</span>
+          <select id="statusFilter">
+            <option value="all">All statuses</option>
+            <option value="active">Active / enabled</option>
+            <option value="paused">Paused</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </label>
+        <label>
+          <span>Campaign</span>
+          <select id="campaignFilter">
+            <option value="all">All campaigns</option>
+          </select>
+        </label>
+        <label>
+          <span>Location Type</span>
+          <select id="locationTypeFilter">
+            <option value="delivered">Delivered / user location</option>
+            <option value="targeted">Targeted location</option>
+            <option value="converting">Conversion countries</option>
+            <option value="wasted">Spend no conversion</option>
+            <option value="all">All location views</option>
+          </select>
+        </label>
+        <label>
+          <span>Country</span>
+          <select id="locationFilter">
+            <option value="all">All locations</option>
+          </select>
+        </label>
+        <label>
+          <span>Conversion Metric</span>
+          <select id="conversionMetricFilter">
+            <option value="all">All conversions</option>
+            <option value="google">Google sign up</option>
+            <option value="meta">Meta free trial</option>
+          </select>
+        </label>
+        <label>
+          <span>From</span>
+          <input id="fromDate" type="date">
+        </label>
+        <label>
+          <span>To</span>
+          <input id="toDate" type="date">
+        </label>
+        <button id="resetFilters" class="reset-button" type="button">Reset</button>
+      </section>
+
+      <section class="action-bar" aria-label="Dashboard actions">
+        <button id="exportCsv" class="action-button" type="button">Export CSV</button>
+        <button id="printReport" class="action-button" type="button">Download PDF / Print</button>
+        <button id="copySummary" class="action-button" type="button">Copy Summary</button>
+      </section>
+
+      <section class="kpi-grid" aria-label="Performance summary">
+        <article class="kpi-card kpi-primary">
+          <span>Total Spend</span>
+          <strong id="totalSpend">AED 0</strong>
+          <small id="spendNote">Across selected data</small>
+        </article>
+        <article class="kpi-card">
+          <span>Impressions</span>
+          <strong id="totalImpressions">0</strong>
+          <small>Total ad impressions</small>
+        </article>
+        <article class="kpi-card">
+          <span>Clicks</span>
+          <strong id="totalClicks">0</strong>
+          <small>Total ad clicks</small>
+        </article>
+        <article class="kpi-card">
+          <span>Total Conversions</span>
+          <strong id="totalConversions">0</strong>
+          <small>Telegram/signup conversion events</small>
+        </article>
+        <article class="kpi-card">
+          <span>CTR</span>
+          <strong id="ctr">0%</strong>
+          <small>Clicks from impressions</small>
+        </article>
+        <article class="kpi-card">
+          <span>CPC</span>
+          <strong id="cpc">AED 0</strong>
+          <small>Average cost per click</small>
+        </article>
+        <article class="kpi-card">
+          <span>Cost / Conversion</span>
+          <strong id="costPerConversion">AED 0</strong>
+          <small>Lower is better</small>
+        </article>
+        <article class="kpi-card">
+          <span>Conversion Rate</span>
+          <strong id="conversionRate">0%</strong>
+          <small>Conversions from clicks</small>
+        </article>
+      </section>
+
+      <section class="panel management-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Management summary</p>
+            <h2>What matters right now</h2>
+          </div>
+        </div>
+        <div id="managementSummary" class="management-summary"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Top opportunities</p>
+            <h2>Important action data first</h2>
+          </div>
+        </div>
+        <div id="opportunityGrid" class="insight-grid"></div>
+      </section>
+
+      <section class="panel alert-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Wasted spend alerts</p>
+            <h2>Fix these before scaling</h2>
+          </div>
+        </div>
+        <div id="alertList" class="alert-list"></div>
+      </section>
+
+      <section class="report-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Trend chart</p>
+              <h2>Spend & conversions by day</h2>
+            </div>
+          </div>
+          <div id="trendChart" class="trend-chart"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Comparison</p>
+              <h2>This period vs previous period</h2>
+            </div>
+          </div>
+          <div id="comparisonGrid" class="comparison-grid"></div>
+        </article>
+      </section>
+
+      <section class="report-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Campaign health</p>
+              <h2>Score by campaign</h2>
+            </div>
+            <button class="show-toggle" type="button" data-toggle-list="health">Show all</button>
+          </div>
+          <div id="healthList" class="health-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Budget recommendations</p>
+              <h2>Scale, keep, reduce, or pause</h2>
+            </div>
+            <button class="show-toggle" type="button" data-toggle-list="recommendations">Show all</button>
+          </div>
+          <div id="recommendationList" class="recommendation-list"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Funnel view</p>
+            <h2>Ad click to Telegram conversion flow</h2>
+          </div>
+        </div>
+        <div id="funnelView" class="funnel-view"></div>
+      </section>
+
+      <section class="report-grid">
+        <article class="panel platform-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Platform mix</p>
+              <h2>Google vs Meta</h2>
+            </div>
+            <span id="selectedRange" class="pill">Last 30 days</span>
+          </div>
+          <div id="platformBreakdown" class="bar-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Accounts</p>
+              <h2>Account-wise performance</h2>
+            </div>
+          <button class="show-toggle" type="button" data-toggle-list="accounts">Show all</button>
+          </div>
+          <div id="accountBreakdown" class="bar-list"></div>
+        </article>
+      </section>
+
+      <section class="map-grid">
+        <article class="panel map-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Country map</p>
+              <h2>Hover countries to inspect KPIs</h2>
+            </div>
+          </div>
+          <div id="countryMap" class="country-map" aria-label="Country performance map"></div>
+          <p id="countryTooltip" class="map-tooltip">Hover a country bubble to view KPIs.</p>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Countries & locations</p>
+              <h2>Where conversions come from</h2>
+            </div>
+          <button class="show-toggle" type="button" data-toggle-list="locations">Show all</button>
+          </div>
+          <div id="locationBreakdown" class="location-list"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Country drilldown</p>
+            <h2>Top campaigns inside each country</h2>
+          </div>
+          <button class="show-toggle" type="button" data-toggle-list="countryDrilldown">Show all</button>
+        </div>
+        <div id="countryDrilldown" class="drilldown-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head table-head">
+          <div>
+            <p class="panel-label">Campaign detail</p>
+            <h2>Conversion-wise campaign performance</h2>
+          </div>
+          <div class="table-actions">
+            <p class="table-note">Sorted by conversions, then lowest cost per conversion.</p>
+            <button class="show-toggle" type="button" data-toggle-list="campaigns">Show all</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Account</th>
+                <th>Status</th>
+                <th>Campaign</th>
+                <th>Location</th>
+                <th>Spend</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>Conversions</th>
+                <th>CTR</th>
+                <th>CPC</th>
+                <th>Cost / Conv.</th>
+                <th>Conv. Rate</th>
+              </tr>
+            </thead>
+            <tbody id="campaignRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="report-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Keyword intelligence</p>
+              <h2>Best & wasted Google keywords</h2>
+            </div>
+          </div>
+          <div id="keywordIntelligence" class="intelligence-grid"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Search terms</p>
+              <h2>Queries users actually searched</h2>
+            </div>
+            <button class="show-toggle" type="button" data-toggle-list="searchTerms">Show all</button>
+          </div>
+          <div id="searchTermList" class="mini-list"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head table-head">
+          <div>
+            <p class="panel-label">Google keywords</p>
+            <h2>Keyword-wise performance</h2>
+          </div>
+          <div class="table-actions">
+            <p class="table-note">Google Ads keywords only. Meta does not expose keyword-level ad reporting.</p>
+            <button class="show-toggle" type="button" data-toggle-list="keywords">Show all</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Match</th>
+                <th>Campaign</th>
+                <th>Ad group</th>
+                <th>Spend</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>Conversions</th>
+                <th>CTR</th>
+                <th>CPC</th>
+                <th>Cost / Conv.</th>
+              </tr>
+            </thead>
+            <tbody id="keywordRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head table-head">
+          <div>
+            <p class="panel-label">Meta creative / ad level</p>
+            <h2>Best and worst ads</h2>
+          </div>
+          <div class="table-actions">
+            <p class="table-note">Meta ad-level reporting by creative/ad name where API data is available.</p>
+            <button class="show-toggle" type="button" data-toggle-list="creatives">Show all</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Ad</th>
+                <th>Ad set</th>
+                <th>Campaign</th>
+                <th>Location</th>
+                <th>Spend</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>Conversions</th>
+                <th>CTR</th>
+                <th>CPC</th>
+                <th>Cost / Conv.</th>
+              </tr>
+            </thead>
+            <tbody id="creativeRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      window.__DASHBOARD_AUTH__ = {
+        passwordHash: "<%= dashboardPasswordHash %>"
+      };
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script src="/assets/dashboard.js" type="module" defer></script>
+  </body>
+</html>

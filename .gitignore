@@ -3,6 +3,8 @@ node_modules/
 .git-local/
 dist/
 .env
+public/data/ads-dashboard.json
+public/dashboard/data/ads-dashboard.json
 *.zip
 npm-debug.log*
 coverage/

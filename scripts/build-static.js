@@ -3,6 +3,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const ejs = require('ejs');
+const crypto = require('crypto');
 
 // Unique per build — forces browsers and CDNs to fetch fresh JS after every deploy.
 const BUILD_VERSION = Date.now();
@@ -211,6 +212,24 @@ ${buildGtmNoScript()}
 </html>`;
 }
 
+async function buildDashboardPage() {
+  const dashboardPasswordHash = process.env.DASHBOARD_PASSWORD
+    ? crypto.createHash('sha256').update(process.env.DASHBOARD_PASSWORD).digest('hex')
+    : '';
+  const html = await ejs.renderFile(path.join(viewsDir, 'dashboard.ejs'), {
+    dashboardPasswordHash
+  });
+  writeTextFile('dashboard/index.html', html);
+
+  if (process.env.DASHBOARD_AUTH_USER_FILE) {
+    writeTextFile('dashboard/.htaccess', `AuthType Basic
+AuthName "TP Club Ads Dashboard"
+AuthUserFile ${process.env.DASHBOARD_AUTH_USER_FILE}
+Require valid-user
+`);
+  }
+}
+
 function buildSitemap() {
   const today = new Date().toISOString().slice(0, 10);
   const paths = ['/en', '/zh', '/en/meta', '/zh/meta', '/en/privacy', '/zh/privacy', '/en/contact', '/zh/contact', '/en/admin', '/zh/admin'];
@@ -237,6 +256,7 @@ async function build() {
   writeTextFile('go/index.html', buildGoPage('en'));
   writeTextFile('zh/go/index.html', buildGoPage('zh'));
   writeTextFile('v2/index.html', buildV2Page());
+  await buildDashboardPage();
 
   for (const lang of ['en', 'zh']) {
     await renderPage({ lang, view: 'meta', outputPath: `${lang}/meta/index.html`, pageKey: 'meta', pagePath: '/meta' });
@@ -262,6 +282,7 @@ RewriteRule ^en/meta$ /en/meta/ [R=301,L,QSA]
 RewriteRule ^zh$ /zh/ [R=301,L,QSA]
 RewriteRule ^en$ /en/ [R=301,L,QSA]
 RewriteRule ^v2$ /v2/ [R=301,L,QSA]
+RewriteRule ^dashboard$ /dashboard/ [R=301,L,QSA]
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 `);

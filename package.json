@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "npm run build && vite preview --host 0.0.0.0",
     "build": "node scripts/build-static.js && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "build:with-ads": "npm run sync:ads && npm run build",
+    "preview": "vite preview --host 0.0.0.0",
+    "sync:ads": "node scripts/sync-ads-data.js"
   },
   "engines": {
     "node": "20.x"

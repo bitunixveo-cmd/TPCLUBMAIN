@@ -43,7 +43,8 @@ function routeRewritePlugin() {
       rewriteTrailingIndex(req, '/zh/meta') ||
       rewriteTrailingIndex(req, '/zh') ||
       rewriteTrailingIndex(req, '/en') ||
-      rewriteTrailingIndex(req, '/v2')
+      rewriteTrailingIndex(req, '/v2') ||
+      rewriteTrailingIndex(req, '/dashboard')
     ) {
       next();
       return;
@@ -72,7 +73,8 @@ module.exports = defineConfig({
       input: {
         main: 'src/main.js',
         go: 'src/go.jsx',
-        v2: 'src/v2.jsx'
+        v2: 'src/v2.jsx',
+        dashboard: 'src/dashboard.js'
       },
       output: {
         entryFileNames: 'assets/[name].js',
