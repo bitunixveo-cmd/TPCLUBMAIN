@@ -12,6 +12,20 @@ function respond(int $status, array $payload): void {
     exit;
 }
 
+function findProjectRoot(string $startDir): ?string {
+    $dir = realpath($startDir);
+
+    while ($dir && $dir !== dirname($dir)) {
+        if (is_file($dir . '/package.json') && is_file($dir . '/scripts/sync-ads-data.js')) {
+            return $dir;
+        }
+
+        $dir = dirname($dir);
+    }
+
+    return null;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Method not allowed']);
 }
@@ -24,11 +38,11 @@ if (!$password || !hash_equals($expectedHash, hash('sha256', $password))) {
     respond(401, ['ok' => false, 'error' => 'Invalid dashboard password']);
 }
 
-$projectRoot = getenv('DASHBOARD_PROJECT_ROOT') ?: realpath(__DIR__ . '/../..');
+$projectRoot = getenv('DASHBOARD_PROJECT_ROOT') ?: findProjectRoot(__DIR__);
 $refreshCommand = getenv('DASHBOARD_REFRESH_COMMAND') ?: 'npm run refresh:ads';
 
 if (!$projectRoot || !is_dir($projectRoot)) {
-    respond(500, ['ok' => false, 'error' => 'Dashboard project root is not configured']);
+    respond(500, ['ok' => false, 'error' => 'Dashboard project root is not configured or package files are missing on the server']);
 }
 
 $command = 'cd ' . escapeshellarg($projectRoot) . ' && ' . $refreshCommand . ' 2>&1';

@@ -270,7 +270,7 @@ function sourceSummary(source) {
   return `failed: ${source.error || 'unknown error'}`;
 }
 
-async function loadSyncedRows() {
+async function loadSyncedRows({ preserveExisting = false } = {}) {
   try {
     const response = await fetch(`/dashboard/data/ads-dashboard.json?v=${Date.now()}`, { cache: 'no-store' });
     if (!response.ok) throw new Error('No synced dashboard data found');
@@ -350,9 +350,14 @@ async function loadSyncedRows() {
     const generatedAt = payload.generatedAt ? new Date(payload.generatedAt).toLocaleString() : 'just now';
     setSyncStatus('Live API data loaded', `Updated ${generatedAt}. Google: ${sourceSummary(payload.sources && payload.sources.google)}. Meta: ${sourceSummary(payload.sources && payload.sources.meta)}.`);
   } catch (error) {
-    clearDashboardData();
+    if (!preserveExisting) {
+      clearDashboardData();
+    }
     setSyncStatus('Live data unavailable', `${error.message}. Use Refresh data after server refresh is configured.`);
+    return false;
   }
+
+  return true;
 }
 
 function getFilteredRows() {
@@ -1082,13 +1087,19 @@ async function refreshDashboardData() {
     }
   } catch (error) {
     setSyncStatus('Server refresh unavailable', error.message);
+    elements.refreshData.textContent = 'Refresh failed';
+    setTimeout(() => {
+      elements.refreshData.textContent = originalText;
+      elements.refreshData.disabled = false;
+    }, 1800);
+    return;
   }
 
-  await loadSyncedRows();
+  const didLoad = await loadSyncedRows({ preserveExisting: true });
   refreshDependentFilters();
   renderDashboard();
 
-  elements.refreshData.textContent = 'Data refreshed';
+  elements.refreshData.textContent = didLoad ? 'Data refreshed' : 'Refresh failed';
   setTimeout(() => {
     elements.refreshData.textContent = originalText;
     elements.refreshData.disabled = false;
