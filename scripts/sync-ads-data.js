@@ -11,9 +11,13 @@ const outputPaths = [
 
 const googleApiVersion = process.env.GOOGLE_ADS_API_VERSION || 'v24';
 const metaApiVersion = process.env.META_API_VERSION || 'v23.0';
-const metaConversionActionTypes = (process.env.META_CONVERSION_ACTION_TYPES || 'offsite_conversion.fb_pixel_start_trial,start_trial,lead,complete_registration')
+const metaConversionActionTypes = (process.env.META_CONVERSION_ACTION_TYPES || 'offsite_conversion.custom.2161872031272162,offsite_conversion.fb_pixel_start_trial,start_trial,lead,complete_registration')
   .split(',')
   .map((value) => value.trim())
+  .filter(Boolean);
+const googleConversionActionNameMatchers = (process.env.GOOGLE_CONVERSION_ACTION_NAMES || 'telegram_click')
+  .split(',')
+  .map((value) => value.trim().toLowerCase())
   .filter(Boolean);
 
 const countryNames = {
@@ -161,7 +165,7 @@ async function googleSearch(accessToken, query) {
   return body.flatMap((chunk) => chunk.results || []);
 }
 
-function googleMetricRow(result, fallbackLocation = 'All locations') {
+function googleMetricRow(result, fallbackLocation = 'All locations', options = {}) {
   const metrics = result.metrics || {};
   const campaign = result.campaign || {};
   const customer = result.customer || {};
@@ -187,9 +191,74 @@ function googleMetricRow(result, fallbackLocation = 'All locations') {
     spend: toNumber(metrics.costMicros) / 1000000,
     clicks: toNumber(metrics.clicks),
     impressions: toNumber(metrics.impressions),
-    conversions: toNumber(metrics.conversions),
+    conversions: options.includeConversions === false ? 0 : toNumber(metrics.conversions),
     source: 'google_ads_api'
   };
+}
+
+function googleConversionActionMatches(name = '') {
+  const normalized = String(name).toLowerCase();
+  return googleConversionActionNameMatchers.length === 0 || googleConversionActionNameMatchers.some((matcher) => normalized.includes(matcher));
+}
+
+function performanceRowKey(row) {
+  return [
+    row.date,
+    row.platform,
+    row.account,
+    row.campaign,
+    row.status,
+    row.locationType,
+    row.location,
+    row.countryCode
+  ].join('||');
+}
+
+function groupPerformanceRows(rows) {
+  const grouped = new Map();
+
+  rows.forEach((row) => {
+    const key = performanceRowKey(row);
+    const current = grouped.get(key);
+
+    if (!current) {
+      grouped.set(key, { ...row });
+      return;
+    }
+
+    current.spend += toNumber(row.spend);
+    current.clicks += toNumber(row.clicks);
+    current.impressions += toNumber(row.impressions);
+    current.conversions += toNumber(row.conversions);
+  });
+
+  return [...grouped.values()];
+}
+
+async function fetchGoogleConversionRows(accessToken, useLocationView) {
+  const dateFilter = `segments.date BETWEEN '${isoDate(30)}' AND '${isoDate(0)}'`;
+  const locationSelect = useLocationView ? 'user_location_view.country_criterion_id,' : '';
+  const from = useLocationView ? 'user_location_view' : 'campaign';
+  const query = `
+    SELECT
+      segments.date,
+      segments.conversion_action_name,
+      ${locationSelect}
+      customer.descriptive_name,
+      campaign.name,
+      campaign.status,
+      metrics.conversions
+    FROM ${from}
+    WHERE ${dateFilter}
+      AND campaign.status != 'REMOVED'
+      AND metrics.conversions > 0
+  `;
+
+  const results = await googleSearch(accessToken, query);
+
+  return results
+    .filter((result) => googleConversionActionMatches(result.segments && result.segments.conversionActionName))
+    .map((result) => googleMetricRow(result, useLocationView ? 'All locations' : 'All Google locations', { includeConversions: true }));
 }
 
 async function fetchGoogleRows() {
@@ -214,7 +283,9 @@ async function fetchGoogleRows() {
 
   try {
     const results = await googleSearch(accessToken, countryQuery);
-    return results.map((result) => googleMetricRow(result));
+    const baseRows = results.map((result) => googleMetricRow(result, 'All locations', { includeConversions: false }));
+    const conversionRows = await fetchGoogleConversionRows(accessToken, true);
+    return groupPerformanceRows([...baseRows, ...conversionRows]);
   } catch (error) {
     const campaignQuery = `
       SELECT
@@ -232,7 +303,9 @@ async function fetchGoogleRows() {
     `;
 
     const results = await googleSearch(accessToken, campaignQuery);
-    return results.map((result) => googleMetricRow(result, 'All Google locations'));
+    const baseRows = results.map((result) => googleMetricRow(result, 'All Google locations', { includeConversions: false }));
+    const conversionRows = await fetchGoogleConversionRows(accessToken, false);
+    return groupPerformanceRows([...baseRows, ...conversionRows]);
   }
 }
 
@@ -415,6 +488,7 @@ async function fetchMetaRows() {
     fields: 'date_start,account_name,campaign_id,campaign_name,spend,clicks,impressions,actions',
     time_increment: '1',
     date_preset: 'last_30d',
+    action_breakdowns: 'action_type',
     breakdowns: 'country',
     limit: '500'
   });
@@ -495,6 +569,7 @@ async function fetchMetaAdRows() {
     fields: 'date_start,account_name,campaign_name,adset_name,ad_name,spend,clicks,impressions,actions',
     time_increment: '1',
     date_preset: 'last_30d',
+    action_breakdowns: 'action_type',
     breakdowns: 'country',
     limit: '500'
   });
