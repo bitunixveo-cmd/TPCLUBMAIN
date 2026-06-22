@@ -117,6 +117,13 @@ const currency = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0
 });
 
+const currencyPrecise = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'AED',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
+
 const number = new Intl.NumberFormat('en-US');
 const authStorageKey = 'tpclub_dashboard_unlocked';
 const refreshPasswordStorageKey = 'tpclub_dashboard_refresh_password';
@@ -210,6 +217,8 @@ function matchesStatus(row) {
 
 function matchesConversionMetric(row) {
   if (filters.conversionMetric.value === 'all') return true;
+  if (filters.conversionMetric.value === 'with-conversions') return row.conversions > 0;
+  if (filters.conversionMetric.value === 'zero-conversions') return row.conversions === 0;
   if (filters.conversionMetric.value === 'google') return row.platform === 'Google Ads';
   if (filters.conversionMetric.value === 'meta') return row.platform === 'Meta Ads';
   return true;
@@ -502,6 +511,28 @@ function statusBadge(status) {
   return `<span class="status-badge ${statusClass(status)}"><span aria-hidden="true"></span>${statusLabel(status)}</span>`;
 }
 
+function platformClass(platform = '') {
+  return platform === 'Meta Ads' ? 'meta' : 'google';
+}
+
+function platformShortLabel(platform = '') {
+  return platform === 'Meta Ads' ? 'Meta' : 'Google';
+}
+
+function platformBadge(platform = '', compact = false) {
+  if (!platform) return '';
+  const shortLabel = platformShortLabel(platform);
+  const isMeta = platform === 'Meta Ads';
+  const icon = isMeta
+    ? `<svg viewBox="0 0 64 40" aria-hidden="true" focusable="false"><path d="M7 28C12 11 19 4 28 19l4 7 4-7C45 4 52 11 57 28c2 7-7 11-13 2l-8-12-4 7-4-7-8 12C14 39 5 35 7 28Z"/></svg>`
+    : `<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path class="g-blue" d="M44 24.5c0-1.6-.1-2.8-.4-4.1H24v7.8h11.5c-.2 1.9-1.5 4.9-4.3 6.8v5.1h7c4.1-3.8 5.8-9.3 5.8-15.6Z"/><path class="g-green" d="M24 45c5.9 0 10.8-1.9 14.3-5.2l-7-5.1c-1.9 1.3-4.4 2.2-7.3 2.2-5.6 0-10.4-3.8-12.1-8.9H4.7v5.3C8.3 40.2 15.5 45 24 45Z"/><path class="g-yellow" d="M11.9 28c-.4-1.3-.7-2.6-.7-4s.2-2.7.7-4v-5.3H4.7C3.2 17.5 2.4 20.7 2.4 24s.8 6.5 2.3 9.3L11.9 28Z"/><path class="g-red" d="M24 11.1c3.2 0 6.1 1.1 8.4 3.3l6.2-6.2C34.8 4.7 29.9 2.5 24 2.5 15.5 2.5 8.3 7.4 4.7 14.7l7.2 5.3c1.7-5.1 6.5-8.9 12.1-8.9Z"/></svg>`;
+  return `<span class="platform-tag ${platformClass(platform)} ${compact ? 'compact' : ''}" title="${platform}" aria-label="${platform}">${icon}</span>`;
+}
+
+function campaignWithPlatform(row) {
+  return `<span class="campaign-name">${platformBadge(row.platform, true)}<span>${row.campaign}</span></span>`;
+}
+
 function changeText(value) {
   const prefix = value > 0 ? '+' : '';
   return `${prefix}${value.toFixed(1)}%`;
@@ -548,18 +579,18 @@ function renderOpportunities(rows) {
   const bestCountry = groupRows(rows, 'location')[0];
 
   const cards = [
-    ['Highest conversions', bestConv ? `${bestConv.campaign}` : 'No data', bestConv ? `${number.format(bestConv.conversions)} conv. · ${currency.format(bestConv.spend)}` : '', 'positive'],
-    ['Lowest cost / conv.', bestCost ? `${bestCost.campaign}` : 'No data', bestCost ? `${currency.format(costPer(bestCost))}/conv.` : '', 'positive'],
-    ['Highest wasted spend', wasted ? `${wasted.campaign}` : 'No wasted spend', wasted ? `${currency.format(wasted.spend)} with 0 conv.` : '', wasted ? 'negative' : 'positive'],
-    ['Best CTR', bestCtr ? `${bestCtr.campaign}` : 'No data', bestCtr ? `${formatPercent(clickThroughRate(bestCtr))} CTR` : '', 'positive'],
-    ['Best country', bestCountry ? bestCountry.name : 'No data', bestCountry ? `${number.format(bestCountry.conversions)} conv. · ${currency.format(bestCountry.spend)}` : '', 'positive']
+    { label: 'Highest conversions', row: bestConv, value: bestConv ? campaignWithPlatform(bestConv) : 'No data', detail: bestConv ? `${number.format(bestConv.conversions)} conv. · ${currency.format(bestConv.spend)}` : '', tone: 'positive' },
+    { label: 'Lowest cost / conv.', row: bestCost, value: bestCost ? campaignWithPlatform(bestCost) : 'No data', detail: bestCost ? `${currency.format(costPer(bestCost))}/conv.` : '', tone: 'positive' },
+    { label: 'Highest wasted spend', row: wasted, value: wasted ? campaignWithPlatform(wasted) : 'No wasted spend', detail: wasted ? `${currency.format(wasted.spend)} with 0 conv.` : '', tone: wasted ? 'negative' : 'positive' },
+    { label: 'Best CTR', row: bestCtr, value: bestCtr ? campaignWithPlatform(bestCtr) : 'No data', detail: bestCtr ? `${formatPercent(clickThroughRate(bestCtr))} CTR` : '', tone: 'positive' },
+    { label: 'Best country', value: bestCountry ? bestCountry.name : 'No data', detail: bestCountry ? `${number.format(bestCountry.conversions)} conv. · ${currency.format(bestCountry.spend)}` : '', tone: 'positive' }
   ];
 
-  elements.opportunityGrid.innerHTML = cards.map(([label, value, detail, tone]) => `
-    <article class="insight-card ${tone}">
-      <span>${label}</span>
-      <strong>${value}</strong>
-      <small>${detail}</small>
+  elements.opportunityGrid.innerHTML = cards.map((card) => `
+    <article class="insight-card ${card.tone}">
+      <span>${card.label}</span>
+      <strong>${card.value}</strong>
+      <small>${card.detail}</small>
     </article>
   `).join('');
 }
@@ -587,12 +618,12 @@ function renderManagementSummary(rows) {
     },
     {
       tone: bestCampaign ? 'positive' : 'neutral',
-      title: bestCampaign ? `Best campaign: ${bestCampaign.campaign}` : 'No campaign winner yet',
+      title: bestCampaign ? `Best campaign: ${campaignWithPlatform(bestCampaign)}` : 'No campaign winner yet',
       body: bestCampaign ? `${number.format(bestCampaign.conversions)} conversions at ${currency.format(costPer(bestCampaign))}/conv.` : 'No campaign has conversion data in this filter.'
     },
     {
       tone: worstCampaign ? 'negative' : 'positive',
-      title: worstCampaign ? `Fix wasted spend: ${worstCampaign.campaign}` : 'No major wasted campaign spend',
+      title: worstCampaign ? `Fix wasted spend: ${campaignWithPlatform(worstCampaign)}` : 'No major wasted campaign spend',
       body: worstCampaign ? `${currency.format(worstCampaign.spend)} spent with 0 conversions.` : 'Selected campaigns have no obvious zero-conversion spend issue.'
     },
     {
@@ -698,7 +729,7 @@ function renderHealthAndRecommendations() {
 
   elements.healthList.innerHTML = visibleRows(campaigns, 'health').map((row) => `
     <div class="health-row ${scoreTone(row.score)}">
-      <strong>${row.campaign}</strong>
+      <strong>${campaignWithPlatform(row)}</strong>
       <span>${healthLabel(row.score)} · ${row.score}/100</span>
       <div><i style="width:${row.score}%"></i></div>
     </div>
@@ -707,7 +738,7 @@ function renderHealthAndRecommendations() {
   elements.recommendationList.innerHTML = visibleRows(campaigns, 'recommendations').map((row) => `
     <div class="recommendation-row ${scoreTone(row.score)}">
       <strong>${recommendationFor(row)}</strong>
-      <span>${row.campaign}</span>
+      <span>${campaignWithPlatform(row)}</span>
       <small>${currency.format(row.spend)} · ${number.format(row.conversions)} conv. · ${currency.format(costPer(row))}/conv.</small>
     </div>
   `).join('') || '<div class="empty-state">No recommendations.</div>';
@@ -740,7 +771,7 @@ function renderCountryDrilldown(rows) {
       <article class="drilldown-card">
         <h3>${country.name}</h3>
         <p>${currency.format(country.spend)} · ${number.format(country.clicks)} clicks · ${number.format(country.conversions)} conv.</p>
-        ${topCampaigns.map((campaign) => `<span>${campaign.campaign} · ${currency.format(costPer(campaign))}/conv.</span>`).join('')}
+        ${topCampaigns.map((campaign) => `<span>${campaignWithPlatform(campaign)} · ${currency.format(costPer(campaign))}/conv.</span>`).join('')}
       </article>
     `;
   }).join('') || '<div class="empty-state">No country drilldown data.</div>';
@@ -768,7 +799,7 @@ function renderSearchTerms() {
   elements.searchTermList.innerHTML = visibleRows(rows, 'searchTerms').map((row) => `
     <div class="mini-row">
       <strong>${row.searchTerm}</strong>
-      <span>${row.campaign} · ${currency.format(row.spend)} · ${number.format(row.conversions)} conv.</span>
+      <span>${campaignWithPlatform(row)} · ${currency.format(row.spend)} · ${number.format(row.conversions)} conv.</span>
     </div>
   `).join('') || '<div class="empty-state">No search term data available.</div>';
 }
@@ -780,14 +811,14 @@ function renderCreativeTable() {
     <tr>
       <td>${row.adName}</td>
       <td>${row.adSet}</td>
-      <td>${row.campaign}</td>
+      <td>${campaignWithPlatform(row)}</td>
       <td>${row.location}</td>
       <td>${currency.format(row.spend)}</td>
       <td>${number.format(row.impressions)}</td>
       <td>${number.format(row.clicks)}</td>
       <td>${number.format(row.conversions)}</td>
       <td>${formatPercent(clickThroughRate(row))}</td>
-      <td>${currency.format(costPerClick(row))}</td>
+      <td>${currencyPrecise.format(costPerClick(row))}</td>
       <td>${currency.format(costPer(row))}</td>
     </tr>
   `).join('') || '<tr><td class="empty-state" colspan="11">No Meta creative data for this filter.</td></tr>';
@@ -800,7 +831,7 @@ function renderKpis(rows) {
   elements.totalClicks.textContent = number.format(summary.clicks);
   elements.totalConversions.textContent = number.format(summary.conversions);
   elements.ctr.textContent = formatPercent(clickThroughRate(summary));
-  elements.cpc.textContent = currency.format(costPerClick(summary));
+  elements.cpc.textContent = currencyPrecise.format(costPerClick(summary));
   elements.costPerConversion.textContent = summary.conversions ? currency.format(summary.spend / summary.conversions) : currency.format(0);
   elements.conversionRate.textContent = formatPercent(summary.clicks ? (summary.conversions / summary.clicks) * 100 : 0);
   elements.spendNote.textContent = `${number.format(summary.clicks)} ad clicks selected`;
@@ -953,20 +984,19 @@ function renderTable(rows) {
   updateToggle('campaigns', campaignRows.length);
 
   elements.campaignRows.innerHTML = visibleRows(campaignRows, 'campaigns').map((row) => {
-    const platformClass = row.platform === 'Meta Ads' ? 'meta' : 'google';
     return `
       <tr>
-        <td><span class="platform-tag ${platformClass}">${row.platform}</span></td>
+        <td>${platformBadge(row.platform)}</td>
         <td>${row.account}</td>
         <td>${statusBadge(row.status)}</td>
-        <td>${row.campaign}</td>
+        <td>${campaignWithPlatform(row)}</td>
         <td>${row.location}</td>
         <td>${currency.format(row.spend)}</td>
         <td>${number.format(row.impressions)}</td>
         <td>${number.format(row.clicks)}</td>
         <td>${number.format(row.conversions)}</td>
         <td>${formatPercent(clickThroughRate(row))}</td>
-        <td>${currency.format(costPerClick(row))}</td>
+        <td>${currencyPrecise.format(costPerClick(row))}</td>
         <td>${currency.format(costPer(row))}</td>
         <td>${formatPercent(conversionRate(row))}</td>
       </tr>
@@ -995,14 +1025,14 @@ function renderKeywordTable() {
     <tr>
       <td>${row.keyword}</td>
       <td>${row.matchType}</td>
-      <td>${row.campaign}</td>
+      <td>${campaignWithPlatform(row)}</td>
       <td>${row.adGroup}</td>
       <td>${currency.format(row.spend)}</td>
       <td>${number.format(row.impressions)}</td>
       <td>${number.format(row.clicks)}</td>
       <td>${number.format(row.conversions)}</td>
       <td>${formatPercent(clickThroughRate(row))}</td>
-      <td>${currency.format(costPerClick(row))}</td>
+      <td>${currencyPrecise.format(costPerClick(row))}</td>
       <td>${currency.format(costPer(row))}</td>
     </tr>
   `).join('') || '<tr><td class="empty-state" colspan="11">No Google keyword data for this filter.</td></tr>';

@@ -303,6 +303,11 @@ select {
   padding: 16px;
 }
 
+.insight-grid-soft .insight-card {
+  border-left-width: 1px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .summary-card,
 .insight-card {
   border-left: 4px solid var(--line);
@@ -382,8 +387,7 @@ select {
 }
 
 .alert-item,
-.recommendation-row,
-.mini-row {
+.recommendation-row {
   display: grid;
   gap: 4px;
   border: 1px solid rgba(255, 184, 77, 0.22);
@@ -391,6 +395,16 @@ select {
   background: rgba(255, 184, 77, 0.06);
   color: #ffe8bf;
   padding: 13px;
+}
+
+.mini-row {
+  display: grid;
+  gap: 5px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+  padding: 12px 13px;
 }
 
 .alert-item {
@@ -854,6 +868,7 @@ select {
   overflow-x: auto;
   border: 1px solid var(--line-soft);
   border-radius: 20px;
+  background: rgba(255, 255, 255, 0.018);
 }
 
 table {
@@ -864,7 +879,7 @@ table {
 
 th,
 td {
-  padding: 15px 14px;
+  padding: 13px 14px;
   border-bottom: 1px solid var(--line-soft);
   text-align: left;
   white-space: nowrap;
@@ -880,7 +895,15 @@ th {
 
 td {
   color: #eaf9df;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+tbody tr {
+  transition: background 160ms ease;
+}
+
+tbody tr:hover {
+  background: rgba(170, 255, 0, 0.035);
 }
 
 tr:last-child td {
@@ -889,10 +912,72 @@ tr:last-child td {
 
 .platform-tag {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
-  padding: 6px 10px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   font-size: 0.78rem;
   font-weight: 900;
+}
+
+.platform-tag.compact {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.platform-tag svg {
+  width: 70%;
+  height: 70%;
+  display: block;
+}
+
+.platform-tag.meta svg {
+  width: 82%;
+  height: 82%;
+}
+
+.platform-tag.meta path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.platform-tag.google svg path {
+  stroke: none;
+}
+
+.platform-tag .g-blue {
+  fill: #4285f4;
+}
+
+.platform-tag .g-green {
+  fill: #34a853;
+}
+
+.platform-tag .g-yellow {
+  fill: #fbbc05;
+}
+
+.platform-tag .g-red {
+  fill: #ea4335;
+}
+
+.campaign-name {
+  display: inline-flex;
+  max-width: min(460px, 100%);
+  gap: 8px;
+  align-items: center;
+  vertical-align: middle;
+  white-space: normal;
+}
+
+.campaign-name span:last-child {
+  min-width: 0;
 }
 
 .status-badge {
@@ -953,6 +1038,15 @@ tr:last-child td {
 .platform-tag.meta {
   background: rgba(255, 92, 168, 0.14);
   color: #ffc0df;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .empty-state {

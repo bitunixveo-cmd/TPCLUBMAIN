@@ -107,6 +107,8 @@
           <span>Conversion Metric</span>
           <select id="conversionMetricFilter">
             <option value="all">All conversions</option>
+            <option value="with-conversions">Only with conversions</option>
+            <option value="zero-conversions">Only zero conversions</option>
             <option value="google">Google sign up</option>
             <option value="meta">Meta free trial</option>
           </select>
@@ -182,26 +184,6 @@
         <div id="managementSummary" class="management-summary"></div>
       </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-label">Top opportunities</p>
-            <h2>Important action data first</h2>
-          </div>
-        </div>
-        <div id="opportunityGrid" class="insight-grid"></div>
-      </section>
-
-      <section class="panel alert-panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-label">Wasted spend alerts</p>
-            <h2>Fix these before scaling</h2>
-          </div>
-        </div>
-        <div id="alertList" class="alert-list"></div>
-      </section>
-
       <section class="report-grid">
         <article class="panel">
           <div class="panel-head">
@@ -217,34 +199,10 @@
           <div class="panel-head">
             <div>
               <p class="panel-label">Comparison</p>
-              <h2>This period vs previous period</h2>
+              <h2>Period comparison</h2>
             </div>
           </div>
           <div id="comparisonGrid" class="comparison-grid"></div>
-        </article>
-      </section>
-
-      <section class="report-grid">
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-label">Campaign health</p>
-              <h2>Score by campaign</h2>
-            </div>
-            <button class="show-toggle" type="button" data-toggle-list="health">Show all</button>
-          </div>
-          <div id="healthList" class="health-list"></div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-label">Budget recommendations</p>
-              <h2>Scale, keep, reduce, or pause</h2>
-            </div>
-            <button class="show-toggle" type="button" data-toggle-list="recommendations">Show all</button>
-          </div>
-          <div id="recommendationList" class="recommendation-list"></div>
         </article>
       </section>
 
@@ -321,10 +279,10 @@
         <div class="panel-head table-head">
           <div>
             <p class="panel-label">Campaign detail</p>
-            <h2>Conversion-wise campaign performance</h2>
+            <h2>Campaign performance</h2>
           </div>
           <div class="table-actions">
-            <p class="table-note">Sorted by conversions, then lowest cost per conversion.</p>
+            <p class="table-note">Sorted by conversions and cost per conversion.</p>
             <button class="show-toggle" type="button" data-toggle-list="campaigns">Show all</button>
           </div>
         </div>
@@ -357,7 +315,7 @@
           <div class="panel-head">
             <div>
               <p class="panel-label">Keyword intelligence</p>
-              <h2>Best & wasted Google keywords</h2>
+              <h2>Keyword summary</h2>
             </div>
           </div>
           <div id="keywordIntelligence" class="intelligence-grid"></div>
@@ -367,7 +325,7 @@
           <div class="panel-head">
             <div>
               <p class="panel-label">Search terms</p>
-              <h2>Queries users actually searched</h2>
+              <h2>Search queries</h2>
             </div>
             <button class="show-toggle" type="button" data-toggle-list="searchTerms">Show all</button>
           </div>
@@ -439,6 +397,50 @@
             <tbody id="creativeRows"></tbody>
           </table>
         </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Top opportunities</p>
+            <h2>Action cards</h2>
+          </div>
+        </div>
+        <div id="opportunityGrid" class="insight-grid insight-grid-soft"></div>
+      </section>
+
+      <section class="report-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Campaign health</p>
+              <h2>Score by campaign</h2>
+            </div>
+            <button class="show-toggle" type="button" data-toggle-list="health">Show all</button>
+          </div>
+          <div id="healthList" class="health-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Budget recommendations</p>
+              <h2>Scale, keep, reduce, or pause</h2>
+            </div>
+            <button class="show-toggle" type="button" data-toggle-list="recommendations">Show all</button>
+          </div>
+          <div id="recommendationList" class="recommendation-list"></div>
+        </article>
+      </section>
+
+      <section class="panel alert-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Wasted spend alerts</p>
+            <h2>Review before scaling</h2>
+          </div>
+        </div>
+        <div id="alertList" class="alert-list"></div>
       </section>
     </main>
 
