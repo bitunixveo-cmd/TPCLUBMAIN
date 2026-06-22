@@ -4,7 +4,10 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.join(__dirname, '..');
-const outputPath = path.join(rootDir, 'public', 'dashboard', 'data', 'ads-dashboard.json');
+const outputPaths = [
+  path.join(rootDir, 'public', 'dashboard', 'data', 'ads-dashboard.json'),
+  path.join(rootDir, 'dist', 'dashboard', 'data', 'ads-dashboard.json')
+];
 
 const googleApiVersion = process.env.GOOGLE_ADS_API_VERSION || 'v24';
 const metaApiVersion = process.env.META_API_VERSION || 'v23.0';
@@ -564,10 +567,17 @@ async function main() {
     creativeRows: metaAds.rows.filter((row) => row.date)
   };
 
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, `${JSON.stringify(payload, null, 2)}\n`);
+  const writableOutputPaths = outputPaths.filter((outputPath) => {
+    const isDistOutput = outputPath.includes(`${path.sep}dist${path.sep}`);
+    return !isDistOutput || fs.existsSync(path.join(rootDir, 'dist'));
+  });
 
-  console.log(`Ads dashboard sync complete: ${payload.rows.length} rows written.`);
+  writableOutputPaths.forEach((outputPath) => {
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, `${JSON.stringify(payload, null, 2)}\n`);
+  });
+
+  console.log(`Ads dashboard sync complete: ${payload.rows.length} rows written to ${writableOutputPaths.length} output path(s).`);
   console.log(`Google Ads: ${payload.sources.google.ok ? 'ok' : 'failed'} (${payload.sources.google.rowCount} rows)`);
   console.log(`Google Targeted Locations: ${payload.sources.googleTargetedLocations.ok ? 'ok' : 'failed'} (${payload.sources.googleTargetedLocations.rowCount} rows)`);
   console.log(`Google Keywords: ${payload.sources.googleKeywords.ok ? 'ok' : 'failed'} (${payload.sources.googleKeywords.rowCount} rows)`);

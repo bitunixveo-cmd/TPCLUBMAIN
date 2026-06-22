@@ -44,7 +44,12 @@
         </div>
       </section>
 
-      <section class="filter-panel" aria-label="Dashboard filters">
+      <div class="filter-toolbar">
+        <button id="toggleFilters" class="action-button" type="button" aria-expanded="true" aria-controls="dashboardFilters">Hide filters</button>
+        <span>Use filters to narrow platform, date, campaign, country, and conversion views.</span>
+      </div>
+
+      <section id="dashboardFilters" class="filter-panel" aria-label="Dashboard filters">
         <label>
           <span>Platform</span>
           <select id="platformFilter">
@@ -118,6 +123,7 @@
       </section>
 
       <section class="action-bar" aria-label="Dashboard actions">
+        <button id="refreshData" class="action-button" type="button">Refresh data</button>
         <button id="exportCsv" class="action-button" type="button">Export CSV</button>
         <button id="printReport" class="action-button" type="button">Download PDF / Print</button>
         <button id="copySummary" class="action-button" type="button">Copy Summary</button>

@@ -98,9 +98,12 @@ const elements = {
   keywordIntelligence: document.querySelector('#keywordIntelligence'),
   searchTermList: document.querySelector('#searchTermList'),
   creativeRows: document.querySelector('#creativeRows'),
+  refreshData: document.querySelector('#refreshData'),
   exportCsv: document.querySelector('#exportCsv'),
   printReport: document.querySelector('#printReport'),
   copySummary: document.querySelector('#copySummary'),
+  toggleFilters: document.querySelector('#toggleFilters'),
+  filterPanel: document.querySelector('#dashboardFilters'),
   showToggles: document.querySelectorAll('[data-toggle-list]'),
   resetFilters: document.querySelector('#resetFilters'),
   syncStatus: document.querySelector('#syncStatus'),
@@ -1052,6 +1055,29 @@ function copySummary() {
   });
 }
 
+async function refreshDashboardData() {
+  const originalText = elements.refreshData.textContent;
+  elements.refreshData.textContent = 'Refreshing...';
+  elements.refreshData.disabled = true;
+
+  await loadSyncedRows();
+  refreshDependentFilters();
+  renderDashboard();
+
+  elements.refreshData.textContent = 'Data refreshed';
+  setTimeout(() => {
+    elements.refreshData.textContent = originalText;
+    elements.refreshData.disabled = false;
+  }, 1400);
+}
+
+function toggleFilters() {
+  const isHidden = elements.filterPanel.hidden;
+  elements.filterPanel.hidden = !isHidden;
+  elements.toggleFilters.setAttribute('aria-expanded', String(isHidden));
+  elements.toggleFilters.textContent = isHidden ? 'Hide filters' : 'Show filters';
+}
+
 function resetFilters() {
   filters.platform.value = 'all';
   filters.datePreset.value = 'last30';
@@ -1096,8 +1122,10 @@ async function initDashboard() {
     });
   });
   elements.exportCsv.addEventListener('click', exportCsv);
+  elements.refreshData.addEventListener('click', refreshDashboardData);
   elements.printReport.addEventListener('click', () => window.print());
   elements.copySummary.addEventListener('click', copySummary);
+  elements.toggleFilters.addEventListener('click', toggleFilters);
   elements.resetFilters.addEventListener('click', resetFilters);
   renderDashboard();
 }

@@ -140,9 +140,9 @@ select {
 .report-hero h1 {
   max-width: 860px;
   margin: 0;
-  font-size: clamp(2.45rem, 6vw, 5.8rem);
-  line-height: 0.9;
-  letter-spacing: -0.075em;
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
 }
 
 .report-intro {
@@ -234,6 +234,24 @@ select {
   background: linear-gradient(135deg, var(--green), var(--green-deep));
   color: #061006;
   font-weight: 900;
+}
+
+.filter-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 12px;
+}
+
+.filter-toolbar span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .action-bar {
@@ -985,6 +1003,11 @@ tr:last-child td {
     position: static;
     grid-template-columns: 1fr 1fr;
     border-radius: 20px;
+  }
+
+  .filter-toolbar {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .filter-panel label:nth-child(3),
