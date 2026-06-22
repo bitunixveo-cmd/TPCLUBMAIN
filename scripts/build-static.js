@@ -12,6 +12,7 @@ const rootDir = path.join(__dirname, '..');
 const viewsDir = path.join(rootDir, 'views');
 const publicDir = path.join(rootDir, 'public');
 const distDir = path.join(rootDir, 'dist');
+const DEFAULT_DASHBOARD_PASSWORD_HASH = 'd3a0f7d71b05d259a0d2d695014d114aceb5b8cdd26e91bfcb6b98544864bc99';
 
 const locales = {
   en: require('../locales/en.json'),
@@ -215,7 +216,7 @@ ${buildGtmNoScript()}
 async function buildDashboardPage() {
   const dashboardPasswordHash = process.env.DASHBOARD_PASSWORD
     ? crypto.createHash('sha256').update(process.env.DASHBOARD_PASSWORD).digest('hex')
-    : '';
+    : process.env.DASHBOARD_PASSWORD_HASH || DEFAULT_DASHBOARD_PASSWORD_HASH;
   const html = await ejs.renderFile(path.join(viewsDir, 'dashboard.ejs'), {
     dashboardPasswordHash
   });
