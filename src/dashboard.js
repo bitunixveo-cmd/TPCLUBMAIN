@@ -119,6 +119,7 @@ const currency = new Intl.NumberFormat('en-US', {
 
 const number = new Intl.NumberFormat('en-US');
 const authStorageKey = 'tpclub_dashboard_unlocked';
+const refreshPasswordStorageKey = 'tpclub_dashboard_refresh_password';
 
 async function sha256(value) {
   const bytes = new TextEncoder().encode(value);
@@ -148,6 +149,7 @@ async function requireDashboardAuth() {
   }
 
   if (sessionStorage.getItem(authStorageKey) === expectedHash) {
+    dashboardRefreshPassword = sessionStorage.getItem(refreshPasswordStorageKey) || '';
     unlockDashboard();
     return true;
   }
@@ -159,6 +161,7 @@ async function requireDashboardAuth() {
       if (typedHash === expectedHash) {
         dashboardRefreshPassword = elements.authPassword.value;
         sessionStorage.setItem(authStorageKey, expectedHash);
+        sessionStorage.setItem(refreshPasswordStorageKey, dashboardRefreshPassword);
         unlockDashboard();
         resolve(true);
         return;
@@ -1074,7 +1077,16 @@ async function refreshDashboardData() {
 
   try {
     if (!endpoint) throw new Error('Refresh endpoint is not configured');
-    if (!dashboardRefreshPassword) throw new Error('Please log out and unlock again before server refresh');
+    dashboardRefreshPassword = dashboardRefreshPassword || sessionStorage.getItem(refreshPasswordStorageKey) || '';
+
+    if (!dashboardRefreshPassword) {
+      dashboardRefreshPassword = window.prompt('Enter dashboard password to refresh live ads data') || '';
+      if (dashboardRefreshPassword) {
+        sessionStorage.setItem(refreshPasswordStorageKey, dashboardRefreshPassword);
+      }
+    }
+
+    if (!dashboardRefreshPassword) throw new Error('Dashboard password is required for server refresh');
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -1083,7 +1095,8 @@ async function refreshDashboardData() {
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.ok) {
-      throw new Error(result.error || result.message || 'Server refresh failed');
+      const serverOutput = Array.isArray(result.output) ? result.output.filter(Boolean).slice(-3).join(' | ') : '';
+      throw new Error(serverOutput || result.error || result.message || 'Server refresh failed');
     }
   } catch (error) {
     setSyncStatus('Server refresh unavailable', error.message);

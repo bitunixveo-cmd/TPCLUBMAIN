@@ -4,7 +4,6 @@ node_modules/
 dist/
 .env
 public/data/ads-dashboard.json
-public/dashboard/data/ads-dashboard.json
 *.zip
 npm-debug.log*
 coverage/
