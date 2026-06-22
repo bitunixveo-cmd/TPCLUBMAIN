@@ -444,7 +444,8 @@
 
     <script>
       window.__DASHBOARD_AUTH__ = {
-        passwordHash: "<%= dashboardPasswordHash %>"
+        passwordHash: "<%= dashboardPasswordHash %>",
+        refreshEndpoint: "/dashboard/refresh-data.php"
       };
     </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>

@@ -19,6 +19,7 @@ let searchTermRows = [];
 let creativeRows = [];
 let leafletMap = null;
 let leafletLayer = null;
+let dashboardRefreshPassword = '';
 
 const countryCoordinates = {
   AE: [23.4241, 53.8478],
@@ -131,6 +132,14 @@ function unlockDashboard() {
   if (elements.app) elements.app.hidden = false;
 }
 
+function clearDashboardData() {
+  adRows = [];
+  targetedLocationRows = [];
+  keywordRows = [];
+  searchTermRows = [];
+  creativeRows = [];
+}
+
 async function requireDashboardAuth() {
   const expectedHash = window.__DASHBOARD_AUTH__ && window.__DASHBOARD_AUTH__.passwordHash;
   if (!expectedHash) {
@@ -148,6 +157,7 @@ async function requireDashboardAuth() {
       event.preventDefault();
       const typedHash = await sha256(elements.authPassword.value);
       if (typedHash === expectedHash) {
+        dashboardRefreshPassword = elements.authPassword.value;
         sessionStorage.setItem(authStorageKey, expectedHash);
         unlockDashboard();
         resolve(true);
@@ -340,12 +350,8 @@ async function loadSyncedRows() {
     const generatedAt = payload.generatedAt ? new Date(payload.generatedAt).toLocaleString() : 'just now';
     setSyncStatus('Live API data loaded', `Updated ${generatedAt}. Google: ${sourceSummary(payload.sources && payload.sources.google)}. Meta: ${sourceSummary(payload.sources && payload.sources.meta)}.`);
   } catch (error) {
-    adRows = fallbackRows;
-    targetedLocationRows = [];
-    keywordRows = fallbackKeywordRows;
-    searchTermRows = [];
-    creativeRows = [];
-    setSyncStatus('Demo data fallback', `${error.message}. Run npm run sync:ads to load live reporting data.`);
+    clearDashboardData();
+    setSyncStatus('Live data unavailable', `${error.message}. Use Refresh data after server refresh is configured.`);
   }
 }
 
@@ -1057,8 +1063,26 @@ function copySummary() {
 
 async function refreshDashboardData() {
   const originalText = elements.refreshData.textContent;
+  const endpoint = window.__DASHBOARD_AUTH__ && window.__DASHBOARD_AUTH__.refreshEndpoint;
   elements.refreshData.textContent = 'Refreshing...';
   elements.refreshData.disabled = true;
+
+  try {
+    if (!endpoint) throw new Error('Refresh endpoint is not configured');
+    if (!dashboardRefreshPassword) throw new Error('Please log out and unlock again before server refresh');
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ password: dashboardRefreshPassword })
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || result.message || 'Server refresh failed');
+    }
+  } catch (error) {
+    setSyncStatus('Server refresh unavailable', error.message);
+  }
 
   await loadSyncedRows();
   refreshDependentFilters();
