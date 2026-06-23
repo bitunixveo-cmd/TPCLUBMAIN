@@ -1,141 +1,132 @@
-<%- include('partials/compliance-banner') %>
-<header class="site-header meta-header" data-nav>
-  <nav class="container nav-shell" aria-label="Primary navigation">
-    <a class="brand" href="/<%= lang %>/meta/" aria-label="<%= t.a11y.home %>">
-      <img src="/images/logo.png" alt="" width="44" height="44">
-      <span><%= t.brand %></span>
-    </a>
-    <div class="language-switcher" aria-label="Language switcher">
-      <a class="<%= lang === 'en' ? 'active' : '' %>" href="/en/meta/">EN</a>
-      <a class="<%= lang === 'zh' ? 'active' : '' %>" href="/zh/meta/">中文</a>
-    </div>
-    <a class="btn-primary nav-cta meta-nav-cta" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.navCta %>"><%= t.metaAds.navCta %></a>
-  </nav>
-</header>
-<main class="meta-landing">
-  <section class="section meta-hero" id="hero">
-    <div class="container meta-hero-grid">
-      <div class="meta-hero-copy">
-        <p class="badge meta-hero-badge"><span class="text-icon" aria-hidden="true">TP</span> <%= t.metaAds.hero.badge %></p>
-        <h1 class="meta-hero-title"><%= t.metaAds.hero.title %><% if (t.metaAds.hero.titleAccent) { %> <span><%= t.metaAds.hero.titleAccent %></span><% } %></h1>
-        <p class="meta-hero-sub"><%= t.metaAds.hero.sub %></p>
-        <ul class="meta-hero-trust" aria-label="<%= t.a11y.proofPoints %>">
-          <% t.metaAds.hero.trustBullets.forEach((bullet) => { %>
-            <li><%= bullet %></li>
-          <% }) %>
-        </ul>
-        <div class="meta-hero-action">
-          <a class="btn-primary meta-hero-cta meta-cta-xl" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.hero.cta %>"><%= t.metaAds.hero.cta %></a>
-          <p class="meta-hero-note"><%= t.metaAds.hero.note %></p>
-        </div>
+<%
+  const isZh = lang === 'zh';
+  const c = isZh ? {
+    badge: '100% 免费 · 中文加密货币教育社群',
+    headline: '没时间整天盯着加密货币行情？',
+    sub: '加入 TP Club 免费中文 Telegram 社群，获取每日市场学习、直播课程、风险管理教育和真实社群讨论。',
+    primaryCta: '获取今日市场分析',
+    secondaryCta: '解锁今日直播课程',
+    micro: '30 秒加入 · 100% 免费 · 仅供教育',
+    proofKicker: '群内真实截图',
+    proofTitle: '加入后，你会看到这些内容',
+    proof: [
+      { title: '每日市场分析', text: 'BTC、ETH 与市场结构教育拆解。', image: '/images/community/daily-market-analysis.png', alt: 'TP Club Telegram 每日市场分析截图' },
+      { title: '直播训练课程', text: '跟着直播学习行情、风险和交易逻辑。', image: '/images/community/live-sessions.png', alt: 'TP Club Telegram 直播训练截图' },
+      { title: '活跃社群讨论', text: '不用一个人乱学，群里可以看到真实互动。', image: '/images/community/active-discussions.png', alt: 'TP Club Telegram 活跃社群讨论截图' }
+    ],
+    whyKicker: '适合谁加入',
+    whyTitle: '如果你有这些问题，这个群就是为你准备的',
+    reasons: [
+      '没有时间整天盯盘',
+      '因为风险管理差，亏损后不知道如何复盘',
+      '想要更结构化的加密货币教育',
+      '更希望用中文学习和提问',
+      '厌倦网上随机、互相矛盾的建议',
+      '想和活跃社群一起学习，而不是一个人摸索'
+    ],
+    finalTitle: '今日市场分析和直播学习内容已经在群里',
+    finalText: '点击进入免费 Telegram 社群，先看看今天的内容是否适合你。',
+    compliance: 'TP Club 仅提供加密货币教育和社群学习内容，不构成金融建议、投资建议或收益承诺。交易存在风险，请始终自行研究并对自己的决定负责。'
+  } : {
+    badge: '100% Free · Chinese Crypto Education Community',
+    headline: "Don’t Have Time To Watch Crypto Markets All Day?",
+    sub: 'Join TP Club’s free Chinese crypto education community for daily market learning, live sessions, risk management lessons, and real community discussion.',
+    primaryCta: "Get Today’s Market Analysis",
+    secondaryCta: "Unlock Today’s Live Session",
+    micro: 'Takes 30 Seconds · 100% Free · Educational Only',
+    proofKicker: 'Real screenshots',
+    proofTitle: 'See What Is Already Inside The Group',
+    proof: [
+      { title: 'Daily Market Analysis', text: 'Educational breakdowns for BTC, ETH, market structure, and risk.', image: '/images/community/daily-market-analysis.png', alt: 'Daily market analysis screenshot from TP Club Telegram' },
+      { title: 'Live Training Sessions', text: 'Join live educational sessions and learn how the market is being read.', image: '/images/community/live-sessions.png', alt: 'Live training session screenshot from TP Club Telegram' },
+      { title: 'Active Community Discussion', text: 'Learn with other Chinese-speaking members instead of figuring it out alone.', image: '/images/community/active-discussions.png', alt: 'Active discussion screenshot from TP Club Telegram' }
+    ],
+    whyKicker: 'Why members join',
+    whyTitle: 'This Is For You If…',
+    reasons: [
+      'You don’t have time to watch charts all day',
+      'You keep losing because of poor risk management',
+      'You want structured crypto education',
+      'You prefer learning in Chinese',
+      'You are tired of random YouTube advice',
+      'You want support from an active community'
+    ],
+    finalTitle: 'Today’s Market Analysis Is Already Inside',
+    finalText: 'Join the free Telegram community and start learning with daily updates, live sessions, and practical crypto education.',
+    compliance: 'TP Club is for crypto education and community learning only. Nothing on this page or inside the group is financial advice. Trading involves risk. Always do your own research before making decisions.'
+  };
+%>
+
+<main class="meta-direct">
+  <section class="meta-direct-hero">
+    <div class="meta-direct-wrap meta-direct-hero-grid">
+      <div class="meta-direct-copy">
+        <p class="meta-direct-badge"><%= c.badge %></p>
+        <h1><%= c.headline %></h1>
+        <p class="meta-direct-sub"><%= c.sub %></p>
+        <a class="meta-direct-cta" href="<%= telegramUrl %>" data-track-cta="<%= c.primaryCta %>"><%= c.primaryCta %></a>
+        <p class="meta-direct-micro"><%= c.micro %></p>
       </div>
-      <div class="meta-hero-proof" aria-label="<%= t.metaAds.heroProof.caption %>">
-        <div class="meta-proof-phone">
-          <div class="meta-proof-topbar">
-            <span class="meta-proof-channel"><%= t.metaAds.heroProof.channel %></span>
-            <span class="meta-proof-live"><%= t.metaAds.heroProof.live %></span>
-          </div>
-          <div class="meta-proof-screens">
-            <% t.metaAds.heroProof.images.forEach((image, index) => { %>
-              <figure class="meta-proof-shot<%= index === 0 ? ' is-primary' : '' %>">
-                <img src="<%= image.src %>" alt="<%= image.alt %>" width="390" height="520" loading="<%= index === 0 ? 'eager' : 'lazy' %>" decoding="async">
-              </figure>
-            <% }) %>
-          </div>
-          <p class="meta-proof-caption"><%= t.metaAds.heroProof.caption %></p>
+
+      <div class="meta-direct-phone" aria-label="<%= c.proof[0].title %>">
+        <img src="<%= c.proof[0].image %>" alt="<%= c.proof[0].alt %>" width="473" height="1024" loading="eager" decoding="async">
+        <div class="meta-direct-phone-label">
+          <strong><%= c.proof[0].title %></strong>
+          <span><%= c.proof[0].text %></span>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section meta-trust-strip" aria-label="<%= t.trust.ariaLabel %>">
-    <div class="container meta-trust-strip-grid">
-      <% t.metaAds.proof.forEach((item) => { %>
-        <div class="meta-trust-pill">
-          <strong><%= item.n %></strong>
-          <span><%= item.l %></span>
-        </div>
-      <% }) %>
-    </div>
-  </section>
-
-  <section class="section section-alt meta-unlocks" id="benefits">
-    <div class="container">
-      <div class="section-head center">
-        <p class="eyebrow"><%= t.metaAds.unlocks.eyebrow %></p>
-        <h2><%= t.metaAds.unlocks.title %></h2>
+  <section class="meta-direct-proof">
+    <div class="meta-direct-wrap">
+      <div class="meta-direct-section-head">
+        <p><%= c.proofKicker %></p>
+        <h2><%= c.proofTitle %></h2>
       </div>
-      <div class="meta-unlock-grid" aria-label="<%= t.a11y.benefits %>">
-        <% t.metaAds.unlocks.items.forEach((item) => { %>
-          <article class="meta-unlock-card meta-unlock-<%= item.icon %>">
-            <span class="meta-unlock-icon" aria-hidden="true"></span>
-            <h3><%= item.t %></h3>
-            <p><%= item.d %></p>
+      <div class="meta-direct-proof-grid">
+        <% c.proof.forEach((item, index) => { %>
+          <article class="meta-direct-proof-card">
+            <img src="<%= item.image %>" alt="<%= item.alt %>" width="473" height="1024" loading="<%= index === 0 ? 'eager' : 'lazy' %>" decoding="async">
+            <div>
+              <strong><%= item.title %></strong>
+              <span><%= item.text %></span>
+            </div>
           </article>
         <% }) %>
       </div>
-      <div class="meta-inline-cta">
-        <a class="btn-primary meta-cta-xl" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
-        <p class="meta-hero-note"><%= t.metaAds.cta.note %></p>
-      </div>
+      <a class="meta-direct-cta meta-direct-cta-secondary" href="<%= telegramUrl %>" data-track-cta="<%= isZh ? '免费加入中文社群' : 'Join Free Chinese Crypto Community' %>"><%= isZh ? '免费加入中文社群' : 'Join Free Chinese Crypto Community' %></a>
     </div>
   </section>
 
-  <section class="section meta-preview" id="preview">
-    <div class="container">
-      <div class="section-head center">
-        <p class="eyebrow"><%= t.metaAds.preview.eyebrow %></p>
-        <h2><%= t.metaAds.preview.title %></h2>
+  <section class="meta-direct-why">
+    <div class="meta-direct-wrap">
+      <div class="meta-direct-section-head">
+        <p><%= c.whyKicker %></p>
+        <h2><%= c.whyTitle %></h2>
       </div>
-      <div class="meta-slider" data-slider>
-        <button class="meta-slider-arrow meta-slider-prev" type="button" aria-label="<%= t.metaAds.preview.prev %>" data-slider-prev>&#8249;</button>
-        <div class="meta-slider-viewport" data-slider-viewport>
-          <div class="meta-slider-track" data-slider-track>
-            <% t.metaAds.preview.items.forEach((item) => { %>
-              <article class="card preview-card preview-card-<%= item.type %> meta-slide" data-slide>
-                <button class="preview-image-link" type="button" data-community-modal-open data-community-image="<%= item.image %>" data-community-title="<%= item.t %>" aria-label="<%= t.communityPreview.openLabel %> <%= item.t %>">
-                  <img src="<%= item.image %>" alt="<%= item.t %> screenshot from TP Club Telegram community" loading="lazy" decoding="async">
-                  <span class="preview-overlay">
-                    <span class="preview-open"><%= t.communityPreview.openLabel %></span>
-                    <strong><%= item.t %></strong>
-                    <span><%= item.d %></span>
-                  </span>
-                </button>
-              </article>
-            <% }) %>
-          </div>
-        </div>
-        <button class="meta-slider-arrow meta-slider-next" type="button" aria-label="<%= t.metaAds.preview.next %>" data-slider-next>&#8250;</button>
-      </div>
-      <div class="meta-slider-dots" role="tablist" aria-label="<%= t.metaAds.preview.title %>" data-slider-dots></div>
-      <p class="meta-slider-hint"><%= t.metaAds.preview.hint %></p>
-    </div>
-    <div class="community-modal" id="community-image-modal" role="dialog" aria-modal="true" aria-labelledby="community-modal-title" hidden data-community-modal>
-      <button class="community-modal-backdrop" type="button" aria-label="<%= t.communityPreview.modalClose %>" data-community-modal-close></button>
-      <div class="community-modal-card" role="document" tabindex="-1" data-community-modal-card>
-        <button class="community-modal-close" type="button" aria-label="<%= t.communityPreview.modalClose %>" data-community-modal-close>&times;</button>
-        <p class="eyebrow"><%= t.communityPreview.eyebrow %></p>
-        <h2 id="community-modal-title" data-community-modal-title><%= t.communityPreview.modalTitle %></h2>
-        <img src="" alt="" data-community-modal-image>
-        <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.communityPreview.modalCta %>"><%= t.communityPreview.modalCta %></a>
-      </div>
+      <ul class="meta-direct-reasons">
+        <% c.reasons.forEach((reason) => { %>
+          <li><span aria-hidden="true">✓</span><%= reason %></li>
+        <% }) %>
+      </ul>
     </div>
   </section>
 
-  <section class="section section-alt meta-final-cta" id="join">
-    <div class="container meta-final-cta-inner">
-      <p class="eyebrow"><%= t.metaAds.cta.eyebrow %></p>
-      <h2><%= t.metaAds.cta.title %></h2>
-      <p class="muted"><%= t.metaAds.cta.sub %></p>
-      <a class="btn-primary meta-cta-xl" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
-      <p class="meta-hero-note"><%= t.metaAds.cta.note %></p>
+  <section class="meta-direct-final">
+    <div class="meta-direct-wrap meta-direct-final-card">
+      <h2><%= c.finalTitle %></h2>
+      <p><%= c.finalText %></p>
+      <a class="meta-direct-cta" href="<%= telegramUrl %>" data-track-cta="<%= c.secondaryCta %>"><%= c.secondaryCta %></a>
+      <small><%= c.micro %></small>
     </div>
   </section>
-  <a class="meta-sticky-cta" href="<%= telegramUrl %>" data-track-cta="<%= t.metaAds.cta.cta %>"><%= t.metaAds.cta.cta %></a>
+
+  <section class="meta-direct-compliance">
+    <div class="meta-direct-wrap">
+      <p><%= c.compliance %></p>
+    </div>
+  </section>
+
+  <a class="meta-direct-sticky" href="<%= telegramUrl %>" data-track-cta="<%= c.primaryCta %>"><%= c.primaryCta %></a>
 </main>
-<footer class="site-footer meta-footer">
-  <div class="container copyright">
-    <p><%= t.metaAds.footerNote %></p>
-    <p><%= t.footer.copyright %></p>
-  </div>
-</footer>
