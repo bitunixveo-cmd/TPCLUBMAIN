@@ -114,6 +114,7 @@ async function renderPage({ lang, view, outputPath, pageKey, pagePath = '' }) {
       seo: buildSeo({ lang, t, pagePath }),
       siteUrl: config.siteUrl,
       gtmId: config.gtmId,
+      cssVersion: BUILD_VERSION,
       mainScriptUrl: `/assets/main.js?v=${BUILD_VERSION}`,
       telegramUrl: lang === 'zh' ? '/zh/go/' : config.telegramRedirectPath,
       telegramChannelUrl: config.telegramChannelUrl,
