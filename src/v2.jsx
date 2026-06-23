@@ -152,7 +152,7 @@ function HeroCommunityMockup() {
         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
         <img
-          src="/images/hero-community-mockup.png"
+          src="/images/hero-community-mockup.jpg"
           alt="TP Club Education Telegram community preview with education updates and Chinese learner discussions"
           width="1024"
           height="1024"
