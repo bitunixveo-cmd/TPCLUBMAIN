@@ -110,10 +110,10 @@
     "modalCta": "免费加入 Telegram →",
     "modalClose": "关闭截图",
     "items": [
-      { "t": "活跃讨论", "d": "成员聊天、观点分享与社群支持。", "type": "chat", "image": "/images/community/active-discussions.png" },
-      { "t": "每日市场分析", "d": "每天更新的教育型市场拆解。", "type": "chart", "image": "/images/community/daily-market-analysis.png" },
-      { "t": "直播互动", "d": "日常直播、问答和社群互动。", "type": "live", "image": "/images/community/live-sessions.png" },
-      { "t": "新手资源", "d": "Telegram 群内真实分享的文件、PDF 和学习资料。", "type": "files", "image": "/images/community/beginner-resources.png" }
+      { "t": "活跃讨论", "d": "成员聊天、观点分享与社群支持。", "type": "chat", "image": "/images/community/active-discussions.jpg" },
+      { "t": "每日市场分析", "d": "每天更新的教育型市场拆解。", "type": "chart", "image": "/images/community/daily-market-analysis.jpg" },
+      { "t": "直播互动", "d": "日常直播、问答和社群互动。", "type": "live", "image": "/images/community/live-sessions.jpg" },
+      { "t": "新手资源", "d": "Telegram 群内真实分享的文件、PDF 和学习资料。", "type": "files", "image": "/images/community/beginner-resources.jpg" }
     ]
   },
   "instructor": {
@@ -211,11 +211,11 @@
       "caption": "群内真实分享的内容",
       "images": [
         {
-          "src": "/images/community/daily-market-analysis.png",
+          "src": "/images/community/daily-market-analysis.jpg",
           "alt": "TP止盈社 Telegram 每日市场分析截图"
         },
         {
-          "src": "/images/community/live-sessions.png",
+          "src": "/images/community/live-sessions.jpg",
           "alt": "TP止盈社 Telegram 直播训练截图"
         }
       ]
@@ -243,10 +243,10 @@
       "next": "下一张截图",
       "hint": "滑动或点击箭头查看更多 →",
       "items": [
-        { "t": "活跃讨论", "d": "成员聊天、观点分享与社群支持。", "type": "chat", "image": "/images/community/active-discussions.png" },
-        { "t": "每日市场分析", "d": "每天更新的教育型市场拆解。", "type": "chart", "image": "/images/community/daily-market-analysis.png" },
-        { "t": "直播互动", "d": "日常直播、问答和社群互动。", "type": "live", "image": "/images/community/live-sessions.png" },
-        { "t": "新手资源", "d": "Telegram 群内真实分享的文件、PDF 和学习资料。", "type": "files", "image": "/images/community/beginner-resources.png" }
+        { "t": "活跃讨论", "d": "成员聊天、观点分享与社群支持。", "type": "chat", "image": "/images/community/active-discussions.jpg" },
+        { "t": "每日市场分析", "d": "每天更新的教育型市场拆解。", "type": "chart", "image": "/images/community/daily-market-analysis.jpg" },
+        { "t": "直播互动", "d": "日常直播、问答和社群互动。", "type": "live", "image": "/images/community/live-sessions.jpg" },
+        { "t": "新手资源", "d": "Telegram 群内真实分享的文件、PDF 和学习资料。", "type": "files", "image": "/images/community/beginner-resources.jpg" }
       ]
     },
     "testimonials": {

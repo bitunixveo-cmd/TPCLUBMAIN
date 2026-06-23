@@ -110,10 +110,10 @@
     "modalCta": "Join Telegram Free →",
     "modalClose": "Close screenshot",
     "items": [
-      { "t": "Active Discussions", "d": "Member chats, shared ideas, and team support.", "type": "chat", "image": "/images/community/active-discussions.png" },
-      { "t": "Daily Market Analysis", "d": "Educational breakdowns every single day.", "type": "chart", "image": "/images/community/daily-market-analysis.png" },
-      { "t": "Live Sessions", "d": "Daily live streams and Q&A discussions.", "type": "live", "image": "/images/community/live-sessions.png" },
-      { "t": "Beginner Resources", "d": "Real files, PDFs, and learning resources shared inside the Telegram group.", "type": "files", "image": "/images/community/beginner-resources.png" }
+      { "t": "Active Discussions", "d": "Member chats, shared ideas, and team support.", "type": "chat", "image": "/images/community/active-discussions.jpg" },
+      { "t": "Daily Market Analysis", "d": "Educational breakdowns every single day.", "type": "chart", "image": "/images/community/daily-market-analysis.jpg" },
+      { "t": "Live Sessions", "d": "Daily live streams and Q&A discussions.", "type": "live", "image": "/images/community/live-sessions.jpg" },
+      { "t": "Beginner Resources", "d": "Real files, PDFs, and learning resources shared inside the Telegram group.", "type": "files", "image": "/images/community/beginner-resources.jpg" }
     ]
   },
   "instructor": {
@@ -211,11 +211,11 @@
       "caption": "Real content shared inside the group",
       "images": [
         {
-          "src": "/images/community/daily-market-analysis.png",
+          "src": "/images/community/daily-market-analysis.jpg",
           "alt": "Daily market analysis screenshot from TP Club Telegram"
         },
         {
-          "src": "/images/community/live-sessions.png",
+          "src": "/images/community/live-sessions.jpg",
           "alt": "Live training session screenshot from TP Club Telegram"
         }
       ]
@@ -243,10 +243,10 @@
       "next": "Next screenshot",
       "hint": "Swipe or use arrows to see more →",
       "items": [
-        { "t": "Active Discussions", "d": "Member chats, shared ideas, and team support.", "type": "chat", "image": "/images/community/active-discussions.png" },
-        { "t": "Daily Market Analysis", "d": "Educational breakdowns every single day.", "type": "chart", "image": "/images/community/daily-market-analysis.png" },
-        { "t": "Live Sessions", "d": "Daily live streams and Q&A discussions.", "type": "live", "image": "/images/community/live-sessions.png" },
-        { "t": "Beginner Resources", "d": "Real files, PDFs, and learning resources shared inside the group.", "type": "files", "image": "/images/community/beginner-resources.png" }
+        { "t": "Active Discussions", "d": "Member chats, shared ideas, and team support.", "type": "chat", "image": "/images/community/active-discussions.jpg" },
+        { "t": "Daily Market Analysis", "d": "Educational breakdowns every single day.", "type": "chart", "image": "/images/community/daily-market-analysis.jpg" },
+        { "t": "Live Sessions", "d": "Daily live streams and Q&A discussions.", "type": "live", "image": "/images/community/live-sessions.jpg" },
+        { "t": "Beginner Resources", "d": "Real files, PDFs, and learning resources shared inside the group.", "type": "files", "image": "/images/community/beginner-resources.jpg" }
       ]
     },
     "testimonials": {
