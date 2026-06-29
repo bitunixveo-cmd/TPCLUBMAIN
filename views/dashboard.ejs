@@ -29,11 +29,16 @@
       </form>
     </section>
     <main id="dashboardApp" class="report-shell" hidden>
+      <header class="print-report-header" aria-hidden="true">
+        <h1>TP Club Ads Performance Report</h1>
+        <p id="printReportMeta">Dashboard export</p>
+      </header>
+
       <section class="report-hero">
         <div>
           <p class="report-eyebrow">Local ads intelligence</p>
-          <h1>Conversion dashboard for Google Ads & Meta Ads.</h1>
-          <p class="report-intro">Track AED spend, impressions, clicks, conversions, CTR, CPC, account performance, campaigns, keywords, countries, and locations from one responsive dashboard.</p>
+          <h1>Ads performance dashboard.</h1>
+          <p class="report-intro">Track AED spend, impressions, clicks, ad-platform conversions, CTR, CPC, CPA, campaigns, creatives, keywords, and locations from one responsive dashboard.</p>
         </div>
         <div class="sync-card">
           <span class="sync-dot" aria-hidden="true"></span>
@@ -46,7 +51,7 @@
 
       <div class="filter-toolbar">
         <button id="toggleFilters" class="action-button" type="button" aria-expanded="true" aria-controls="dashboardFilters">Hide filters</button>
-        <span>Use filters to narrow platform, date, campaign, country, and conversion views.</span>
+        <span>Use filters to narrow platform, date, campaign, country, and conversion views. Conversions come from Google Ads and Meta Ads Manager.</span>
       </div>
 
       <section id="dashboardFilters" class="filter-panel" aria-label="Dashboard filters">
@@ -61,6 +66,9 @@
           <select id="datePresetFilter">
             <option value="last30">Last 30 days</option>
             <option value="last7">Last 7 days</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="latest">Latest synced day</option>
             <option value="thisMonth">This month</option>
             <option value="previousMonth">Previous month</option>
             <option value="custom">Custom</option>
@@ -131,58 +139,145 @@
         <button id="copySummary" class="action-button" type="button">Copy Summary</button>
       </section>
 
-      <section class="kpi-grid" aria-label="Performance summary">
-        <article class="kpi-card kpi-primary">
-          <span>Total Spend</span>
+      <div id="filterNotice" class="filter-notice" hidden></div>
+
+      <div class="kpi-toolbar">
+        <span id="dataThroughPill" class="pill data-through-pill">Data through —</span>
+        <button id="toggleSecondaryKpis" class="show-toggle" type="button" aria-expanded="false" aria-controls="secondaryKpiGrid">More metrics</button>
+      </div>
+
+      <section class="kpi-grid kpi-grid-hero" aria-label="Key performance indicators">
+        <article class="kpi-card kpi-hero">
+          <span>Spend</span>
           <strong id="totalSpend">AED 0</strong>
+          <em id="spendDelta" class="kpi-delta" aria-label="Spend change vs previous period"></em>
           <small id="spendNote">Across selected data</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card kpi-hero">
+          <span>Conversions</span>
+          <strong id="totalConversions">0</strong>
+          <em id="conversionsDelta" class="kpi-delta" aria-label="Conversions change vs previous period"></em>
+          <small>Google/Meta tracked</small>
+        </article>
+        <article class="kpi-card kpi-hero">
+          <span>CPA</span>
+          <strong id="costPerConversion">AED 0</strong>
+          <em id="cpaDelta" class="kpi-delta" aria-label="CPA change vs previous period"></em>
+          <small>Lower is better</small>
+        </article>
+        <article class="kpi-card kpi-hero kpi-warning">
+          <span>Wasted spend</span>
+          <strong id="wastedSpend">AED 0</strong>
+          <em id="wasteDelta" class="kpi-delta" aria-label="Waste change vs previous period"></em>
+          <small>Spend with 0 conversions</small>
+        </article>
+      </section>
+
+      <section id="secondaryKpiGrid" class="kpi-grid kpi-grid-secondary" aria-label="Secondary metrics" hidden>
+        <article class="kpi-card kpi-secondary">
           <span>Impressions</span>
           <strong id="totalImpressions">0</strong>
           <small>Total ad impressions</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card kpi-secondary">
           <span>Clicks</span>
           <strong id="totalClicks">0</strong>
           <small>Total ad clicks</small>
         </article>
-        <article class="kpi-card">
-          <span>Total Conversions</span>
-          <strong id="totalConversions">0</strong>
-          <small>Telegram/signup conversion events</small>
-        </article>
-        <article class="kpi-card">
+        <article class="kpi-card kpi-secondary">
           <span>CTR</span>
           <strong id="ctr">0%</strong>
           <small>Clicks from impressions</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card kpi-secondary">
           <span>CPC</span>
           <strong id="cpc">AED 0</strong>
           <small>Average cost per click</small>
         </article>
-        <article class="kpi-card">
-          <span>Cost / Conversion</span>
-          <strong id="costPerConversion">AED 0</strong>
-          <small>Lower is better</small>
-        </article>
-        <article class="kpi-card">
-          <span>Conversion Rate</span>
+        <article class="kpi-card kpi-secondary">
+          <span>CVR</span>
           <strong id="conversionRate">0%</strong>
           <small>Conversions from clicks</small>
         </article>
       </section>
 
-      <section class="panel management-panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-label">Management summary</p>
-            <h2>What matters right now</h2>
-          </div>
-        </div>
-        <div id="managementSummary" class="management-summary"></div>
+      <section class="panel executive-strip">
+        <div id="executiveSnapshot" class="executive-scorecard" aria-label="Executive scorecard"></div>
       </section>
+
+      <details class="dashboard-drawer">
+        <summary>
+          <span>Planning, targets & alerts</span>
+          <small>Budget pacing, forecast, goals, anomalies</small>
+        </summary>
+        <section class="goal-panel" aria-label="Planning targets">
+          <label>
+            <span>Monthly budget</span>
+            <input id="monthlyBudgetTarget" type="number" min="0" step="100" value="10000">
+          </label>
+          <label>
+            <span>Target CPA</span>
+            <input id="targetCpa" type="number" min="0" step="10" value="150">
+          </label>
+          <label>
+            <span>Target CPC</span>
+            <input id="targetCpc" type="number" min="0" step="0.1" value="1.5">
+          </label>
+          <label>
+            <span>Target CVR %</span>
+            <input id="targetCvr" type="number" min="0" step="0.1" value="1">
+          </label>
+        </section>
+        <section class="report-grid drawer-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-label">Budget pacing</p>
+                <h2>Spend vs monthly plan</h2>
+              </div>
+            </div>
+            <div id="budgetPacing"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-label">Forecast</p>
+                <h2>End-of-month projection</h2>
+              </div>
+            </div>
+            <div id="forecastGrid" class="management-summary"></div>
+          </article>
+        </section>
+        <section class="report-grid drawer-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-label">Goal tracking</p>
+                <h2>Targets vs actuals</h2>
+              </div>
+            </div>
+            <div id="targetScorecard" class="management-summary"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-label">Anomaly alerts</p>
+                <h2>What changed</h2>
+              </div>
+            </div>
+            <div id="anomalyGrid" class="management-summary"></div>
+          </article>
+        </section>
+        <section class="panel management-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-label">Management summary</p>
+              <h2>What matters right now</h2>
+            </div>
+          </div>
+          <div id="managementSummary" class="management-summary"></div>
+        </section>
+      </details>
 
       <section class="report-grid">
         <article class="panel">
@@ -190,9 +285,22 @@
             <div>
               <p class="panel-label">Trend chart</p>
               <h2>Spend & conversions by day</h2>
+              <p class="panel-helper">Interactive ECharts view — click a day to filter. Hover for full KPIs.</p>
             </div>
           </div>
-          <div id="trendChart" class="trend-chart"></div>
+          <div class="chart-legend" aria-label="Trend chart legend">
+            <span><i class="legend-spend"></i>Spend (bars)</span>
+            <span><i class="legend-conv"></i>Conversions (line)</span>
+          </div>
+          <div id="trendChart" class="trend-chart echart-panel" role="img" aria-label="Daily spend and conversions chart"></div>
+          <div class="trend-tabs" aria-label="Line chart metric">
+            <button class="trend-tab is-active" type="button" data-trend-metric="spend">Spend</button>
+            <button class="trend-tab" type="button" data-trend-metric="clicks">Clicks</button>
+            <button class="trend-tab" type="button" data-trend-metric="conversions">Conversions</button>
+            <button class="trend-tab" type="button" data-trend-metric="cpc">CPC</button>
+            <button class="trend-tab" type="button" data-trend-metric="cpa">CPA</button>
+          </div>
+          <div id="metricLineChart" class="metric-line-chart echart-panel" role="img" aria-label="Selected metric trend line chart"></div>
         </article>
 
         <article class="panel">
@@ -206,38 +314,71 @@
         </article>
       </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-label">Funnel view</p>
-            <h2>Ad click to Telegram conversion flow</h2>
-          </div>
-        </div>
-        <div id="funnelView" class="funnel-view"></div>
-      </section>
-
-      <section class="report-grid">
+      <section class="report-grid main-charts">
         <article class="panel platform-panel">
           <div class="panel-head">
             <div>
               <p class="panel-label">Platform mix</p>
               <h2>Google vs Meta</h2>
+              <p class="panel-helper">Click a bar to filter by platform.</p>
             </div>
             <span id="selectedRange" class="pill">Last 30 days</span>
           </div>
-          <div id="platformBreakdown" class="bar-list"></div>
+          <div id="platformBreakdown" class="platform-echart echart-panel" role="img" aria-label="Google vs Meta performance chart"></div>
         </article>
 
         <article class="panel">
           <div class="panel-head">
             <div>
-              <p class="panel-label">Accounts</p>
-              <h2>Account-wise performance</h2>
+              <p class="panel-label">Campaign chart</p>
+              <h2>Top campaigns by spend</h2>
+              <p class="panel-helper">Click a bar to open drilldown.</p>
             </div>
-          <button class="show-toggle" type="button" data-toggle-list="accounts">Show all</button>
           </div>
-          <div id="accountBreakdown" class="bar-list"></div>
+          <div class="chart-legend" aria-label="Campaign chart legend">
+            <span><i class="legend-google"></i>Google Ads</span>
+            <span><i class="legend-meta"></i>Meta Ads</span>
+          </div>
+          <div id="campaignChart" class="campaign-chart echart-panel" role="img" aria-label="Top campaigns by spend chart"></div>
         </article>
+      </section>
+
+      <details class="dashboard-drawer">
+        <summary>
+          <span>Detailed analysis</span>
+          <small>Tables, keywords, creatives, health, recommendations</small>
+        </summary>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Conversion path</p>
+            <h2>Ad impression to tracked conversion</h2>
+          </div>
+        </div>
+        <div id="funnelView" class="funnel-view"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Accounts</p>
+            <h2>Account-wise performance</h2>
+            <p class="panel-helper">ECharts account comparison — click a bar to filter by account.</p>
+          </div>
+          <button class="show-toggle" type="button" data-toggle-list="accounts">Show all</button>
+        </div>
+        <div id="accountBreakdown" class="account-echart echart-panel" role="img" aria-label="Account performance chart"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Campaign drilldown</p>
+            <h2>Click a campaign to inspect it</h2>
+          </div>
+        </div>
+        <div id="campaignDrilldown" class="campaign-drilldown"></div>
       </section>
 
       <section class="map-grid">
@@ -245,8 +386,14 @@
           <div class="panel-head">
             <div>
               <p class="panel-label">Country map</p>
-              <h2>Hover countries to inspect KPIs</h2>
+              <h2>Real map heat view</h2>
+              <p class="panel-helper">Dark map with country flags. Ring color = performance, size = spend. Click or hover for KPIs.</p>
             </div>
+          </div>
+          <div class="chart-legend" aria-label="Map legend">
+            <span><i class="legend-spend"></i>On target</span>
+            <span><i class="legend-watch"></i>Watch</span>
+            <span><i class="legend-waste"></i>Waste</span>
           </div>
           <div id="countryMap" class="country-map" aria-label="Country performance map"></div>
           <p id="countryTooltip" class="map-tooltip">Hover a country bubble to view KPIs.</p>
@@ -255,10 +402,21 @@
         <article class="panel">
           <div class="panel-head">
             <div>
+              <p class="panel-label">Country spend</p>
+              <h2>Top countries by spend</h2>
+              <p class="panel-helper">Flag labels show delivered location spend. Click to filter.</p>
+            </div>
+          </div>
+          <div id="countrySpendChart" class="country-spend-echart echart-panel" role="img" aria-label="Country spend chart"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
               <p class="panel-label">Countries & locations</p>
               <h2>Where conversions come from</h2>
             </div>
-          <button class="show-toggle" type="button" data-toggle-list="locations">Show all</button>
+            <button class="show-toggle" type="button" data-toggle-list="locations">Show all</button>
           </div>
           <div id="locationBreakdown" class="location-list"></div>
         </article>
@@ -278,7 +436,7 @@
       <section class="panel">
         <div class="panel-head table-head">
           <div>
-            <p class="panel-label">Campaign detail</p>
+              <p class="panel-label">Campaign detail</p>
             <h2>Campaign performance</h2>
           </div>
           <div class="table-actions">
@@ -298,11 +456,11 @@
                 <th>Spend</th>
                 <th>Impressions</th>
                 <th>Clicks</th>
-                <th>Conversions</th>
+                <th>Ad Conv.</th>
                 <th>CTR</th>
                 <th>CPC</th>
                 <th>Cost / Conv.</th>
-                <th>Conv. Rate</th>
+                <th>Ad CVR</th>
               </tr>
             </thead>
             <tbody id="campaignRows"></tbody>
@@ -310,59 +468,61 @@
         </div>
       </section>
 
-      <section class="report-grid">
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-label">Keyword intelligence</p>
-              <h2>Keyword summary</h2>
-            </div>
-          </div>
-          <div id="keywordIntelligence" class="intelligence-grid"></div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-label">Search terms</p>
-              <h2>Search queries</h2>
-            </div>
-            <button class="show-toggle" type="button" data-toggle-list="searchTerms">Show all</button>
-          </div>
-          <div id="searchTermList" class="mini-list"></div>
-        </article>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head table-head">
+      <section class="panel search-intel-panel">
+        <div class="panel-head">
           <div>
-            <p class="panel-label">Google keywords</p>
-            <h2>Keyword-wise performance</h2>
-          </div>
-          <div class="table-actions">
-            <p class="table-note">Google Ads keywords only. Meta does not expose keyword-level ad reporting.</p>
-            <button class="show-toggle" type="button" data-toggle-list="keywords">Show all</button>
+            <p class="panel-label">Search intelligence</p>
+            <h2>Keywords &amp; search queries</h2>
+            <p class="table-note">Google Ads only — Meta does not expose keyword-level reporting.</p>
           </div>
         </div>
-        <div class="table-wrap">
-          <table>
+        <div class="search-intel-toolbar">
+          <div class="trend-tabs search-intel-tabs" aria-label="Search intelligence views">
+            <button class="trend-tab is-active" type="button" data-search-tab="waste">Waste</button>
+            <button class="trend-tab" type="button" data-search-tab="winners">Winners</button>
+            <button class="trend-tab" type="button" data-search-tab="keywords">All keywords</button>
+            <button class="trend-tab" type="button" data-search-tab="queries">Search queries</button>
+          </div>
+          <label class="search-intel-filter">
+            <input id="keywordMinSpendToggle" type="checkbox" checked>
+            <span>Hide under AED 10 spend</span>
+          </label>
+          <div class="search-intel-actions">
+            <button id="exportWastedKeywords" class="action-button action-button-small" type="button">Export wasted keywords</button>
+            <button id="exportWastedSearchTerms" class="action-button action-button-small" type="button">Export wasted search terms</button>
+            <button id="copyNegativesList" class="action-button action-button-small" type="button">Copy negatives list</button>
+          </div>
+        </div>
+        <div id="searchIntelCharts" class="search-intel-charts">
+          <div id="keywordWasteChart" class="keyword-waste-echart echart-panel" role="img" aria-label="Keyword waste chart"></div>
+          <div id="searchTermWasteChart" class="search-term-waste-echart echart-panel" role="img" aria-label="Search term waste chart"></div>
+          <div id="matchTypeChart" class="match-type-echart echart-panel" role="img" aria-label="Match type breakdown chart"></div>
+        </div>
+        <div id="searchIntelPanel" class="search-intel-panel-body"></div>
+        <div id="keywordTableWrap" class="table-wrap keyword-table-wrap" hidden>
+          <table class="keyword-table">
             <thead>
               <tr>
                 <th>Keyword</th>
                 <th>Match</th>
-                <th>Campaign</th>
-                <th>Ad group</th>
                 <th>Spend</th>
-                <th>Impressions</th>
                 <th>Clicks</th>
-                <th>Conversions</th>
-                <th>CTR</th>
-                <th>CPC</th>
-                <th>Cost / Conv.</th>
+                <th>Ad Conv.</th>
+                <th>CPA</th>
+                <th>Flag</th>
+                <th class="col-extra">Campaign</th>
+                <th class="col-extra">Ad group</th>
+                <th class="col-extra">Impressions</th>
+                <th class="col-extra">CTR</th>
+                <th class="col-extra">CPC</th>
               </tr>
             </thead>
             <tbody id="keywordRows"></tbody>
           </table>
+        </div>
+        <div class="table-actions keyword-table-actions" hidden>
+          <button id="toggleKeywordColumns" class="show-toggle" type="button">More columns</button>
+          <button class="show-toggle" type="button" data-toggle-list="keywords">Show all</button>
         </div>
       </section>
 
@@ -388,7 +548,7 @@
                 <th>Spend</th>
                 <th>Impressions</th>
                 <th>Clicks</th>
-                <th>Conversions</th>
+                <th>Ad Conv.</th>
                 <th>CTR</th>
                 <th>CPC</th>
                 <th>Cost / Conv.</th>
@@ -399,55 +559,30 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel actions-panel-wrap">
         <div class="panel-head">
           <div>
-            <p class="panel-label">Top opportunities</p>
-            <h2>Action cards</h2>
+            <p class="panel-label">Actions</p>
+            <h2>Scale, fix, watch</h2>
           </div>
         </div>
-        <div id="opportunityGrid" class="insight-grid insight-grid-soft"></div>
+        <div id="actionsPanel" class="actions-panel"></div>
       </section>
-
-      <section class="report-grid">
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-label">Campaign health</p>
-              <h2>Score by campaign</h2>
-            </div>
-            <button class="show-toggle" type="button" data-toggle-list="health">Show all</button>
-          </div>
-          <div id="healthList" class="health-list"></div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-label">Budget recommendations</p>
-              <h2>Scale, keep, reduce, or pause</h2>
-            </div>
-            <button class="show-toggle" type="button" data-toggle-list="recommendations">Show all</button>
-          </div>
-          <div id="recommendationList" class="recommendation-list"></div>
-        </article>
-      </section>
-
-      <section class="panel alert-panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-label">Wasted spend alerts</p>
-            <h2>Review before scaling</h2>
-          </div>
-        </div>
-        <div id="alertList" class="alert-list"></div>
-      </section>
+      </details>
     </main>
+
+    <div id="chartFloatingTooltip" class="chart-floating-tooltip" role="tooltip" hidden></div>
 
     <script>
       window.__DASHBOARD_AUTH__ = {
         passwordHash: "<%= dashboardPasswordHash %>",
-        refreshEndpoint: "/dashboard/refresh-data.php"
+        refreshEndpoint: "/dashboard/refresh-data.php",
+        liveRefresh: {
+          enabled: true,
+          staleAfterMinutes: 20,
+          apiSyncMinutes: 30,
+          jsonPollMinutes: 3
+        }
       };
     </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>

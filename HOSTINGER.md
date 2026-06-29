@@ -45,8 +45,10 @@ This updates:
 dist/dashboard/data/ads-dashboard.json
 ```
 
-You can also schedule the same refresh with cron:
+You can also schedule the same refresh with cron so data stays current even when nobody has the dashboard open:
 
 ```
-cd /absolute/path/to/repository && npm run refresh:ads
+*/15 * * * * cd /absolute/path/to/repository && npm run refresh:ads >> /tmp/tpclub-ads-sync.log 2>&1
 ```
+
+The dashboard also auto-syncs while open: it pulls fresh API data on load when stale, checks for newer JSON every 3 minutes, and runs a full API sync every 30 minutes.
