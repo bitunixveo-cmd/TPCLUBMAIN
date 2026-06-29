@@ -85,6 +85,32 @@ function isoDate(daysAgo) {
   return date.toISOString().slice(0, 10);
 }
 
+function metaTimeRange(daysAgo = 30) {
+  return JSON.stringify({ since: isoDate(daysAgo), until: isoDate(0) });
+}
+
+function loadPreviousPayload() {
+  for (const outputPath of outputPaths) {
+    if (!fs.existsSync(outputPath)) continue;
+    try {
+      return JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+    } catch (_error) {
+      // try next path
+    }
+  }
+  return null;
+}
+
+function preserveRowsOnFailure(sourceResult, previousRows, matchFn) {
+  if (sourceResult.status.ok && sourceResult.rows.length) {
+    return sourceResult.rows;
+  }
+  if (!Array.isArray(previousRows) || !previousRows.length) {
+    return sourceResult.rows;
+  }
+  return previousRows.filter(matchFn);
+}
+
 async function requestJson(url, options = {}) {
   const response = await fetch(url, options);
   const text = await response.text();
@@ -487,7 +513,7 @@ async function fetchMetaRows() {
     level: 'campaign',
     fields: 'date_start,account_name,campaign_id,campaign_name,spend,clicks,impressions,actions',
     time_increment: '1',
-    date_preset: 'last_30d',
+    time_range: metaTimeRange(30),
     action_breakdowns: 'action_type',
     breakdowns: 'country',
     limit: '500'
@@ -568,7 +594,7 @@ async function fetchMetaAdRows() {
     level: 'ad',
     fields: 'date_start,account_name,campaign_name,adset_name,ad_name,spend,clicks,impressions,actions',
     time_increment: '1',
-    date_preset: 'last_30d',
+    time_range: metaTimeRange(30),
     action_breakdowns: 'action_type',
     breakdowns: 'country',
     limit: '500'
@@ -620,6 +646,22 @@ async function main() {
     runSource('metaAds', fetchMetaAdRows)
   ]);
 
+  const previous = loadPreviousPayload();
+  const previousRows = Array.isArray(previous?.rows) ? previous.rows : [];
+  const googleRows = preserveRowsOnFailure(google, previousRows, (row) => row.platform === 'Google Ads');
+  const metaRows = preserveRowsOnFailure(meta, previousRows, (row) => row.platform === 'Meta Ads');
+  const previousTargeted = Array.isArray(previous?.targetedLocationRows) ? previous.targetedLocationRows : [];
+  const googleTargeted = preserveRowsOnFailure(
+    googleTargetedLocations,
+    previousTargeted,
+    (row) => row.platform === 'Google Ads' || row.source === 'google_ads_geo'
+  );
+  const metaTargeted = preserveRowsOnFailure(
+    metaTargetedLocations,
+    previousTargeted,
+    (row) => row.platform === 'Meta Ads' || row.source === 'meta_ads_targeting'
+  );
+
   const payload = {
     generatedAt: new Date().toISOString(),
     range: {
@@ -635,11 +677,11 @@ async function main() {
       metaTargetedLocations: metaTargetedLocations.status,
       metaAds: metaAds.status
     },
-    rows: [...google.rows, ...meta.rows].filter((row) => row.date),
-    targetedLocationRows: [...googleTargetedLocations.rows, ...metaTargetedLocations.rows].filter((row) => row.location),
-    keywordRows: googleKeywords.rows.filter((row) => row.date),
-    searchTermRows: googleSearchTerms.rows.filter((row) => row.date),
-    creativeRows: metaAds.rows.filter((row) => row.date)
+    rows: [...googleRows, ...metaRows].filter((row) => row.date),
+    targetedLocationRows: [...googleTargeted, ...metaTargeted].filter((row) => row.location),
+    keywordRows: preserveRowsOnFailure(googleKeywords, previous?.keywordRows || [], () => true).filter((row) => row.date),
+    searchTermRows: preserveRowsOnFailure(googleSearchTerms, previous?.searchTermRows || [], () => true).filter((row) => row.date),
+    creativeRows: preserveRowsOnFailure(metaAds, previous?.creativeRows || [], () => true).filter((row) => row.date)
   };
 
   const writableOutputPaths = outputPaths.filter((outputPath) => {

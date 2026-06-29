@@ -54,7 +54,7 @@ let keywordMinSpendEnabled = true;
 let kpiSecondaryExpanded = false;
 let keywordColumnsExpanded = false;
 let selectedCampaignKey = '';
-const syncMeta = { generatedAtMs: 0 };
+const syncMeta = { generatedAtMs: 0, sources: {} };
 const liveUpdateState = { isRefreshing: false, jsonPollTimer: null, apiSyncTimer: null };
 
 function getLiveRefreshConfig() {
@@ -609,12 +609,19 @@ async function loadSyncedRows({ preserveExisting = false } = {}) {
     })) : [];
 
     syncMeta.generatedAtMs = payload.generatedAt ? new Date(payload.generatedAt).getTime() : Date.now();
+    syncMeta.sources = payload.sources || {};
     const generatedAt = payload.generatedAt ? new Date(payload.generatedAt).toLocaleString() : 'just now';
     const rangeText = payload.range && payload.range.from && payload.range.to ? `${payload.range.from} to ${payload.range.to}` : 'last synced range';
     const latestDay = latestAvailableDate();
     const throughText = latestDay ? ` Reporting through ${latestDay}.` : '';
     const liveNote = getRefreshEndpoint() && getLiveRefreshConfig().enabled ? ' Auto-sync is on while this tab is open.' : '';
-    setSyncStatus('Live reporting data', `Updated ${generatedAt}.${throughText}${syncStalenessNote()}${liveNote} Range: ${rangeText}. Google: ${sourceSummary(payload.sources && payload.sources.google)}. Meta: ${sourceSummary(payload.sources && payload.sources.meta)}.`);
+    const googleIssue = syncMeta.sources.google && !syncMeta.sources.google.ok
+      ? ` Google sync failed (${syncMeta.sources.google.error || 'check API token'}). Showing last good Google data.`
+      : '';
+    setSyncStatus(
+      needsLiveApiRefresh() ? 'Reporting data is behind' : 'Live reporting data',
+      `Updated ${generatedAt}.${throughText}${syncStalenessNote()}${googleIssue}${liveNote} Range: ${rangeText}. Google: ${sourceSummary(syncMeta.sources.google)}. Meta: ${sourceSummary(syncMeta.sources.meta)}.`
+    );
     updateDateInputBounds();
   } catch (error) {
     if (!preserveExisting) {
@@ -1788,9 +1795,12 @@ function renderFilterNotice(rows) {
   }
 
   if (!overlaps) {
+    const today = calendarTodayIso();
+    const isToday = from === to && from === today;
+    const isYesterday = from === to && from === isoFromDate(new Date(parseDateInput(today).getTime() - dayMs));
     elements.filterNotice.hidden = false;
     elements.filterNotice.innerHTML = `
-      <p><strong>No synced data for ${escapeHtml(from)} to ${escapeHtml(to)}.</strong> Available reporting runs ${escapeHtml(earliest)} through ${escapeHtml(latest)}. Calendar today is ${escapeHtml(calendarTodayIso())}, so today/yesterday only work after you refresh from Google/Meta.</p>
+      <p><strong>No synced data for ${escapeHtml(from)} to ${escapeHtml(to)}.</strong> Available reporting runs ${escapeHtml(earliest)} through ${escapeHtml(latest)}.${isToday ? ' Ad platforms often lag by a few hours — try Yesterday or click Refresh data.' : ''}${isYesterday && latest < from ? ' Yesterday is not in the sync file yet — click Refresh data on the server.' : ''}</p>
       <div class="filter-notice-actions">
         <button type="button" class="action-button action-button-small" data-jump-latest-day>Use latest synced day (${escapeHtml(latest)})</button>
         <button type="button" class="action-button action-button-small" data-jump-last7>Last 7 days</button>
@@ -2567,7 +2577,10 @@ async function initDashboard() {
   });
 
   if (needsLiveApiRefresh() && getRefreshEndpoint() && getStoredRefreshPassword()) {
-    syncLiveDataFromServer({ silent: true });
+    syncLiveDataFromServer({ silent: true, force: true });
+  } else if (needsLiveApiRefresh() && getRefreshEndpoint()) {
+    const latest = latestAvailableDate();
+    setSyncStatus('Data is behind', `Reporting through ${latest || 'unknown'}. Click Refresh data and enter your dashboard password to pull the latest Google/Meta numbers.`);
   }
 }
 
