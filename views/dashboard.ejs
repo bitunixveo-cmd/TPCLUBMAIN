@@ -134,15 +134,17 @@
 
       <section class="action-bar" aria-label="Dashboard actions">
         <button id="refreshData" class="action-button" type="button">Refresh data</button>
+        <button id="toggleFocusMode" class="action-button" type="button" aria-pressed="false">Focus mode</button>
         <button id="exportCsv" class="action-button" type="button">Export CSV</button>
         <button id="printReport" class="action-button" type="button">Download PDF / Print</button>
         <button id="copySummary" class="action-button" type="button">Copy Summary</button>
       </section>
 
       <div id="filterNotice" class="filter-notice" hidden></div>
+      <div id="syncHealthBanner" class="sync-health-banner" hidden role="status"></div>
 
       <div class="kpi-toolbar">
-        <span id="dataThroughPill" class="pill data-through-pill">Data through —</span>
+        <div id="platformDataPills" class="platform-data-pills" aria-label="Data freshness by platform"></div>
         <button id="toggleSecondaryKpis" class="show-toggle" type="button" aria-expanded="false" aria-controls="secondaryKpiGrid">More metrics</button>
       </div>
 
@@ -150,24 +152,28 @@
         <article class="kpi-card kpi-hero">
           <span>Spend</span>
           <strong id="totalSpend">AED 0</strong>
+          <span id="spendSparkline" class="kpi-sparkline-wrap" aria-hidden="true"></span>
           <em id="spendDelta" class="kpi-delta" aria-label="Spend change vs previous period"></em>
           <small id="spendNote">Across selected data</small>
         </article>
         <article class="kpi-card kpi-hero">
           <span>Conversions</span>
           <strong id="totalConversions">0</strong>
+          <span id="conversionsSparkline" class="kpi-sparkline-wrap" aria-hidden="true"></span>
           <em id="conversionsDelta" class="kpi-delta" aria-label="Conversions change vs previous period"></em>
           <small>Google/Meta tracked</small>
         </article>
         <article class="kpi-card kpi-hero">
           <span>CPA</span>
           <strong id="costPerConversion">AED 0</strong>
+          <span id="cpaSparkline" class="kpi-sparkline-wrap" aria-hidden="true"></span>
           <em id="cpaDelta" class="kpi-delta" aria-label="CPA change vs previous period"></em>
           <small>Lower is better</small>
         </article>
         <article class="kpi-card kpi-hero kpi-warning">
           <span>Wasted spend</span>
           <strong id="wastedSpend">AED 0</strong>
+          <span id="wasteSparkline" class="kpi-sparkline-wrap" aria-hidden="true"></span>
           <em id="wasteDelta" class="kpi-delta" aria-label="Waste change vs previous period"></em>
           <small>Spend with 0 conversions</small>
         </article>
@@ -205,7 +211,7 @@
         <div id="executiveSnapshot" class="executive-scorecard" aria-label="Executive scorecard"></div>
       </section>
 
-      <details class="dashboard-drawer">
+      <details class="dashboard-drawer" data-focus-hide>
         <summary>
           <span>Planning, targets & alerts</span>
           <small>Budget pacing, forecast, goals, anomalies</small>
@@ -226,6 +232,10 @@
           <label>
             <span>Target CVR %</span>
             <input id="targetCvr" type="number" min="0" step="0.1" value="1">
+          </label>
+          <label>
+            <span>Waste alert threshold (AED/day)</span>
+            <input id="wasteAlertThreshold" type="number" min="0" step="50" value="200" title="Server sends Telegram via n8n when daily waste exceeds this (set N8N_WEBHOOK + WASTE_ALERT_THRESHOLD_AED on Hostinger)">
           </label>
         </section>
         <section class="report-grid drawer-grid">
@@ -314,6 +324,16 @@
         </article>
       </section>
 
+      <section class="panel dual-range-panel" data-focus-hide>
+        <div class="panel-head">
+          <div>
+            <p class="panel-label">Range compare</p>
+            <h2>This period vs previous period</h2>
+          </div>
+        </div>
+        <div id="dualRangeCompare" class="dual-range-compare"></div>
+      </section>
+
       <section class="report-grid main-charts">
         <article class="panel platform-panel">
           <div class="panel-head">
@@ -343,7 +363,7 @@
         </article>
       </section>
 
-      <details class="dashboard-drawer">
+      <details class="dashboard-drawer" data-focus-hide>
         <summary>
           <span>Detailed analysis</span>
           <small>Tables, keywords, creatives, health, recommendations</small>
@@ -452,7 +472,7 @@
                 <th>Account</th>
                 <th>Status</th>
                 <th>Campaign</th>
-                <th>Location</th>
+                <th>Top locations</th>
                 <th>Spend</th>
                 <th>Impressions</th>
                 <th>Clicks</th>
@@ -484,12 +504,14 @@
             <button class="trend-tab" type="button" data-search-tab="queries">Search queries</button>
           </div>
           <label class="search-intel-filter">
-            <input id="keywordMinSpendToggle" type="checkbox" checked>
-            <span>Hide under AED 10 spend</span>
+            <span>Min spend AED</span>
+            <input id="keywordMinSpendSlider" type="range" min="0" max="50" step="5" value="10">
+            <output id="keywordMinSpendValue">10</output>
           </label>
           <div class="search-intel-actions">
             <button id="exportWastedKeywords" class="action-button action-button-small" type="button">Export wasted keywords</button>
             <button id="exportWastedSearchTerms" class="action-button action-button-small" type="button">Export wasted search terms</button>
+            <button id="exportGoogleNegatives" class="action-button action-button-small" type="button">Export Google negatives</button>
             <button id="copyNegativesList" class="action-button action-button-small" type="button">Copy negatives list</button>
           </div>
         </div>
@@ -541,6 +563,7 @@
           <table>
             <thead>
               <tr>
+                <th>Preview</th>
                 <th>Ad</th>
                 <th>Ad set</th>
                 <th>Campaign</th>

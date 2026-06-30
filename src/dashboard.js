@@ -53,7 +53,12 @@ let keywordMinSpend = 10;
 let keywordMinSpendEnabled = true;
 let kpiSecondaryExpanded = false;
 let keywordColumnsExpanded = false;
+let focusMode = false;
+let searchIntelChartsLoaded = false;
 let selectedCampaignKey = '';
+const datePresetStorageKey = 'tpclub_dashboard_date_preset';
+const focusModeStorageKey = 'tpclub_dashboard_focus_mode';
+const wasteAlertStorageKey = 'tpclub_dashboard_waste_alert_threshold';
 const syncMeta = { generatedAtMs: 0, sources: {} };
 const liveUpdateState = { isRefreshing: false, jsonPollTimer: null, apiSyncTimer: null };
 
@@ -162,7 +167,8 @@ const filters = {
   monthlyBudget: document.querySelector('#monthlyBudgetTarget'),
   targetCpa: document.querySelector('#targetCpa'),
   targetCpc: document.querySelector('#targetCpc'),
-  targetCvr: document.querySelector('#targetCvr')
+  targetCvr: document.querySelector('#targetCvr'),
+  wasteAlertThreshold: document.querySelector('#wasteAlertThreshold')
 };
 
 const elements = {
@@ -185,7 +191,14 @@ const elements = {
   conversionsDelta: document.querySelector('#conversionsDelta'),
   cpaDelta: document.querySelector('#cpaDelta'),
   wasteDelta: document.querySelector('#wasteDelta'),
-  dataThroughPill: document.querySelector('#dataThroughPill'),
+  spendSparkline: document.querySelector('#spendSparkline'),
+  conversionsSparkline: document.querySelector('#conversionsSparkline'),
+  cpaSparkline: document.querySelector('#cpaSparkline'),
+  wasteSparkline: document.querySelector('#wasteSparkline'),
+  platformDataPills: document.querySelector('#platformDataPills'),
+  syncHealthBanner: document.querySelector('#syncHealthBanner'),
+  toggleFocusMode: document.querySelector('#toggleFocusMode'),
+  dualRangeCompare: document.querySelector('#dualRangeCompare'),
   toggleSecondaryKpis: document.querySelector('#toggleSecondaryKpis'),
   secondaryKpiGrid: document.querySelector('#secondaryKpiGrid'),
   executiveSnapshot: document.querySelector('#executiveSnapshot'),
@@ -204,9 +217,11 @@ const elements = {
   keywordTableWrap: document.querySelector('#keywordTableWrap'),
   keywordTableActions: document.querySelector('.keyword-table-actions'),
   toggleKeywordColumns: document.querySelector('#toggleKeywordColumns'),
-  keywordMinSpendToggle: document.querySelector('#keywordMinSpendToggle'),
+  keywordMinSpendSlider: document.querySelector('#keywordMinSpendSlider'),
+  keywordMinSpendValue: document.querySelector('#keywordMinSpendValue'),
   exportWastedKeywords: document.querySelector('#exportWastedKeywords'),
   exportWastedSearchTerms: document.querySelector('#exportWastedSearchTerms'),
+  exportGoogleNegatives: document.querySelector('#exportGoogleNegatives'),
   copyNegativesList: document.querySelector('#copyNegativesList'),
   searchIntelTabButtons: document.querySelectorAll('[data-search-tab]'),
   countrySpendChart: document.querySelector('#countrySpendChart'),
@@ -329,6 +344,233 @@ function latestAvailableDate() {
   return dates.length ? dates[dates.length - 1] : '';
 }
 
+function latestAvailableDateForPlatform(platform) {
+  const dates = adRows
+    .filter((row) => row.platform === platform)
+    .map((row) => row.date)
+    .sort();
+  return dates.length ? dates[dates.length - 1] : '';
+}
+
+function buildSparklineSvg(values, { width = 72, height = 22, tone = 'neutral' } = {}) {
+  if (!values.length) return '';
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const range = max - min || 1;
+  const points = values.map((value, index) => {
+    const x = (index / Math.max(values.length - 1, 1)) * width;
+    const y = height - ((value - min) / range) * (height - 4) - 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return `<svg class="kpi-sparkline kpi-sparkline-${tone}" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" aria-hidden="true"><polyline points="${points}" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function dailyWastedSpend(rows) {
+  const days = new Map();
+  rows.forEach((row) => {
+    if (!row.date) return;
+    const current = days.get(row.date) || 0;
+    if (row.spend > 0 && row.conversions === 0) {
+      days.set(row.date, current + row.spend);
+    }
+  });
+  return days;
+}
+
+function renderHeroSparklines(rows) {
+  const days = buildTrendDays(rows).slice(-7);
+  const spendValues = days.map((day) => day.spend || 0);
+  const convValues = days.map((day) => day.conversions || 0);
+  const cpaValues = days.map((day) => (day.conversions ? day.spend / day.conversions : 0));
+  const wasteByDay = dailyWastedSpend(rows);
+  const wasteValues = days.map((day) => wasteByDay.get(day.name) || 0);
+
+  if (elements.spendSparkline) elements.spendSparkline.innerHTML = buildSparklineSvg(spendValues, { tone: 'spend' });
+  if (elements.conversionsSparkline) elements.conversionsSparkline.innerHTML = buildSparklineSvg(convValues, { tone: 'conv' });
+  if (elements.cpaSparkline) elements.cpaSparkline.innerHTML = buildSparklineSvg(cpaValues, { tone: 'cpa' });
+  if (elements.wasteSparkline) elements.wasteSparkline.innerHTML = buildSparklineSvg(wasteValues, { tone: 'waste' });
+}
+
+function renderPlatformDataPills() {
+  if (!elements.platformDataPills) return;
+  const googleThrough = latestAvailableDateForPlatform('Google Ads');
+  const metaThrough = latestAvailableDateForPlatform('Meta Ads');
+  const googleOk = syncMeta.sources.google && syncMeta.sources.google.ok;
+  const metaOk = syncMeta.sources.meta && syncMeta.sources.meta.ok;
+
+  const pills = [
+    {
+      label: 'Google',
+      through: googleThrough || '—',
+      tone: googleOk ? 'ok' : 'error'
+    },
+    {
+      label: 'Meta',
+      through: metaThrough || '—',
+      tone: metaOk ? 'ok' : 'error'
+    }
+  ];
+
+  elements.platformDataPills.innerHTML = pills.map((pill) => `
+    <span class="pill platform-pill platform-pill-${pill.tone}">${pill.label} through ${escapeHtml(pill.through)}</span>
+  `).join('');
+}
+
+function renderSyncHealthBanner() {
+  if (!elements.syncHealthBanner) return;
+  const issues = [];
+  const google = syncMeta.sources.google;
+  const meta = syncMeta.sources.meta;
+
+  if (google && !google.ok) {
+    issues.push(`<strong>Google Ads sync failed</strong> — ${escapeHtml(google.error || 'check refresh token')}. Showing last cached Google data${latestAvailableDateForPlatform('Google Ads') ? ` through ${escapeHtml(latestAvailableDateForPlatform('Google Ads'))}` : ''}.`);
+  }
+  if (meta && !meta.ok) {
+    issues.push(`<strong>Meta Ads sync failed</strong> — ${escapeHtml(meta.error || 'check API token')}.`);
+  }
+  if (needsLiveApiRefresh()) {
+    const latest = latestAvailableDate();
+    issues.push(`<strong>Data is behind calendar</strong> — latest synced day is ${escapeHtml(latest || 'unknown')}. Click <em>Refresh data</em> or set up Hostinger cron.`);
+  }
+
+  if (!issues.length) {
+    elements.syncHealthBanner.hidden = true;
+    elements.syncHealthBanner.innerHTML = '';
+    return;
+  }
+
+  elements.syncHealthBanner.hidden = false;
+  elements.syncHealthBanner.innerHTML = issues.map((issue) => `<p>${issue}</p>`).join('');
+}
+
+function applyFocusMode() {
+  document.body.classList.toggle('dashboard-focus-mode', focusMode);
+  if (elements.toggleFocusMode) {
+    elements.toggleFocusMode.textContent = focusMode ? 'Exit focus' : 'Focus mode';
+    elements.toggleFocusMode.setAttribute('aria-pressed', String(focusMode));
+  }
+  sessionStorage.setItem(focusModeStorageKey, focusMode ? '1' : '0');
+  requestAnimationFrame(() => resizeDashboardCharts());
+}
+
+function formatGoogleNegative(term, matchType) {
+  const text = String(term || '').trim();
+  if (!text) return '';
+  const mt = String(matchType || '').toUpperCase();
+  if (mt === 'EXACT') return `[${text}]`;
+  if (mt === 'PHRASE') return `"${text}"`;
+  return text;
+}
+
+function groupCampaignRowsByCampaign(rows) {
+  const groups = new Map();
+
+  rows.forEach((row) => {
+    const key = [row.platform, row.account, row.campaign].join('|');
+    const current = groups.get(key) || {
+      platform: row.platform,
+      account: row.account,
+      campaign: row.campaign,
+      status: row.status || 'UNKNOWN',
+      locations: new Set(),
+      spend: 0,
+      clicks: 0,
+      impressions: 0,
+      conversions: 0,
+      wastedSpend: 0,
+      latestDate: ''
+    };
+    current.spend += row.spend;
+    current.clicks += row.clicks;
+    current.impressions += row.impressions || 0;
+    current.conversions += row.conversions;
+    if (row.location) current.locations.add(row.location);
+    if (row.spend > 0 && row.conversions === 0) current.wastedSpend += row.spend;
+    if (!current.latestDate || row.date > current.latestDate) {
+      current.latestDate = row.date;
+      current.status = row.status || current.status;
+    }
+    groups.set(key, current);
+  });
+
+  return [...groups.values()]
+    .map((row) => ({
+      platform: row.platform,
+      account: row.account,
+      campaign: row.campaign,
+      status: row.status,
+      location: [...row.locations].slice(0, 3).join(', ') || '—',
+      countryCode: row.countryCode,
+      spend: row.spend,
+      clicks: row.clicks,
+      impressions: row.impressions,
+      conversions: row.conversions,
+      wastedSpend: row.wastedSpend,
+      latestDate: row.latestDate
+    }))
+    .sort((a, b) => b.conversions - a.conversions || costPer(a) - costPer(b));
+}
+
+function filteredCampaignTableGroups() {
+  return groupCampaignRowsByCampaign(getFilteredRows()).filter(rowHasActivity);
+}
+
+function renderDualRangeCompare() {
+  if (!elements.dualRangeCompare) return;
+  const { current, previous, currentFrom, currentTo, previousFrom, previousTo } = getPreviousSummary();
+  if (!currentFrom || !currentTo) {
+    elements.dualRangeCompare.innerHTML = '<div class="empty-state">Select a date range to compare periods.</div>';
+    return;
+  }
+
+  const cards = [
+    ['Spend', currency.format(current.spend), currency.format(previous.spend), changeText(deltaPercent(current.spend, previous.spend))],
+    ['Conversions', number.format(current.conversions), number.format(previous.conversions), changeText(deltaPercent(current.conversions, previous.conversions))],
+    ['CPA', formatCostPerConversion(current), formatCostPerConversion(previous), previous.conversions ? changeText(deltaPercent(current.conversions ? current.spend / current.conversions : 0, previous.conversions ? previous.spend / previous.conversions : 0)) : '—'],
+    ['Waste', currency.format(current.wastedSpend), currency.format(previous.wastedSpend), changeText(deltaPercent(current.wastedSpend, previous.wastedSpend))]
+  ];
+
+  elements.dualRangeCompare.innerHTML = `
+    <div class="dual-range-head">
+      <span><strong>This period</strong> ${formatDateRange(currentFrom, currentTo)}</span>
+      <span><strong>Previous</strong> ${formatDateRange(previousFrom, previousTo)}</span>
+    </div>
+    <div class="dual-range-grid">
+      ${cards.map(([label, currentValue, previousValue, delta]) => `
+        <article class="dual-range-card">
+          <span>${label}</span>
+          <div class="dual-range-values">
+            <strong>${currentValue}</strong>
+            <em>${delta}</em>
+          </div>
+          <small>vs ${previousValue} previous</small>
+        </article>
+      `).join('')}
+    </div>
+  `;
+}
+
+async function renderSearchIntelCharts() {
+  if (activeSearchIntelTab !== 'waste') return;
+  const token = ++chartsRenderToken;
+  setChartPanelsLoading(true);
+
+  try {
+    const charts = await loadChartsModule();
+    if (token !== chartsRenderToken) return;
+
+    charts.renderKeywordWasteChart(elements.keywordWasteChart, wastedKeywords(), chartFormatters);
+    charts.renderSearchTermWasteChart(elements.searchTermWasteChart, wastedSearchTerms().slice(0, 10), chartFormatters);
+    charts.renderMatchTypeChart(elements.matchTypeChart, matchTypeBreakdown(keywordRowsWithMinSpend()), chartFormatters);
+    searchIntelChartsLoaded = true;
+  } finally {
+    if (token === chartsRenderToken) {
+      setChartPanelsLoading(false);
+      requestAnimationFrame(() => resizeDashboardCharts());
+    }
+  }
+}
+
 function calendarTodayIso() {
   const now = new Date();
   return isoFromDate(new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())));
@@ -390,8 +632,21 @@ function setupFilters() {
   addOptions(filters.platform, uniqueValues('platform'));
   refreshDependentFilters();
 
-  setDatePreset(filters.datePreset.value || 'last30');
+  const savedPreset = sessionStorage.getItem(datePresetStorageKey) || 'last7';
+  filters.datePreset.value = savedPreset;
+  focusMode = sessionStorage.getItem(focusModeStorageKey) === '1';
+  const savedWasteAlert = sessionStorage.getItem(wasteAlertStorageKey);
+  if (savedWasteAlert && filters.wasteAlertThreshold) {
+    filters.wasteAlertThreshold.value = savedWasteAlert;
+  }
+  if (elements.keywordMinSpendSlider) {
+    elements.keywordMinSpendSlider.value = String(keywordMinSpend);
+    if (elements.keywordMinSpendValue) elements.keywordMinSpendValue.textContent = String(keywordMinSpend);
+  }
+
+  setDatePreset(filters.datePreset.value);
   updateDateInputBounds();
+  applyFocusMode();
 }
 
 function locationSourceRowsForCurrentView() {
@@ -483,6 +738,18 @@ function setDatePreset(preset) {
 
   filters.from.value = isoFromDate(from);
   filters.to.value = isoFromDate(to);
+
+  if (preset === 'today') {
+    const todayIso = isoFromDate(to);
+    const hasToday = adRows.some((row) => row.date === todayIso);
+    if (!hasToday && latestDataDate) {
+      filters.datePreset.value = 'latest';
+      filters.from.value = isoFromDate(latestDataDate);
+      filters.to.value = isoFromDate(latestDataDate);
+    }
+  }
+
+  sessionStorage.setItem(datePresetStorageKey, filters.datePreset.value);
 }
 
 function valuesForFilter(key) {
@@ -502,7 +769,7 @@ function valuesForFilter(key) {
 function syncFilterDependencies() {
   refreshDependentFilters();
 
-  const campaigns = groupCampaignRows(getFilteredRows());
+  const campaigns = groupCampaignRowsByCampaign(getFilteredRows());
   if (selectedCampaignKey && !campaigns.some((row) => campaignKey(row) === selectedCampaignKey)) {
     selectedCampaignKey = '';
   }
@@ -602,6 +869,7 @@ async function loadSyncedRows({ preserveExisting = false } = {}) {
       adSet: row.adSet || 'Unknown ad set',
       adName: row.adName || 'Unknown ad',
       location: row.location || row.countryCode || 'Unknown',
+      thumbnailUrl: row.thumbnailUrl || '',
       spend: Number(row.spend || 0),
       clicks: Number(row.clicks || 0),
       impressions: Number(row.impressions || 0),
@@ -622,6 +890,8 @@ async function loadSyncedRows({ preserveExisting = false } = {}) {
       needsLiveApiRefresh() ? 'Reporting data is behind' : 'Live reporting data',
       `Updated ${generatedAt}.${throughText}${syncStalenessNote()}${googleIssue}${liveNote} Range: ${rangeText}. Google: ${sourceSummary(syncMeta.sources.google)}. Meta: ${sourceSummary(syncMeta.sources.meta)}.`
     );
+    renderSyncHealthBanner();
+    renderPlatformDataPills();
     updateDateInputBounds();
   } catch (error) {
     if (!preserveExisting) {
@@ -1060,7 +1330,7 @@ function groupDaily(rows) {
 }
 
 function filteredCampaignGroups() {
-  return groupCampaignRows(getFilteredRows()).filter(rowHasActivity);
+  return groupCampaignRowsByCampaign(getFilteredRows()).filter(rowHasActivity);
 }
 
 function filteredSearchTerms() {
@@ -1380,10 +1650,6 @@ async function renderEchartSections(rows, locationRows) {
       selectedCampaignKey
     );
 
-    charts.renderKeywordWasteChart(elements.keywordWasteChart, wastedKeywords(), chartFormatters);
-    charts.renderSearchTermWasteChart(elements.searchTermWasteChart, wastedSearchTerms().slice(0, 10), chartFormatters);
-    charts.renderMatchTypeChart(elements.matchTypeChart, matchTypeBreakdown(keywordRowsWithMinSpend()), chartFormatters);
-
     const countries = groupRows(locationRows, 'location').slice(0, 10);
     charts.renderCountrySpendChart(elements.countrySpendChart, countries, chartFormatters, onChartCountryClick);
   } finally {
@@ -1593,6 +1859,7 @@ function renderSearchIntelligence() {
         </div>
       </div>
     `;
+    renderSearchIntelCharts();
     return;
   }
 
@@ -1723,7 +1990,8 @@ function renderCreativeTable() {
   updateToggle('creatives', rows.length);
   elements.creativeRows.innerHTML = visibleRows(rows, 'creatives').map((row) => `
     <tr>
-      <td>${row.adName}</td>
+      <td>${row.thumbnailUrl ? `<img class="creative-thumb" src="${escapeHtml(row.thumbnailUrl)}" alt="" width="48" height="48" loading="lazy" decoding="async">` : '<span class="creative-thumb-fallback" aria-hidden="true">Ad</span>'}</td>
+      <td>${escapeHtml(row.adName)}</td>
       <td>${row.adSet}</td>
       <td>${campaignWithPlatform(row)}</td>
       <td>${row.location}</td>
@@ -1735,7 +2003,7 @@ function renderCreativeTable() {
       <td>${currencyPrecise.format(costPerClick(row))}</td>
       <td>${formatCostPerConversion(row)}</td>
     </tr>
-  `).join('') || '<tr><td class="empty-state" colspan="11">No Meta creative data for this filter.</td></tr>';
+  `).join('') || '<tr><td class="empty-state" colspan="12">No Meta creative data for this filter.</td></tr>';
 }
 
 function renderKpis(rows) {
@@ -1765,10 +2033,9 @@ function renderKpis(rows) {
     : 'No rows match the current filters';
   elements.selectedRange.textContent = `${filters.from.value || 'Start'} to ${filters.to.value || latestAvailableDate() || 'End'}`;
 
-  if (elements.dataThroughPill) {
-    const latest = latestAvailableDate();
-    elements.dataThroughPill.textContent = latest ? `Data through ${latest}` : 'No synced data';
-  }
+  renderPlatformDataPills();
+  renderHeroSparklines(rows);
+  renderSyncHealthBanner();
 
   if (elements.secondaryKpiGrid) {
     elements.secondaryKpiGrid.hidden = !kpiSecondaryExpanded;
@@ -2044,8 +2311,8 @@ function renderCountryMap(rows) {
   elements.countryTooltip.textContent = firstSummary;
 }
 
-function renderTable(rows) {
-  const campaignRows = filteredCampaignGroups();
+function renderTable() {
+  const campaignRows = filteredCampaignTableGroups();
   updateToggle('campaigns', campaignRows.length);
 
   elements.campaignRows.innerHTML = visibleRows(campaignRows, 'campaigns').map((row) => {
@@ -2128,10 +2395,11 @@ function renderDashboard() {
   renderCountryDrilldown(locationRows);
   renderCampaignChart(rows);
   renderCampaignDrilldown();
-  renderTable(rows);
+  renderTable();
   renderSearchIntelligence();
   renderActionsPanel(rows);
   renderCreativeTable();
+  renderDualRangeCompare();
   renderEchartSections(rows, locationRows);
 }
 
@@ -2204,6 +2472,19 @@ async function copyNegativesList() {
   } catch {
     window.prompt('Copy negatives list:', negatives.join('\n'));
   }
+}
+
+function exportGoogleNegativesCsv() {
+  const keywordNegatives = getFilteredKeywordRows()
+    .filter((row) => row.spend > 0 && row.conversions === 0 && (!keywordMinSpendEnabled || !keywordMinSpend || row.spend >= keywordMinSpend))
+    .map((row) => formatGoogleNegative(row.keyword, row.matchType));
+  const termNegatives = wastedSearchTerms().map((row) => formatGoogleNegative(row.searchTerm, 'BROAD'));
+  const negatives = [...new Set([...keywordNegatives, ...termNegatives].filter(Boolean))];
+  if (!negatives.length) {
+    window.alert('No wasted terms to export for this filter.');
+    return;
+  }
+  downloadCsv('google-negative-keywords.csv', ['Negative keyword'], negatives.map((term) => csvEscape(term)));
 }
 
 function preparePrintReport() {
@@ -2376,7 +2657,7 @@ function toggleFilters() {
 
 function resetFilters() {
   filters.platform.value = 'all';
-  filters.datePreset.value = 'last30';
+  filters.datePreset.value = 'last7';
   filters.account.value = 'all';
   filters.status.value = 'all';
   filters.campaign.value = 'all';
@@ -2439,10 +2720,21 @@ function setupDashboardInteractions() {
 
   elements.searchIntelTabButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      activeSearchIntelTab = button.dataset.searchTab || 'waste';
+      const nextTab = button.dataset.searchTab || 'waste';
+      if (nextTab !== activeSearchIntelTab) {
+        searchIntelChartsLoaded = false;
+      }
+      activeSearchIntelTab = nextTab;
       renderDashboard();
     });
   });
+
+  if (elements.toggleFocusMode) {
+    elements.toggleFocusMode.addEventListener('click', () => {
+      focusMode = !focusMode;
+      applyFocusMode();
+    });
+  }
 
   if (elements.toggleSecondaryKpis) {
     elements.toggleSecondaryKpis.addEventListener('click', () => {
@@ -2451,9 +2743,14 @@ function setupDashboardInteractions() {
     });
   }
 
-  if (elements.keywordMinSpendToggle) {
-    elements.keywordMinSpendToggle.addEventListener('change', () => {
-      keywordMinSpendEnabled = elements.keywordMinSpendToggle.checked;
+  if (elements.keywordMinSpendSlider) {
+    elements.keywordMinSpendSlider.addEventListener('input', () => {
+      keywordMinSpend = Number(elements.keywordMinSpendSlider.value) || 0;
+      keywordMinSpendEnabled = keywordMinSpend > 0;
+      if (elements.keywordMinSpendValue) {
+        elements.keywordMinSpendValue.textContent = String(keywordMinSpend);
+      }
+      searchIntelChartsLoaded = false;
       renderDashboard();
     });
   }
@@ -2471,12 +2768,20 @@ function setupDashboardInteractions() {
   if (elements.exportWastedSearchTerms) {
     elements.exportWastedSearchTerms.addEventListener('click', exportWastedSearchTermsCsv);
   }
+  if (elements.exportGoogleNegatives) {
+    elements.exportGoogleNegatives.addEventListener('click', exportGoogleNegativesCsv);
+  }
   if (elements.copyNegativesList) {
     elements.copyNegativesList.addEventListener('click', copyNegativesList);
   }
 
-  [filters.monthlyBudget, filters.targetCpa, filters.targetCpc, filters.targetCvr].filter(Boolean).forEach((input) => {
-    input.addEventListener('input', renderDashboard);
+  [filters.monthlyBudget, filters.targetCpa, filters.targetCpc, filters.targetCvr, filters.wasteAlertThreshold].filter(Boolean).forEach((input) => {
+    input.addEventListener('input', () => {
+      if (input === filters.wasteAlertThreshold) {
+        sessionStorage.setItem(wasteAlertStorageKey, input.value || '0');
+      }
+      renderDashboard();
+    });
   });
 
   document.addEventListener('click', (event) => {
@@ -2544,6 +2849,7 @@ async function initDashboard() {
   Object.values(filters).forEach((filter) => filter.addEventListener('change', () => {
     if (filter === filters.datePreset) {
       setDatePreset(filters.datePreset.value);
+      sessionStorage.setItem(datePresetStorageKey, filters.datePreset.value);
     }
     if ([filters.from, filters.to].includes(filter)) {
       filters.datePreset.value = 'custom';

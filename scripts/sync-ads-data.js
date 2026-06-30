@@ -583,12 +583,28 @@ async function fetchMetaTargetedLocationRows() {
   });
 }
 
+async function fetchMetaAdThumbnailMap(accountId) {
+  const params = new URLSearchParams({
+    access_token: process.env.META_ACCESS_TOKEN,
+    fields: 'name,creative{thumbnail_url}',
+    limit: '500'
+  });
+  const rows = await fetchMetaPage(`https://graph.facebook.com/${metaApiVersion}/act_${accountId}/ads?${params.toString()}`);
+  const map = new Map();
+  rows.forEach((row) => {
+    const url = row.creative && row.creative.thumbnail_url;
+    if (row.name && url) map.set(row.name, url);
+  });
+  return map;
+}
+
 async function fetchMetaAdRows() {
   if (!process.env.META_AD_ACCOUNT_ID || !process.env.META_ACCESS_TOKEN) {
     throw new Error('Missing META_AD_ACCOUNT_ID or META_ACCESS_TOKEN');
   }
 
   const accountId = String(process.env.META_AD_ACCOUNT_ID).replace(/^act_/, '');
+  const thumbnailMap = await fetchMetaAdThumbnailMap(accountId).catch(() => new Map());
   const params = new URLSearchParams({
     access_token: process.env.META_ACCESS_TOKEN,
     level: 'ad',
@@ -609,6 +625,7 @@ async function fetchMetaAdRows() {
     campaign: row.campaign_name || 'Unknown campaign',
     adSet: row.adset_name || 'Unknown ad set',
     adName: row.ad_name || 'Unknown ad',
+    thumbnailUrl: thumbnailMap.get(row.ad_name || '') || '',
     locationType: 'delivered',
     location: countryNames[row.country] || row.country || 'All Meta locations',
     countryCode: row.country || '',
@@ -632,6 +649,36 @@ async function runSource(name, fetcher) {
       status: { ok: false, rowCount: 0, error: sanitizeError(error) },
       rows: []
     };
+  }
+}
+
+async function maybeSendWasteAlert(rows) {
+  const webhook = process.env.N8N_WEBHOOK || process.env.VITE_N8N_WEBHOOK;
+  const threshold = Number(process.env.WASTE_ALERT_THRESHOLD_AED || 0);
+  if (!webhook || !threshold) return;
+
+  const today = isoDate(0);
+  const wastedToday = rows
+    .filter((row) => row.date === today && row.spend > 0 && row.conversions === 0)
+    .reduce((sum, row) => sum + row.spend, 0);
+
+  if (wastedToday < threshold) return;
+
+  try {
+    await requestJson(webhook, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        type: 'waste_alert',
+        date: today,
+        wastedSpend: wastedToday,
+        threshold,
+        message: `TP Club ads waste alert: AED ${wastedToday.toFixed(0)} wasted today (threshold AED ${threshold}).`
+      })
+    });
+    console.log(`Waste alert sent: AED ${wastedToday.toFixed(0)} on ${today}.`);
+  } catch (error) {
+    console.log(`Waste alert webhook failed: ${sanitizeError(error)}`);
   }
 }
 
@@ -693,6 +740,8 @@ async function main() {
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, `${JSON.stringify(payload, null, 2)}\n`);
   });
+
+  await maybeSendWasteAlert(payload.rows);
 
   console.log(`Ads dashboard sync complete: ${payload.rows.length} rows written to ${writableOutputPaths.length} output path(s).`);
   console.log(`Google Ads: ${payload.sources.google.ok ? 'ok' : 'failed'} (${payload.sources.google.rowCount} rows)`);

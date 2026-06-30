@@ -9,7 +9,8 @@
     "build:with-ads": "npm run sync:ads && npm run build",
     "preview": "vite preview --host 0.0.0.0",
     "refresh:ads": "npm run sync:ads",
-    "sync:ads": "node scripts/sync-ads-data.js"
+    "sync:ads": "node scripts/sync-ads-data.js",
+    "google:token": "node scripts/google-get-refresh-token.js"
   },
   "engines": {
     "node": "20.x"
