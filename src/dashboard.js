@@ -48,6 +48,7 @@ let leafletMap = null;
 let leafletLayer = null;
 let dashboardRefreshPassword = '';
 let activeTrendMetric = 'spend';
+let creativeSortMetric = 'conversions';
 let activeSearchIntelTab = 'waste';
 let keywordMinSpend = 10;
 let keywordMinSpendEnabled = true;
@@ -57,6 +58,7 @@ let focusMode = false;
 let searchIntelChartsLoaded = false;
 let selectedCampaignKey = '';
 const datePresetStorageKey = 'tpclub_dashboard_date_preset';
+const dashboardFiltersStorageKey = 'tpclub_dashboard_filters';
 const focusModeStorageKey = 'tpclub_dashboard_focus_mode';
 const wasteAlertStorageKey = 'tpclub_dashboard_waste_alert_threshold';
 const syncMeta = { generatedAtMs: 0, sources: {} };
@@ -150,7 +152,8 @@ const listState = {
   recommendations: false,
   countryDrilldown: false,
   searchTerms: false,
-  creatives: false
+  creatives: true,
+  campaigns: true
 };
 
 const filters = {
@@ -243,14 +246,22 @@ const elements = {
   campaignRows: document.querySelector('#campaignRows'),
   keywordRows: document.querySelector('#keywordRows'),
   creativeRows: document.querySelector('#creativeRows'),
+  creativeSortButtons: document.querySelectorAll('[data-creative-sort]'),
+  creativeSortNote: document.querySelector('#creativeSortNote'),
+  creativePreviewModal: document.querySelector('#creativePreviewModal'),
+  creativePreviewContent: document.querySelector('#creativePreviewContent'),
   refreshData: document.querySelector('#refreshData'),
   exportCsv: document.querySelector('#exportCsv'),
   printReport: document.querySelector('#printReport'),
   copySummary: document.querySelector('#copySummary'),
   toggleFilters: document.querySelector('#toggleFilters'),
+  filterShell: document.querySelector('#filterShell'),
+  filterCompactBar: document.querySelector('#filterCompactBar'),
+  filterActiveSummary: document.querySelector('#filterActiveSummary'),
   filterPanel: document.querySelector('#dashboardFilters'),
   showToggles: document.querySelectorAll('[data-toggle-list]'),
   resetFilters: document.querySelector('#resetFilters'),
+  resetFiltersCompact: document.querySelector('#resetFiltersCompact'),
   syncStatus: document.querySelector('#syncStatus'),
   syncSubtext: document.querySelector('#syncSubtext'),
   syncDot: document.querySelector('.sync-dot'),
@@ -391,12 +402,45 @@ function renderHeroSparklines(rows) {
   if (elements.wasteSparkline) elements.wasteSparkline.innerHTML = buildSparklineSvg(wasteValues, { tone: 'waste' });
 }
 
+function getActivePlatformFilter() {
+  const value = filters.platform?.value || 'all';
+  if (value === 'Google Ads') return 'google';
+  if (value === 'Meta Ads') return 'meta';
+  return 'all';
+}
+
+function isPlatformSectionVisible(scope) {
+  const platform = getActivePlatformFilter();
+  if (scope === 'compare') return platform === 'all';
+  if (platform === 'all') return true;
+  if (scope === 'google') return platform === 'google';
+  if (scope === 'meta') return platform === 'meta';
+  return true;
+}
+
+function applyPlatformSectionVisibility() {
+  const platform = getActivePlatformFilter();
+  document.body.dataset.platformFilter = platform;
+
+  document.querySelectorAll('[data-platform-only]').forEach((section) => {
+    section.hidden = !isPlatformSectionVisible(section.dataset.platformOnly);
+  });
+
+  const conversionsNote = document.querySelector('#totalConversions')?.closest('.kpi-card')?.querySelector('small');
+  if (conversionsNote) {
+    if (platform === 'google') conversionsNote.textContent = 'Google Ads tracked';
+    else if (platform === 'meta') conversionsNote.textContent = 'Meta Ads tracked';
+    else conversionsNote.textContent = 'Google/Meta tracked';
+  }
+}
+
 function renderPlatformDataPills() {
   if (!elements.platformDataPills) return;
   const googleThrough = latestAvailableDateForPlatform('Google Ads');
   const metaThrough = latestAvailableDateForPlatform('Meta Ads');
   const googleOk = syncMeta.sources.google && syncMeta.sources.google.ok;
   const metaOk = syncMeta.sources.meta && syncMeta.sources.meta.ok;
+  const platform = getActivePlatformFilter();
 
   const pills = [
     {
@@ -409,7 +453,11 @@ function renderPlatformDataPills() {
       through: metaThrough || '—',
       tone: metaOk ? 'ok' : 'error'
     }
-  ];
+  ].filter((pill) => {
+    if (platform === 'all') return true;
+    if (platform === 'google') return pill.label === 'Google';
+    return pill.label === 'Meta';
+  });
 
   elements.platformDataPills.innerHTML = pills.map((pill) => `
     <span class="pill platform-pill platform-pill-${pill.tone}">${pill.label} through ${escapeHtml(pill.through)}</span>
@@ -422,10 +470,11 @@ function renderSyncHealthBanner() {
   const google = syncMeta.sources.google;
   const meta = syncMeta.sources.meta;
 
-  if (google && !google.ok) {
+  const platform = getActivePlatformFilter();
+  if (google && !google.ok && (platform === 'all' || platform === 'google')) {
     issues.push(`<strong>Google Ads sync failed</strong> — ${escapeHtml(google.error || 'check refresh token')}. Showing last cached Google data${latestAvailableDateForPlatform('Google Ads') ? ` through ${escapeHtml(latestAvailableDateForPlatform('Google Ads'))}` : ''}.`);
   }
-  if (meta && !meta.ok) {
+  if (meta && !meta.ok && (platform === 'all' || platform === 'meta')) {
     issues.push(`<strong>Meta Ads sync failed</strong> — ${escapeHtml(meta.error || 'check API token')}.`);
   }
   if (needsLiveApiRefresh()) {
@@ -509,6 +558,267 @@ function groupCampaignRowsByCampaign(rows) {
       latestDate: row.latestDate
     }))
     .sort((a, b) => b.conversions - a.conversions || costPer(a) - costPer(b));
+}
+
+function upgradeMetaThumbnailUrl(url) {
+  if (!url) return '';
+  return String(url)
+    .replace(/_p\d+x\d+_/gi, '_p720x720_')
+    .replace(/([/_])p(\d+)x(\d+)/gi, '$1p720x720')
+    .replace(/_q\d+_/gi, '_q90_');
+}
+
+function getCreativePreviewImageUrl(row) {
+  if (!row) return '';
+  return row.previewUrl || upgradeMetaThumbnailUrl(row.thumbnailUrl);
+}
+
+function creativeRowKey(row) {
+  return [row.campaign, row.adSet, row.adName].join('|||');
+}
+
+function parseCreativeRowKey(key) {
+  const parts = String(key || '').split('|||');
+  return {
+    campaign: parts[0] || '',
+    adSet: parts[1] || '',
+    adName: parts[2] || ''
+  };
+}
+
+function groupCreativeRowsByAd(rows) {
+  const groups = new Map();
+
+  rows.forEach((row) => {
+    const key = creativeRowKey(row);
+    const current = groups.get(key) || {
+      platform: row.platform || 'Meta Ads',
+      account: row.account,
+      campaign: row.campaign,
+      adSet: row.adSet,
+      adName: row.adName,
+      thumbnailUrl: row.thumbnailUrl || '',
+      previewUrl: row.previewUrl || '',
+      locations: new Map(),
+      spend: 0,
+      clicks: 0,
+      impressions: 0,
+      conversions: 0,
+      wastedSpend: 0
+    };
+
+    current.spend += row.spend;
+    current.clicks += row.clicks;
+    current.impressions += row.impressions || 0;
+    current.conversions += row.conversions;
+    if (row.spend > 0 && row.conversions === 0) current.wastedSpend += row.spend;
+    if (!current.thumbnailUrl && row.thumbnailUrl) current.thumbnailUrl = row.thumbnailUrl;
+    if (!current.previewUrl && row.previewUrl) current.previewUrl = row.previewUrl;
+
+    if (row.location) {
+      const loc = current.locations.get(row.location) || { spend: 0, clicks: 0, conversions: 0 };
+      loc.spend += row.spend;
+      loc.clicks += row.clicks;
+      loc.conversions += row.conversions;
+      current.locations.set(row.location, loc);
+    }
+
+    groups.set(key, current);
+  });
+
+  return groups;
+}
+
+function aggregatedCreativeRows() {
+  return [...groupCreativeRowsByAd(filteredCreatives()).values()]
+    .filter(rowHasActivity)
+    .map((row) => ({
+      platform: row.platform,
+      account: row.account,
+      campaign: row.campaign,
+      adSet: row.adSet,
+      adName: row.adName,
+      thumbnailUrl: row.thumbnailUrl,
+      previewUrl: row.previewUrl,
+      spend: row.spend,
+      clicks: row.clicks,
+      impressions: row.impressions,
+      conversions: row.conversions,
+      wastedSpend: row.wastedSpend,
+      location: [...row.locations.entries()]
+        .sort((a, b) => b[1].spend - a[1].spend)
+        .slice(0, 3)
+        .map(([name]) => name)
+        .join(', ') || '—'
+    }));
+}
+
+function sortAggregatedCreatives(rows, metric = creativeSortMetric) {
+  const sorters = {
+    conversions: (a, b) => b.conversions - a.conversions || b.spend - a.spend,
+    spend: (a, b) => b.spend - a.spend || b.conversions - a.conversions,
+    impressions: (a, b) => b.impressions - a.impressions || b.spend - a.spend,
+    clicks: (a, b) => b.clicks - a.clicks || b.spend - a.spend,
+    ctr: (a, b) => clickThroughRate(b) - clickThroughRate(a) || b.impressions - a.impressions,
+    cpa: (a, b) => {
+      if (!a.conversions && !b.conversions) return b.spend - a.spend;
+      if (!a.conversions) return 1;
+      if (!b.conversions) return -1;
+      return costPer(a) - costPer(b) || b.conversions - a.conversions;
+    },
+    waste: (a, b) => b.wastedSpend - a.wastedSpend || b.spend - a.spend
+  };
+
+  return [...rows].sort(sorters[metric] || sorters.conversions);
+}
+
+function creativeSortNoteText(metric) {
+  const notes = {
+    conversions: 'Ads ranked by highest conversions in the selected period.',
+    spend: 'Ads ranked by highest spend in the selected period.',
+    impressions: 'Ads ranked by highest impressions in the selected period.',
+    clicks: 'Ads ranked by highest clicks in the selected period.',
+    ctr: 'Ads ranked by highest CTR in the selected period.',
+    cpa: 'Converting ads first, ranked by lowest cost per conversion.',
+    waste: 'Ads ranked by highest wasted spend (zero conversions).'
+  };
+  return notes[metric] || notes.conversions;
+}
+
+function getCreativePreviewData(key) {
+  const { campaign, adSet, adName } = parseCreativeRowKey(key);
+  const adRowsForCreative = filteredCreatives().filter((row) =>
+    row.campaign === campaign && row.adSet === adSet && row.adName === adName
+  );
+  const grouped = groupCreativeRowsByAd(adRowsForCreative);
+  const ad = grouped.get(key) || null;
+
+  const campaignRows = getFilteredRows().filter((row) => row.campaign === campaign);
+  const campaignSummary = summarize(campaignRows);
+  const campaignGroup = groupCampaignRowsByCampaign(campaignRows)[0] || null;
+
+  const locations = ad
+    ? [...ad.locations.entries()]
+      .map(([name, stats]) => ({ name, ...stats }))
+      .sort((a, b) => b.spend - a.spend)
+    : [];
+
+  return { ad, campaignSummary, campaignGroup, locations };
+}
+
+function renderCreativePreviewMetric(label, value) {
+  return `
+    <article class="creative-preview-metric">
+      <span>${label}</span>
+      <strong>${value}</strong>
+    </article>
+  `;
+}
+
+function renderCreativePreviewContent(key) {
+  const { ad, campaignSummary, campaignGroup, locations } = getCreativePreviewData(key);
+  if (!ad) {
+    return '<p class="empty-state">No creative data for this selection in the current date range.</p>';
+  }
+
+  const periodLabel = `${filters.from.value || 'Start'} to ${filters.to.value || latestAvailableDate() || 'End'}`;
+  const adMetrics = {
+    spend: ad.spend,
+    clicks: ad.clicks,
+    impressions: ad.impressions,
+    conversions: ad.conversions
+  };
+  const locationRows = locations.slice(0, 8).map((loc) => `
+    <tr>
+      <td>${escapeHtml(loc.name)}</td>
+      <td>${currency.format(loc.spend)}</td>
+      <td>${number.format(loc.clicks)}</td>
+      <td>${number.format(loc.conversions)}</td>
+    </tr>
+  `).join('');
+
+  return `
+    <div class="creative-preview-layout">
+      <div class="creative-preview-media">
+        ${getCreativePreviewImageUrl(ad)
+    ? `<a class="creative-preview-image-link" href="${escapeHtml(getCreativePreviewImageUrl(ad))}" target="_blank" rel="noopener noreferrer">
+          <img class="creative-preview-image" src="${escapeHtml(getCreativePreviewImageUrl(ad))}" alt="${escapeHtml(ad.adName)} preview" decoding="async">
+        </a>
+        <p class="creative-preview-image-note">Click image to open full size in a new tab</p>`
+    : '<div class="creative-preview-image-fallback">No preview image</div>'}
+      </div>
+      <div class="creative-preview-copy">
+        <p class="panel-label">Meta creative preview</p>
+        <h2 id="creativePreviewTitle">${escapeHtml(ad.adName)}</h2>
+        <p class="creative-preview-meta"><strong>Ad set:</strong> ${escapeHtml(ad.adSet)}</p>
+        <p class="creative-preview-meta"><strong>Campaign:</strong> ${escapeHtml(ad.campaign)}</p>
+        <p class="creative-preview-meta"><strong>Account:</strong> ${escapeHtml(ad.account || '—')}</p>
+        <p class="creative-preview-period">Selected period: ${escapeHtml(periodLabel)}</p>
+      </div>
+    </div>
+
+    <section class="creative-preview-section">
+      <h3>Ad performance (selected period)</h3>
+      <div class="creative-preview-metrics">
+        ${renderCreativePreviewMetric('Spend', currency.format(adMetrics.spend))}
+        ${renderCreativePreviewMetric('Impressions', number.format(adMetrics.impressions))}
+        ${renderCreativePreviewMetric('Clicks', number.format(adMetrics.clicks))}
+        ${renderCreativePreviewMetric('Conversions', number.format(adMetrics.conversions))}
+        ${renderCreativePreviewMetric('CTR', formatPercent(clickThroughRate(adMetrics)))}
+        ${renderCreativePreviewMetric('CPC', currencyPrecise.format(costPerClick(adMetrics)))}
+        ${renderCreativePreviewMetric('CPA', formatCostPerConversion(adMetrics))}
+        ${renderCreativePreviewMetric('Wasted spend', currency.format(ad.wastedSpend))}
+      </div>
+    </section>
+
+    <section class="creative-preview-section">
+      <h3>Campaign performance (same period)</h3>
+      <p class="creative-preview-meta">${escapeHtml(ad.campaign)}${campaignGroup ? ` · ${statusBadge(campaignGroup.status)}` : ''}</p>
+      <div class="creative-preview-metrics">
+        ${renderCreativePreviewMetric('Spend', currency.format(campaignSummary.spend))}
+        ${renderCreativePreviewMetric('Impressions', number.format(campaignSummary.impressions))}
+        ${renderCreativePreviewMetric('Clicks', number.format(campaignSummary.clicks))}
+        ${renderCreativePreviewMetric('Conversions', number.format(campaignSummary.conversions))}
+        ${renderCreativePreviewMetric('CTR', formatPercent(clickThroughRate(campaignSummary)))}
+        ${renderCreativePreviewMetric('CPC', currencyPrecise.format(costPerClick(campaignSummary)))}
+        ${renderCreativePreviewMetric('CPA', formatCostPerConversion(campaignSummary))}
+        ${renderCreativePreviewMetric('Wasted spend', currency.format(campaignSummary.wastedSpend))}
+      </div>
+    </section>
+
+    ${locations.length ? `
+      <section class="creative-preview-section">
+        <h3>Ad locations in this period</h3>
+        <div class="table-wrap">
+          <table class="creative-preview-table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Spend</th>
+                <th>Clicks</th>
+                <th>Conv.</th>
+              </tr>
+            </thead>
+            <tbody>${locationRows}</tbody>
+          </table>
+        </div>
+      </section>
+    ` : ''}
+  `;
+}
+
+function openCreativePreview(key) {
+  if (!elements.creativePreviewModal || !elements.creativePreviewContent) return;
+  elements.creativePreviewContent.innerHTML = renderCreativePreviewContent(key);
+  elements.creativePreviewModal.hidden = false;
+  document.body.classList.add('creative-preview-open');
+}
+
+function closeCreativePreview() {
+  if (!elements.creativePreviewModal) return;
+  elements.creativePreviewModal.hidden = true;
+  document.body.classList.remove('creative-preview-open');
+  if (elements.creativePreviewContent) elements.creativePreviewContent.innerHTML = '';
 }
 
 function filteredCampaignTableGroups() {
@@ -628,12 +938,130 @@ function addOptions(select, values) {
   });
 }
 
+function loadSavedDashboardFilters() {
+  try {
+    const raw = localStorage.getItem(dashboardFiltersStorageKey);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_error) {
+    return null;
+  }
+}
+
+function saveDashboardFilters() {
+  const payload = {
+    platform: filters.platform.value,
+    datePreset: filters.datePreset.value,
+    account: filters.account.value,
+    status: filters.status.value,
+    campaign: filters.campaign.value,
+    locationType: filters.locationType.value,
+    location: filters.location.value,
+    conversionMetric: filters.conversionMetric.value,
+    from: filters.from.value,
+    to: filters.to.value,
+    creativeSortMetric,
+    filtersPanelOpen: !elements.filterPanel?.hidden
+  };
+  localStorage.setItem(dashboardFiltersStorageKey, JSON.stringify(payload));
+  sessionStorage.setItem(datePresetStorageKey, filters.datePreset.value);
+}
+
+function applySavedDashboardFilters(saved) {
+  if (!saved) return false;
+
+  filters.platform.value = saved.platform || 'all';
+  filters.datePreset.value = saved.datePreset || 'last7';
+  filters.account.value = saved.account || 'all';
+  filters.status.value = saved.status || 'all';
+  filters.campaign.value = saved.campaign || 'all';
+  filters.locationType.value = saved.locationType || 'delivered';
+  filters.location.value = saved.location || 'all';
+  filters.conversionMetric.value = saved.conversionMetric || 'all';
+  creativeSortMetric = saved.creativeSortMetric || 'conversions';
+
+  if (saved.datePreset === 'custom' && saved.from && saved.to) {
+    filters.from.value = saved.from;
+    filters.to.value = saved.to;
+  } else {
+    setDatePreset(filters.datePreset.value);
+  }
+
+  if (typeof saved.filtersPanelOpen === 'boolean' && elements.filterPanel) {
+    elements.filterPanel.hidden = !saved.filtersPanelOpen;
+    elements.toggleFilters?.setAttribute('aria-expanded', String(saved.filtersPanelOpen));
+    elements.toggleFilters.textContent = saved.filtersPanelOpen ? 'Hide filters' : 'Show filters';
+  }
+
+  return true;
+}
+
+function datePresetLabel(preset) {
+  const labels = {
+    last7: 'Last 7 days',
+    last30: 'Last 30 days',
+    today: 'Today',
+    yesterday: 'Yesterday',
+    latest: 'Latest synced day',
+    thisMonth: 'This month',
+    previousMonth: 'Previous month',
+    custom: 'Custom range'
+  };
+  return labels[preset] || preset;
+}
+
+function renderFilterActiveSummary() {
+  if (!elements.filterActiveSummary) return;
+
+  const parts = [];
+  if (filters.platform.value !== 'all') parts.push(filters.platform.value);
+  if (filters.datePreset.value === 'custom') {
+    parts.push(`${filters.from.value || '…'} to ${filters.to.value || '…'}`);
+  } else {
+    parts.push(datePresetLabel(filters.datePreset.value));
+  }
+  if (filters.account.value !== 'all') parts.push(filters.account.value);
+  if (filters.campaign.value !== 'all') parts.push(filters.campaign.value);
+  if (filters.location.value !== 'all') parts.push(filters.location.value);
+  if (filters.status.value !== 'all') parts.push(`Status: ${filters.status.value}`);
+  if (filters.conversionMetric.value !== 'all') parts.push('Filtered conversions');
+
+  elements.filterActiveSummary.textContent = parts.length ? parts.join(' · ') : 'All data · no filters applied';
+}
+
+function setupFilterScrollBehavior() {
+  if (!elements.filterShell) return;
+
+  const onScroll = () => {
+    const shouldCollapse = window.scrollY > 96;
+    elements.filterShell.classList.toggle('is-scrolled', shouldCollapse);
+    if (shouldCollapse) {
+      elements.filterShell.classList.remove('is-open');
+      if (elements.toggleFilters) {
+        elements.toggleFilters.setAttribute('aria-expanded', 'false');
+        elements.toggleFilters.textContent = 'Filters';
+      }
+    } else if (elements.toggleFilters && elements.filterPanel) {
+      const isOpen = !elements.filterPanel.hidden;
+      elements.toggleFilters.setAttribute('aria-expanded', String(isOpen));
+      elements.toggleFilters.textContent = isOpen ? 'Hide filters' : 'Show filters';
+    }
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
 function setupFilters() {
   addOptions(filters.platform, uniqueValues('platform'));
   refreshDependentFilters();
 
-  const savedPreset = sessionStorage.getItem(datePresetStorageKey) || 'last7';
-  filters.datePreset.value = savedPreset;
+  const saved = loadSavedDashboardFilters();
+  if (!applySavedDashboardFilters(saved)) {
+    const savedPreset = sessionStorage.getItem(datePresetStorageKey) || 'last7';
+    filters.datePreset.value = savedPreset;
+    setDatePreset(filters.datePreset.value);
+  }
+
   focusMode = sessionStorage.getItem(focusModeStorageKey) === '1';
   const savedWasteAlert = sessionStorage.getItem(wasteAlertStorageKey);
   if (savedWasteAlert && filters.wasteAlertThreshold) {
@@ -644,9 +1072,10 @@ function setupFilters() {
     if (elements.keywordMinSpendValue) elements.keywordMinSpendValue.textContent = String(keywordMinSpend);
   }
 
-  setDatePreset(filters.datePreset.value);
   updateDateInputBounds();
+  syncFilterDependencies();
   applyFocusMode();
+  renderFilterActiveSummary();
 }
 
 function locationSourceRowsForCurrentView() {
@@ -870,6 +1299,7 @@ async function loadSyncedRows({ preserveExisting = false } = {}) {
       adName: row.adName || 'Unknown ad',
       location: row.location || row.countryCode || 'Unknown',
       thumbnailUrl: row.thumbnailUrl || '',
+      previewUrl: row.previewUrl || '',
       spend: Number(row.spend || 0),
       clicks: Number(row.clicks || 0),
       impressions: Number(row.impressions || 0),
@@ -1199,15 +1629,20 @@ function toneForMetric(type, value) {
 }
 
 function visibleRows(rows, listName) {
-  return listState[listName] ? rows : rows.slice(0, 5);
+  if (listState[listName]) return rows;
+  const defaultLimit = listName === 'creatives' || listName === 'campaigns' ? 15 : 5;
+  return rows.slice(0, defaultLimit);
 }
 
 function updateToggle(listName, totalCount) {
   const button = [...elements.showToggles].find((toggle) => toggle.dataset.toggleList === listName);
   if (!button) return;
 
-  button.hidden = totalCount <= 5;
-  button.textContent = listState[listName] ? 'Show top 5' : `Show all ${totalCount}`;
+  const collapsedLimit = listName === 'creatives' || listName === 'campaigns' ? 15 : 5;
+  button.hidden = totalCount <= collapsedLimit;
+  button.textContent = listState[listName]
+    ? `Show top ${collapsedLimit}`
+    : `Show all ${totalCount}`;
 }
 
 function statusClass(status = '') {
@@ -1635,7 +2070,11 @@ async function renderEchartSections(rows, locationRows) {
     const days = buildTrendDays(rows);
     charts.renderSpendConversionTrendChart(elements.trendChart, days, chartFormatters, onChartDayClick);
     charts.renderMetricTrendChart(elements.metricLineChart, days, activeTrendMetric, chartFormatters, onChartDayClick);
-    charts.renderPlatformChart(elements.platformBreakdown, groupRows(rows, 'platform'), chartFormatters, onChartPlatformClick);
+    if (getActivePlatformFilter() === 'all') {
+      charts.renderPlatformChart(elements.platformBreakdown, groupRows(rows, 'platform'), chartFormatters, onChartPlatformClick);
+    } else if (elements.platformBreakdown) {
+      elements.platformBreakdown.innerHTML = '';
+    }
 
     const accountGroups = visibleRows(groupRows(rows, 'account'), 'accounts');
     updateToggle('accounts', groupRows(rows, 'account').length);
@@ -1985,12 +2424,45 @@ function renderActionsPanel(rows) {
   `;
 }
 
+function updateCreativeSortNote(total, visible) {
+  if (!elements.creativeSortNote) return;
+  const rank = creativeSortNoteText(creativeSortMetric);
+  if (!total) {
+    elements.creativeSortNote.textContent = 'No Meta ads in the selected date range.';
+    return;
+  }
+  if (visible < total) {
+    elements.creativeSortNote.textContent = `Showing ${visible} of ${total} ads — ${rank}`;
+    return;
+  }
+  elements.creativeSortNote.textContent = `Showing all ${total} ads — ${rank}`;
+}
+
 function renderCreativeTable() {
-  const rows = filteredCreatives().sort((a, b) => b.conversions - a.conversions || costPer(a) - costPer(b));
+  const rows = sortAggregatedCreatives(aggregatedCreativeRows());
+  const visible = visibleRows(rows, 'creatives');
   updateToggle('creatives', rows.length);
-  elements.creativeRows.innerHTML = visibleRows(rows, 'creatives').map((row) => `
+
+  if (elements.creativeSortButtons) {
+    elements.creativeSortButtons.forEach((button) => {
+      button.classList.toggle('is-active', button.dataset.creativeSort === creativeSortMetric);
+    });
+  }
+  updateCreativeSortNote(rows.length, visible.length);
+
+  elements.creativeRows.innerHTML = visible.map((row) => {
+    const previewKey = encodeURIComponent(creativeRowKey(row));
+    const previewControl = row.thumbnailUrl
+      ? `<button type="button" class="creative-thumb-button" data-creative-preview="${previewKey}" aria-label="Preview ${escapeHtml(row.adName)}">
+          <img class="creative-thumb" src="${escapeHtml(row.thumbnailUrl)}" alt="" width="48" height="48" loading="lazy" decoding="async">
+        </button>`
+      : `<button type="button" class="creative-thumb-button creative-thumb-button-fallback" data-creative-preview="${previewKey}" aria-label="Preview ${escapeHtml(row.adName)}">
+          <span class="creative-thumb-fallback" aria-hidden="true">Ad</span>
+        </button>`;
+
+    return `
     <tr>
-      <td>${row.thumbnailUrl ? `<img class="creative-thumb" src="${escapeHtml(row.thumbnailUrl)}" alt="" width="48" height="48" loading="lazy" decoding="async">` : '<span class="creative-thumb-fallback" aria-hidden="true">Ad</span>'}</td>
+      <td>${previewControl}</td>
       <td>${escapeHtml(row.adName)}</td>
       <td>${row.adSet}</td>
       <td>${campaignWithPlatform(row)}</td>
@@ -2003,7 +2475,8 @@ function renderCreativeTable() {
       <td>${currencyPrecise.format(costPerClick(row))}</td>
       <td>${formatCostPerConversion(row)}</td>
     </tr>
-  `).join('') || '<tr><td class="empty-state" colspan="12">No Meta creative data for this filter.</td></tr>';
+  `;
+  }).join('') || '<tr><td class="empty-state" colspan="12">No Meta creative data for this filter.</td></tr>';
 }
 
 function renderKpis(rows) {
@@ -2319,7 +2792,7 @@ function renderTable() {
     const key = campaignKey(row);
     return `
       <tr class="${selectedCampaignKey === key ? 'is-selected' : ''}" data-campaign-key="${escapeHtml(key)}">
-        <td>${platformBadge(row.platform)}</td>
+        <td class="col-platform">${platformBadge(row.platform)}</td>
         <td>${row.account}</td>
         <td>${statusBadge(row.status)}</td>
         <td>${campaignWithPlatform(row)}</td>
@@ -2377,6 +2850,8 @@ function renderKeywordTable() {
 }
 
 function renderDashboard() {
+  renderFilterActiveSummary();
+  applyPlatformSectionVisibility();
   const rows = getFilteredRows();
   const locationRows = getFilteredLocationRows();
   renderFilterNotice(rows);
@@ -2649,13 +3124,27 @@ async function refreshDashboardData() {
 }
 
 function toggleFilters() {
+  const shell = elements.filterShell;
+  const isScrolled = shell?.classList.contains('is-scrolled');
+
+  if (isScrolled && shell) {
+    shell.classList.toggle('is-open');
+    const isOpen = shell.classList.contains('is-open');
+    elements.toggleFilters.setAttribute('aria-expanded', String(isOpen));
+    elements.toggleFilters.textContent = isOpen ? 'Hide filters' : 'Filters';
+    saveDashboardFilters();
+    return;
+  }
+
   const isHidden = elements.filterPanel.hidden;
   elements.filterPanel.hidden = !isHidden;
   elements.toggleFilters.setAttribute('aria-expanded', String(isHidden));
   elements.toggleFilters.textContent = isHidden ? 'Hide filters' : 'Show filters';
+  saveDashboardFilters();
 }
 
 function resetFilters() {
+  localStorage.removeItem(dashboardFiltersStorageKey);
   filters.platform.value = 'all';
   filters.datePreset.value = 'last7';
   filters.account.value = 'all';
@@ -2664,13 +3153,19 @@ function resetFilters() {
   filters.locationType.value = 'delivered';
   filters.location.value = 'all';
   filters.conversionMetric.value = 'all';
+  creativeSortMetric = 'conversions';
   Object.keys(listState).forEach((key) => {
-    listState[key] = false;
+    listState[key] = key === 'creatives' || key === 'campaigns';
   });
 
   selectedCampaignKey = '';
+  elements.filterPanel.hidden = false;
+  elements.filterShell?.classList.remove('is-open');
+  elements.toggleFilters?.setAttribute('aria-expanded', 'true');
+  elements.toggleFilters.textContent = 'Hide filters';
   setDatePreset(filters.datePreset.value);
   syncFilterDependencies();
+  saveDashboardFilters();
   renderDashboard();
 }
 
@@ -2717,6 +3212,16 @@ function setupDashboardInteractions() {
       renderDashboard();
     });
   });
+
+  if (elements.creativeSortButtons) {
+    elements.creativeSortButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        creativeSortMetric = button.dataset.creativeSort || 'conversions';
+        saveDashboardFilters();
+        renderCreativeTable();
+      });
+    });
+  }
 
   elements.searchIntelTabButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -2789,6 +3294,7 @@ function setupDashboardInteractions() {
       filters.datePreset.value = 'latest';
       setDatePreset('latest');
       syncFilterDependencies();
+      saveDashboardFilters();
       renderDashboard();
       return;
     }
@@ -2796,7 +3302,19 @@ function setupDashboardInteractions() {
       filters.datePreset.value = 'last7';
       setDatePreset('last7');
       syncFilterDependencies();
+      saveDashboardFilters();
       renderDashboard();
+      return;
+    }
+
+    const creativePreview = event.target.closest('[data-creative-preview]');
+    if (creativePreview) {
+      openCreativePreview(decodeURIComponent(creativePreview.dataset.creativePreview || ''));
+      return;
+    }
+
+    if (event.target.closest('[data-close-creative-preview]')) {
+      closeCreativePreview();
       return;
     }
 
@@ -2806,6 +3324,7 @@ function setupDashboardInteractions() {
       filters.from.value = dateTarget.dataset.chartDate;
       filters.to.value = dateTarget.dataset.chartDate;
       syncFilterDependencies();
+      saveDashboardFilters();
       renderDashboard();
       return;
     }
@@ -2814,6 +3333,7 @@ function setupDashboardInteractions() {
     if (platformTarget) {
       filters.platform.value = platformTarget.dataset.platformFilter;
       syncFilterDependencies();
+      saveDashboardFilters();
       renderDashboard();
       return;
     }
@@ -2822,6 +3342,7 @@ function setupDashboardInteractions() {
     if (accountTarget) {
       filters.account.value = accountTarget.dataset.accountFilter;
       syncFilterDependencies();
+      saveDashboardFilters();
       renderDashboard();
       return;
     }
@@ -2849,12 +3370,12 @@ async function initDashboard() {
   Object.values(filters).forEach((filter) => filter.addEventListener('change', () => {
     if (filter === filters.datePreset) {
       setDatePreset(filters.datePreset.value);
-      sessionStorage.setItem(datePresetStorageKey, filters.datePreset.value);
     }
     if ([filters.from, filters.to].includes(filter)) {
       filters.datePreset.value = 'custom';
     }
     syncFilterDependencies();
+    saveDashboardFilters();
     renderDashboard();
   }));
   elements.showToggles.forEach((button) => {
@@ -2870,12 +3391,21 @@ async function initDashboard() {
   elements.copySummary.addEventListener('click', copySummary);
   elements.toggleFilters.addEventListener('click', toggleFilters);
   elements.resetFilters.addEventListener('click', resetFilters);
+  if (elements.resetFiltersCompact) {
+    elements.resetFiltersCompact.addEventListener('click', resetFilters);
+  }
+  setupFilterScrollBehavior();
   setupChartTooltips();
   setupDashboardInteractions();
   renderDashboard();
   startLiveDataUpdates();
   window.addEventListener('resize', () => { resizeDashboardCharts(); }, { passive: true });
   window.addEventListener('beforeprint', preparePrintReport);
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !elements.creativePreviewModal?.hidden) {
+      closeCreativePreview();
+    }
+  });
   document.querySelectorAll('.dashboard-drawer').forEach((drawer) => {
     drawer.addEventListener('toggle', () => {
       setTimeout(resizeDashboardCharts, 80);

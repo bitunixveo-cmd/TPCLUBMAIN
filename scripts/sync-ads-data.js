@@ -583,17 +583,50 @@ async function fetchMetaTargetedLocationRows() {
   });
 }
 
-async function fetchMetaAdThumbnailMap(accountId) {
+function upgradeMetaThumbnailUrl(url) {
+  if (!url) return '';
+  return String(url)
+    .replace(/_p\d+x\d+_/gi, '_p720x720_')
+    .replace(/([/_])p(\d+)x(\d+)/gi, '$1p720x720')
+    .replace(/_q\d+_/gi, '_q90_');
+}
+
+function extractCreativePreviewUrl(creative) {
+  if (!creative) return '';
+
+  if (creative.image_url) return creative.image_url;
+
+  const spec = creative.object_story_spec;
+  if (spec) {
+    if (spec.link_data && spec.link_data.picture) return spec.link_data.picture;
+    if (spec.video_data && spec.video_data.image_url) return spec.video_data.image_url;
+    if (spec.photo_data) {
+      if (spec.photo_data.url) return spec.photo_data.url;
+      const images = spec.photo_data.images;
+      if (Array.isArray(images) && images[0] && images[0].url) return images[0].url;
+    }
+  }
+
+  return upgradeMetaThumbnailUrl(creative.thumbnail_url || '');
+}
+
+async function fetchMetaAdCreativeMap(accountId) {
   const params = new URLSearchParams({
     access_token: process.env.META_ACCESS_TOKEN,
-    fields: 'name,creative{thumbnail_url}',
+    fields: 'name,creative{thumbnail_url,image_url,object_story_spec}',
     limit: '500'
   });
   const rows = await fetchMetaPage(`https://graph.facebook.com/${metaApiVersion}/act_${accountId}/ads?${params.toString()}`);
   const map = new Map();
   rows.forEach((row) => {
-    const url = row.creative && row.creative.thumbnail_url;
-    if (row.name && url) map.set(row.name, url);
+    if (!row.name) return;
+    const creative = row.creative || {};
+    const thumbnailUrl = creative.thumbnail_url || '';
+    const previewUrl = extractCreativePreviewUrl(creative);
+    map.set(row.name, {
+      thumbnailUrl,
+      previewUrl: previewUrl || thumbnailUrl
+    });
   });
   return map;
 }
@@ -604,7 +637,7 @@ async function fetchMetaAdRows() {
   }
 
   const accountId = String(process.env.META_AD_ACCOUNT_ID).replace(/^act_/, '');
-  const thumbnailMap = await fetchMetaAdThumbnailMap(accountId).catch(() => new Map());
+  const creativeMap = await fetchMetaAdCreativeMap(accountId).catch(() => new Map());
   const params = new URLSearchParams({
     access_token: process.env.META_ACCESS_TOKEN,
     level: 'ad',
@@ -625,7 +658,8 @@ async function fetchMetaAdRows() {
     campaign: row.campaign_name || 'Unknown campaign',
     adSet: row.adset_name || 'Unknown ad set',
     adName: row.ad_name || 'Unknown ad',
-    thumbnailUrl: thumbnailMap.get(row.ad_name || '') || '',
+    thumbnailUrl: (creativeMap.get(row.ad_name || '') || {}).thumbnailUrl || '',
+    previewUrl: (creativeMap.get(row.ad_name || '') || {}).previewUrl || '',
     locationType: 'delivered',
     location: countryNames[row.country] || row.country || 'All Meta locations',
     countryCode: row.country || '',

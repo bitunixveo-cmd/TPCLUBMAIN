@@ -41,8 +41,8 @@ function buildStructuredData({ lang, t, pagePath = '', includeFaq = false }) {
     alternateName: '止盈社',
     url: config.siteUrl,
     logo: `${config.siteUrl}/images/logo.png`,
-    description: 'Australian Mandarin-speaking crypto education community',
-    areaServed: 'AU',
+    description: 'Mandarin-speaking crypto education community for Chinese learners worldwide',
+    areaServed: 'Worldwide',
     knowsLanguage: ['en', 'zh'],
     sameAs: [config.telegramUrl, config.telegramChannelUrl]
   };

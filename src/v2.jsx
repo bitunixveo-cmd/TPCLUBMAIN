@@ -243,13 +243,13 @@ function App() {
       <section className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-12 pt-10 sm:px-8 lg:min-h-[650px] lg:grid-cols-[0.86fr_1.14fr]">
         <motion.div className="relative z-10" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <p className="mb-5 inline-flex rounded-full border border-lime-300/20 bg-lime-300/8 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.22em] text-lime-300">
-            Mandarin-first · Education-only · Australia
+            Mandarin-first · Education-only · Worldwide
           </p>
           <h1 className="max-w-xl text-[clamp(2.35rem,5.1vw,4.15rem)] font-black leading-[0.98] tracking-[-0.055em] text-white">
             The Beginner-Friendly <span className="text-lime-300">Crypto Education Community</span>
           </h1>
           <p className="mt-5 max-w-lg text-sm leading-7 text-white/76 sm:text-base">
-            Built for Chinese Australians. Daily crypto education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
+            Built for Chinese learners worldwide. Daily crypto education, Mandarin-speaking support, beginner onboarding, and a private Telegram community focused on learning, not hype.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a href="/go/" onClick={(event) => handleTelegramClick(event, 'Join Free Telegram Community')} className="group inline-flex items-center justify-center rounded-2xl bg-lime-300 px-7 py-4 text-sm font-black text-black shadow-[0_18px_58px_rgba(170,255,0,0.34)] transition hover:-translate-y-1 hover:bg-lime-200 hover:shadow-[0_24px_72px_rgba(170,255,0,0.46)]">
@@ -347,7 +347,7 @@ function App() {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.22em] text-lime-300">Real Community · Real People</p>
           <h2 className="mt-4 text-4xl font-black leading-tight tracking-[-0.045em]">You’re Not Alone On This Journey</h2>
-          <p className="mt-5 text-white/58">Join hundreds of Chinese Australian learners sharing questions and building confidence through education together.</p>
+          <p className="mt-5 text-white/58">Join hundreds of Chinese-speaking learners worldwide sharing questions and building confidence through education together.</p>
           <div className="mt-7">
             <AvatarStack />
             <p className="mt-4 text-sm font-bold text-lime-300">500+ Active Members</p>
@@ -377,7 +377,7 @@ function App() {
               <AvatarStack />
               <p className="mt-8 text-sm font-bold text-lime-300">500+ Active Members</p>
               <h3 className="mt-3 text-3xl font-black tracking-[-0.04em]">You Are Not Alone On This Journey</h3>
-              <p className="mt-4 max-w-md text-white/56">Join hundreds of Chinese Australian learners asking questions, learning safely, and building confidence together.</p>
+              <p className="mt-4 max-w-md text-white/56">Join hundreds of Chinese-speaking learners worldwide asking questions, learning safely, and building confidence together.</p>
             </div>
           </div>
           <div className="flex flex-col justify-center p-2 lg:p-10">
@@ -398,7 +398,7 @@ function App() {
             <img src="/images/logo.png" alt="TP Club logo" width="32" height="32" className="h-8 w-8 rounded-xl" />
             <span className="font-bold">TP Club</span>
           </div>
-          <p className="max-w-xs leading-6">A Mandarin-first education community for Chinese Australians. Learn together. Grow smarter.</p>
+          <p className="max-w-xs leading-6">A Mandarin-first education community for Chinese learners worldwide. Learn together. Grow smarter.</p>
         </div>
         <div>
           <p className="mb-3 font-bold text-white">Community</p>

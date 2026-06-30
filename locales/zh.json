@@ -29,7 +29,7 @@
     "cta2": "查看社群预览",
     "caption": "点击即可加入免费 Telegram 学习群，获取新手指南与置顶资料。",
     "trustTitle": "加入前你会知道",
-    "trustItems": ["新手友好", "仅供教育", "中文 + English", "澳洲用户友好"],
+    "trustItems": ["新手友好", "仅供教育", "中文 + English", "全球华人"],
     "telegramProof": "TP Club_止盈社 · 1,000+ 成员 · 活跃学习社群",
     "chartTitle": "教育学习台",
     "chartSub": "社群学习",
@@ -43,7 +43,7 @@
       "学习波动、风险与新手常见问题",
       "建立更安全、更理性的学习习惯"
     ],
-    "proof": ["新手友好", "仅供教育", "中文 + English", "澳洲用户友好"],
+    "proof": ["新手友好", "仅供教育", "中文 + English", "全球华人"],
     "featurePills": [
       { "t": "每日分析", "d": "每天更新" },
       { "t": "新手指南", "d": "一步一步学" },
@@ -154,7 +154,7 @@
     "sub": "真实学员，真实社区",
     "items": [
       { "name": "Li Wei", "role": "2024 年加入", "rating": 5, "text": "加入TP Club是我做过最好的决定。老师讲解得非常清楚，即使是零基础也能理解。学习氛围也很适合新手。强烈推荐！" },
-      { "name": "Zhang Mei", "role": "2023 年加入", "rating": 5, "text": "澳大利亚很难找到中文的加密货币教育资源，TP Club完美填补了这个空白。老师的分析让我真正明白了市场是怎么运作的。" },
+      { "name": "Zhang Mei", "role": "2023 年加入", "rating": 5, "text": "很难找到优质的中文加密货币教育资源，TP Club 对全球华人学习者非常实用。老师的分析让我真正明白了市场是怎么运作的。" },
       { "name": "David Chen", "role": "2024 年加入", "rating": 5, "text": "I was new to crypto education and had no idea where to start. The beginner guides were super clear, and the education group is incredibly helpful. Great community!" }
     ]
   },
@@ -254,7 +254,7 @@
       "title": "真实学员，真实社群",
       "items": [
         { "name": "李伟", "role": "2024 年加入", "rating": 5, "text": "加入 TP止盈社 是我做过最好的决定。老师讲解得非常清楚，即使是零基础也能理解。强烈推荐！" },
-        { "name": "张梅", "role": "2023 年加入", "rating": 5, "text": "澳大利亚很难找到中文的加密货币教育资源，TP止盈社 完美填补了这个空白。" }
+        { "name": "张梅", "role": "2023 年加入", "rating": 5, "text": "很难找到优质的中文加密货币教育资源，TP止盈社 对全球华人学习者非常实用。" }
       ]
     },
     "cta": {

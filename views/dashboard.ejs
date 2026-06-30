@@ -49,12 +49,18 @@
         </div>
       </section>
 
-      <div class="filter-toolbar">
-        <button id="toggleFilters" class="action-button" type="button" aria-expanded="true" aria-controls="dashboardFilters">Hide filters</button>
-        <span>Use filters to narrow platform, date, campaign, country, and conversion views. Conversions come from Google Ads and Meta Ads Manager.</span>
-      </div>
+      <div id="filterShell" class="filter-shell">
+        <div id="filterCompactBar" class="filter-compact-bar" aria-label="Active filters">
+          <button id="toggleFilters" class="action-button" type="button" aria-expanded="true" aria-controls="dashboardFilters">Hide filters</button>
+          <span id="filterActiveSummary" class="filter-active-summary">All data · no filters applied</span>
+          <button id="resetFiltersCompact" class="reset-button reset-button-compact" type="button">Reset</button>
+        </div>
 
-      <section id="dashboardFilters" class="filter-panel" aria-label="Dashboard filters">
+        <div class="filter-toolbar filter-expanded-only">
+          <span>Use filters to narrow platform, date, campaign, country, and conversion views.</span>
+        </div>
+
+        <section id="dashboardFilters" class="filter-panel" aria-label="Dashboard filters">
         <label>
           <span>Platform</span>
           <select id="platformFilter">
@@ -130,7 +136,8 @@
           <input id="toDate" type="date">
         </label>
         <button id="resetFilters" class="reset-button" type="button">Reset</button>
-      </section>
+        </section>
+      </div>
 
       <section class="action-bar" aria-label="Dashboard actions">
         <button id="refreshData" class="action-button" type="button">Refresh data</button>
@@ -335,7 +342,7 @@
       </section>
 
       <section class="report-grid main-charts">
-        <article class="panel platform-panel">
+        <article class="panel platform-panel" data-platform-only="compare">
           <div class="panel-head">
             <div>
               <p class="panel-label">Platform mix</p>
@@ -356,8 +363,8 @@
             </div>
           </div>
           <div class="chart-legend" aria-label="Campaign chart legend">
-            <span><i class="legend-google"></i>Google Ads</span>
-            <span><i class="legend-meta"></i>Meta Ads</span>
+            <span class="legend-item legend-item-google"><i class="legend-google"></i>Google Ads</span>
+            <span class="legend-item legend-item-meta"><i class="legend-meta"></i>Meta Ads</span>
           </div>
           <div id="campaignChart" class="campaign-chart echart-panel" role="img" aria-label="Top campaigns by spend chart"></div>
         </article>
@@ -468,7 +475,7 @@
           <table>
             <thead>
               <tr>
-                <th>Platform</th>
+                <th class="col-platform">Platform</th>
                 <th>Account</th>
                 <th>Status</th>
                 <th>Campaign</th>
@@ -488,7 +495,7 @@
         </div>
       </section>
 
-      <section class="panel search-intel-panel">
+      <section class="panel search-intel-panel" data-platform-only="google">
         <div class="panel-head">
           <div>
             <p class="panel-label">Search intelligence</p>
@@ -548,16 +555,28 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" data-platform-only="meta">
         <div class="panel-head table-head">
           <div>
             <p class="panel-label">Meta creative / ad level</p>
             <h2>Best and worst ads</h2>
           </div>
           <div class="table-actions">
-            <p class="table-note">Meta ad-level reporting by creative/ad name where API data is available.</p>
+            <p class="table-note">Meta ad-level reporting aggregated by ad for the selected date range.</p>
             <button class="show-toggle" type="button" data-toggle-list="creatives">Show all</button>
           </div>
+        </div>
+        <div class="creative-table-toolbar">
+          <div class="trend-tabs creative-sort-tabs" aria-label="Sort ads by metric">
+            <button class="trend-tab is-active" type="button" data-creative-sort="conversions">Conversions</button>
+            <button class="trend-tab" type="button" data-creative-sort="spend">Spend</button>
+            <button class="trend-tab" type="button" data-creative-sort="impressions">Impressions</button>
+            <button class="trend-tab" type="button" data-creative-sort="clicks">Clicks</button>
+            <button class="trend-tab" type="button" data-creative-sort="ctr">CTR</button>
+            <button class="trend-tab" type="button" data-creative-sort="cpa">CPA</button>
+            <button class="trend-tab" type="button" data-creative-sort="waste">Waste</button>
+          </div>
+          <p id="creativeSortNote" class="table-note creative-sort-note">Ads ranked by highest conversions in the selected period.</p>
         </div>
         <div class="table-wrap">
           <table>
@@ -595,6 +614,14 @@
     </main>
 
     <div id="chartFloatingTooltip" class="chart-floating-tooltip" role="tooltip" hidden></div>
+
+    <div id="creativePreviewModal" class="creative-preview-modal" hidden>
+      <div class="creative-preview-backdrop" data-close-creative-preview></div>
+      <div class="creative-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="creativePreviewTitle">
+        <button type="button" class="creative-preview-close" data-close-creative-preview aria-label="Close preview">&times;</button>
+        <div id="creativePreviewContent" class="creative-preview-content"></div>
+      </div>
+    </div>
 
     <script>
       window.__DASHBOARD_AUTH__ = {

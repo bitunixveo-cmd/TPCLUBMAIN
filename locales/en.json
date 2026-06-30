@@ -2,7 +2,7 @@
   "meta": {
     "title": "TP Club | Chinese Crypto Learning & Market Analysis Community",
     "description": "Join TP Club — a Chinese-first crypto learning and market analysis community with daily analysis, live sessions, beginner guides, and free Telegram access.",
-    "ogLocale": "en_AU",
+    "ogLocale": "en_US",
     "lang": "en"
   },
   "compliance": "For Educational Purposes Only — All content is for learning. Not financial or investment advice.",
@@ -29,7 +29,7 @@
     "cta2": "View Community Preview",
     "caption": "Click to join our free Telegram learning group and get access to beginner guides and pinned resources.",
     "trustTitle": "Before you join",
-    "trustItems": ["Newbie Friendly", "Education Only", "Chinese + English", "Australia Focused"],
+    "trustItems": ["Newbie Friendly", "Education Only", "Chinese + English", "Worldwide Community"],
     "telegramProof": "TP Club_止盈社 · 1,000+ members · Active learning group",
     "chartTitle": "Education Learning Desk",
     "chartSub": "Community Learning",
@@ -43,7 +43,7 @@
       "How volatility and risk concepts affect beginners",
       "How to ask safer questions before making personal decisions"
     ],
-    "proof": ["Newbie Friendly", "Education Only", "Chinese + English", "Australia Focused"],
+    "proof": ["Newbie Friendly", "Education Only", "Chinese + English", "Worldwide Community"],
     "featurePills": [
       { "t": "Daily Analysis", "d": "Every Day" },
       { "t": "Beginner Guides", "d": "Step by Step" },
@@ -154,7 +154,7 @@
     "sub": "Real learners, real community",
     "items": [
       { "name": "Li Wei", "role": "Member since 2024", "rating": 5, "text": "加入TP Club是我做过最好的决定。老师讲解得非常清楚，即使是零基础也能理解。学习氛围也很适合新手。强烈推荐！" },
-      { "name": "Zhang Mei", "role": "Member since 2023", "rating": 5, "text": "澳大利亚很难找到中文的加密货币教育资源，TP Club完美填补了这个空白。老师的分析让我真正明白了市场是怎么运作的。" },
+      { "name": "Zhang Mei", "role": "Member since 2023", "rating": 5, "text": "很难找到优质的中文加密货币教育资源，TP Club 对全球华人学习者来说非常实用。老师的分析让我真正明白了市场是怎么运作的。" },
       { "name": "David Chen", "role": "Member since 2024", "rating": 5, "text": "I was new to crypto education and had no idea where to start. The beginner guides were super clear, and the education group is incredibly helpful. Great community!" }
     ]
   },
@@ -254,7 +254,7 @@
       "title": "Real learners, real community",
       "items": [
         { "name": "Li Wei", "role": "Member since 2024", "rating": 5, "text": "Joining TP Club was the best decision I made. The explanations are clear, even for complete beginners. Highly recommended!" },
-        { "name": "Zhang Mei", "role": "Member since 2023", "rating": 5, "text": "Hard to find quality Chinese crypto education in Australia. TP Club fills that gap perfectly." }
+        { "name": "Zhang Mei", "role": "Member since 2023", "rating": 5, "text": "Hard to find quality Chinese crypto education for learners worldwide. TP Club fills that gap perfectly." }
       ]
     },
     "cta": {
