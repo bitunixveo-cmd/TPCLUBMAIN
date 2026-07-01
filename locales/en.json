@@ -1,7 +1,8 @@
 {
   "meta": {
-    "title": "TP Club | Chinese Crypto Learning & Market Analysis Community",
-    "description": "Join TP Club — a Chinese-first crypto learning and market analysis community with daily analysis, live sessions, beginner guides, and free Telegram access.",
+    "title": "TP Club | Leading Chinese Crypto Community on Telegram",
+    "description": "Join TP Club — an active Chinese-speaking crypto community with daily discussions, live sessions, market analysis, and member support. Free Telegram access. Education-first. Not financial advice.",
+    "keywords": "Chinese crypto community, Mandarin crypto Telegram, Chinese cryptocurrency community, Chinese-speaking crypto group, TP Club",
     "ogLocale": "en_US",
     "lang": "en"
   },
@@ -20,17 +21,17 @@
     }
   },
   "hero": {
-    "badge": "100% Free · Educational Community",
+    "badge": "100% Free · Chinese Crypto Community",
     "h1a": "Join the Leading Chinese Crypto ",
-    "h1b": "Learning & Market Analysis Community",
-    "h1c": "",
-    "sub": "Daily market analysis, live sessions, beginner guidance, and an active Chinese-speaking Telegram community. Free to join.",
+    "h1b": "Community",
+    "h1c": "Learn, discuss markets & grow together",
+    "sub": "An active Chinese-speaking Telegram community for daily market discussions, live sessions, member support, and beginner-friendly learning. Free to join.",
     "cta1": "Join Telegram Free →",
     "cta2": "View Community Preview",
     "caption": "Click to join our free Telegram learning group and get access to beginner guides and pinned resources.",
     "trustTitle": "Before you join",
     "trustItems": ["Newbie Friendly", "Education Only", "Chinese + English", "Worldwide Community"],
-    "telegramProof": "TP Club_止盈社 · 1,000+ members · Active learning group",
+    "telegramProof": "TP Club_止盈社 · 1,000+ members · Active Chinese crypto community",
     "chartTitle": "Education Learning Desk",
     "chartSub": "Community Learning",
     "live": "Telegram education room open now",
@@ -54,7 +55,7 @@
     ],
     "liveBadge": "LIVE",
     "chartMonths": ["Jan", "May", "Now"],
-    "mockupAlt": "TP Club Telegram education community preview",
+    "mockupAlt": "TP Club Chinese crypto Telegram community preview",
     "modalTitle": "Join Telegram to unlock the full learning room",
     "modalText": "Join Telegram to view the full community, pinned guides, chart education, market insights, beginner lessons, and all education content in one place.",
     "modalCta": "Join Telegram Community",
@@ -78,9 +79,9 @@
     ]
   },
   "how": {
-    "eyebrow": "Education Access",
-    "title": "How to Get Started",
-    "sub": "Three simple steps to join TP Club and access beginner-friendly education resources",
+    "eyebrow": "Chinese Crypto Community",
+    "title": "How to Join the Community",
+    "sub": "Three steps to join TP Club's Chinese Telegram community and start learning with other members",
     "accountCta": "Create Your Account",
     "steps": [
       { "n": "01", "t": "Join the Free Education Community", "d": "Start with the private Telegram education group. No experience required, no pressure, and no financial advice.", "telegramCta": "Join the Telegram Community" },
@@ -177,9 +178,11 @@
     "eyebrow": "FAQ",
     "title": "Common Questions",
     "items": [
+      { "q": "What is the TP Club Chinese crypto community?", "a": "TP Club is a Chinese-first cryptocurrency Telegram community where members discuss markets daily, join live sessions, ask questions, and get market analysis and beginner support. Joining is free, and content is education-focused — not financial advice." },
+      { "q": "Where can I find an active Mandarin crypto Telegram community?", "a": "Look for transparent communities with daily discussions, real screenshots, live sessions, and no requests for passwords or fund access. TP Club offers 1,000+ members, active Chinese discussions, and a free Telegram join link." },
       { "q": "Is this free? What do I need to pay?", "a": "Joining TP Club is completely free. There are no monthly fees charged by us, and the community content is education-focused." },
       { "q": "Is this a scam? Is it safe?", "a": "We operate with full transparency — our educator shares education content inside the group, you keep full control of your own accounts and funds, and we never ask for login credentials or access to your funds." },
-      { "q": "Is this financial advice?", "a": "No. TP Club is an educational community. All content is for learning purposes only. We do not provide personalised financial advice, investment recommendations, account management, or guaranteed results." },
+      { "q": "Is this financial advice?", "a": "No. TP Club is an educational crypto community. All content is for learning purposes only. We do not provide personalised financial advice, investment recommendations, account management, or guaranteed results." },
       { "q": "I'm completely new to crypto education. Can I still join?", "a": "Absolutely — beginners are welcome! Our content is designed for people with zero prior experience. We explain beginner concepts, learning methods, market structure, and risk education step by step." },
       { "q": "Can I ask questions before joining?", "a": "Yes! You can message us on Telegram before joining. We're happy to answer questions, explain what the community is about, and help you decide if TP Club is the right fit for you." }
     ]

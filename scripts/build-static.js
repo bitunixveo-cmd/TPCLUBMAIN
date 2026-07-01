@@ -34,14 +34,20 @@ function pageUrl(lang, pagePath = '') {
 }
 
 function buildStructuredData({ lang, t, pagePath = '', includeFaq = false }) {
+  const orgDescription = lang === 'zh'
+    ? '领先的中文加密货币 Telegram 社群，提供每日讨论、直播互动、市场分析与新手支持。'
+    : 'Leading Chinese-speaking crypto Telegram community with daily discussions, live sessions, market analysis, and member support.';
+
   const organization = {
     '@context': 'https://schema.org',
-    '@type': 'EducationalOrganization',
-    name: 'TP Club',
-    alternateName: '止盈社',
+    '@type': ['Organization', 'EducationalOrganization'],
+    name: lang === 'zh' ? 'TP止盈社' : 'TP Club',
+    alternateName: lang === 'zh'
+      ? ['TP Club', '止盈社', '中文加密货币社群', 'TP Club 中文加密货币社群']
+      : ['TP Club', '止盈社', 'Chinese Crypto Community', 'Chinese Cryptocurrency Community'],
     url: config.siteUrl,
     logo: `${config.siteUrl}/images/logo.png`,
-    description: 'Mandarin-speaking crypto education community for Chinese learners worldwide',
+    description: orgDescription,
     areaServed: 'Worldwide',
     knowsLanguage: ['en', 'zh'],
     sameAs: [config.telegramUrl, config.telegramChannelUrl]
@@ -67,6 +73,21 @@ function buildStructuredData({ lang, t, pagePath = '', includeFaq = false }) {
   };
 
   const schema = [organization, breadcrumb];
+
+  if (pagePath === '') {
+    schema.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: lang === 'zh' ? 'TP止盈社' : 'TP Club',
+      alternateName: lang === 'zh'
+        ? ['止盈社', '中文加密货币社群']
+        : ['止盈社', 'Chinese Crypto Community'],
+      url: config.siteUrl,
+      description: orgDescription,
+      inLanguage: ['zh-Hans', 'en']
+    });
+  }
+
   if (includeFaq) {
     schema.push({
       '@context': 'https://schema.org',
@@ -214,6 +235,37 @@ ${buildGtmNoScript()}
 </html>`;
 }
 
+async function buildAgtPage() {
+  const agtTelegramUrl = process.env.META_LANDING_TELEGRAM_URL || process.env.AGT_TELEGRAM_URL || config.telegramRedirectPath;
+  const screenshots = [
+    {
+      src: '/images/community/daily-market-analysis.jpg',
+      alt: 'TP Club daily market analysis Telegram screenshot'
+    },
+    {
+      src: '/images/community/live-sessions.jpg',
+      alt: 'TP Club live trading session Telegram screenshot'
+    },
+    {
+      src: '/images/community/active-discussions.jpg',
+      alt: 'TP Club active community discussion Telegram screenshot'
+    },
+    {
+      src: '/images/community/beginner-resources.jpg',
+      alt: 'TP Club beginner learning resources Telegram screenshot'
+    }
+  ];
+  const html = await ejs.renderFile(path.join(viewsDir, 'agt.ejs'), {
+    cssVersion: BUILD_VERSION,
+    telegramUrl: agtTelegramUrl,
+    heroImage: '/images/agt/hero-live-trading.png',
+    screenshots,
+    privacyUrl: '/en/privacy/',
+    termsUrl: '/en/privacy/'
+  });
+  writeTextFile('agt/index.html', html);
+}
+
 async function buildDashboardPage() {
   const dashboardPasswordHash = process.env.DASHBOARD_PASSWORD
     ? crypto.createHash('sha256').update(process.env.DASHBOARD_PASSWORD).digest('hex')
@@ -258,6 +310,7 @@ async function build() {
   writeTextFile('go/index.html', buildGoPage('en'));
   writeTextFile('zh/go/index.html', buildGoPage('zh'));
   writeTextFile('v2/index.html', buildV2Page());
+  await buildAgtPage();
   await buildDashboardPage();
 
   for (const lang of ['en', 'zh']) {
@@ -272,6 +325,7 @@ async function build() {
   writeTextFile('sitemap.xml', buildSitemap());
   writeTextFile('robots.txt', `User-agent: *
 Allow: /
+Disallow: /agt/
 
 Sitemap: ${config.siteUrl}/sitemap.xml
 `);
@@ -284,6 +338,7 @@ RewriteRule ^en/meta$ /en/meta/ [R=301,L,QSA]
 RewriteRule ^zh$ /zh/ [R=301,L,QSA]
 RewriteRule ^en$ /en/ [R=301,L,QSA]
 RewriteRule ^v2$ /v2/ [R=301,L,QSA]
+RewriteRule ^agt$ /agt/ [R=301,L,QSA]
 RewriteRule ^dashboard$ /dashboard/ [R=301,L,QSA]
 DirectoryIndex index.html
 ErrorDocument 404 /404.html

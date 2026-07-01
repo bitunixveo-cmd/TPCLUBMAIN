@@ -52,7 +52,13 @@ let creativeSortMetric = 'conversions';
 let activeSearchIntelTab = 'waste';
 let keywordMinSpend = 10;
 let keywordMinSpendEnabled = true;
-let kpiSecondaryExpanded = false;
+let campaignSearchQuery = '';
+const filterPresets = [
+  { id: 'all-30', label: 'All · 30d', values: { platform: 'all', datePreset: 'last30', conversionMetric: 'all' } },
+  { id: 'meta-7', label: 'Meta · 7d', values: { platform: 'Meta Ads', datePreset: 'last7', conversionMetric: 'all' } },
+  { id: 'google-month', label: 'Google · Month', values: { platform: 'Google Ads', datePreset: 'thisMonth', conversionMetric: 'all' } },
+  { id: 'waste', label: 'Waste hunt', values: { platform: 'all', datePreset: 'last30', conversionMetric: 'zero-conversions' } }
+];
 let keywordColumnsExpanded = false;
 let focusMode = false;
 let searchIntelChartsLoaded = false;
@@ -260,12 +266,16 @@ const elements = {
   filterActiveSummary: document.querySelector('#filterActiveSummary'),
   filterPanel: document.querySelector('#dashboardFilters'),
   showToggles: document.querySelectorAll('[data-toggle-list]'),
-  resetFilters: document.querySelector('#resetFilters'),
   resetFiltersCompact: document.querySelector('#resetFiltersCompact'),
   syncStatus: document.querySelector('#syncStatus'),
   syncSubtext: document.querySelector('#syncSubtext'),
   syncDot: document.querySelector('.sync-dot'),
-  filterNotice: document.querySelector('#filterNotice')
+  filterNotice: document.querySelector('#filterNotice'),
+  filterPresets: document.querySelector('#filterPresets'),
+  todayPulse: document.querySelector('#todayPulse'),
+  platformScorecard: document.querySelector('#platformScorecard'),
+  winnersBleeders: document.querySelector('#winnersBleeders'),
+  campaignSearch: document.querySelector('#campaignSearch')
 };
 
 const currency = new Intl.NumberFormat('en-US', {
@@ -960,7 +970,8 @@ function saveDashboardFilters() {
     from: filters.from.value,
     to: filters.to.value,
     creativeSortMetric,
-    filtersPanelOpen: !elements.filterPanel?.hidden
+    filtersPanelOpen: !elements.filterPanel?.hidden,
+    campaignSearch: campaignSearchQuery
   };
   localStorage.setItem(dashboardFiltersStorageKey, JSON.stringify(payload));
   sessionStorage.setItem(datePresetStorageKey, filters.datePreset.value);
@@ -978,6 +989,10 @@ function applySavedDashboardFilters(saved) {
   filters.location.value = saved.location || 'all';
   filters.conversionMetric.value = saved.conversionMetric || 'all';
   creativeSortMetric = saved.creativeSortMetric || 'conversions';
+  campaignSearchQuery = saved.campaignSearch || '';
+  if (elements.campaignSearch) {
+    elements.campaignSearch.value = campaignSearchQuery;
+  }
 
   if (saved.datePreset === 'custom' && saved.from && saved.to) {
     filters.from.value = saved.from;
@@ -1888,6 +1903,183 @@ function renderExecutiveSnapshot(rows) {
   `;
 }
 
+function getPulseComparison() {
+  const baseRows = adRows.filter((row) => matchesDashboardFilters(row, { includeDate: false }));
+  const todayIso = calendarTodayIso();
+  const yesterdayIso = isoFromDate(new Date(parseDateInput(todayIso).getTime() - dayMs));
+  const latest = latestAvailableDate();
+
+  let currentIso = todayIso;
+  let previousIso = yesterdayIso;
+  let label = 'Today';
+
+  const todaySummary = summarize(baseRows.filter((row) => row.date === todayIso));
+  const hasTodayActivity = rowHasActivity(todaySummary);
+
+  if (!hasTodayActivity && latest) {
+    currentIso = latest;
+    previousIso = isoFromDate(new Date(parseDateInput(latest).getTime() - dayMs));
+    label = 'Latest synced day';
+  }
+
+  const current = summarize(baseRows.filter((row) => row.date === currentIso));
+  const previous = summarize(baseRows.filter((row) => row.date === previousIso));
+
+  return { current, previous, currentIso, previousIso, label };
+}
+
+function renderTodayPulse() {
+  if (!elements.todayPulse) return;
+
+  const { current, previous, currentIso, previousIso, label } = getPulseComparison();
+  const hasCurrent = rowHasActivity(current);
+
+  if (!hasCurrent) {
+    elements.todayPulse.hidden = true;
+    elements.todayPulse.innerHTML = '';
+    return;
+  }
+
+  const cpaCurrent = current.conversions ? current.spend / current.conversions : 0;
+  const cpaPrevious = previous.conversions ? previous.spend / previous.conversions : 0;
+  const spendPct = deltaPercent(current.spend, previous.spend);
+  const convPct = deltaPercent(current.conversions, previous.conversions);
+  const cpaPct = cpaPrevious ? deltaPercent(cpaCurrent, cpaPrevious) : 0;
+  const compareLabel = label === 'Today' ? 'vs yesterday' : `vs ${previousIso}`;
+
+  elements.todayPulse.hidden = false;
+  elements.todayPulse.innerHTML = `
+    <div class="today-pulse-head">
+      <p class="today-pulse-label">${escapeHtml(label)}</p>
+      <span class="today-pulse-date">${escapeHtml(currentIso)}</span>
+    </div>
+    <p class="today-pulse-metrics">
+      <span>Spend <strong>${currency.format(current.spend)}</strong> <em class="${deltaToneClass(spendPct)}">${previous.spend ? changeText(spendPct) : '—'}</em></span>
+      <span class="exec-sep">·</span>
+      <span>${number.format(current.conversions)} conv <em class="${deltaToneClass(convPct)}">${previous.conversions ? changeText(convPct) : '—'}</em></span>
+      <span class="exec-sep">·</span>
+      <span>CPA <strong>${cpaCurrent ? currency.format(cpaCurrent) : '—'}</strong> <em class="${deltaToneClass(cpaPct, true)}">${cpaPrevious ? changeText(cpaPct) : '—'}</em></span>
+      <span class="exec-sep">·</span>
+      <span>Waste <strong>${currency.format(current.wastedSpend)}</strong></span>
+    </p>
+    <p class="today-pulse-note">${compareLabel} · Respects platform/campaign filters, not the date range above.</p>
+  `;
+}
+
+function renderPlatformScorecard(rows) {
+  if (!elements.platformScorecard) return;
+
+  if (getActivePlatformFilter() !== 'all') {
+    elements.platformScorecard.innerHTML = '';
+    return;
+  }
+
+  const platforms = [
+    { name: 'Google Ads', short: 'Google', className: 'google' },
+    { name: 'Meta Ads', short: 'Meta', className: 'meta' }
+  ];
+
+  elements.platformScorecard.innerHTML = `
+    <div class="platform-scorecard-table" role="table" aria-label="Google vs Meta scorecard">
+      <div class="platform-scorecard-row platform-scorecard-head" role="row">
+        <span role="columnheader">Platform</span>
+        <span role="columnheader">Spend</span>
+        <span role="columnheader">Conv.</span>
+        <span role="columnheader">CPA</span>
+        <span role="columnheader">Waste</span>
+      </div>
+      ${platforms.map((platform) => {
+        const summary = summarize(rows.filter((row) => row.platform === platform.name));
+        const cpa = summary.conversions ? summary.spend / summary.conversions : 0;
+        return `
+          <button class="platform-scorecard-row platform-scorecard-row-${platform.className}" type="button" data-platform-filter="${escapeHtml(platform.name)}" role="row">
+            <span class="platform-scorecard-name" role="cell">${platformBadge(platform.name)} ${platform.short}</span>
+            <span role="cell">${currency.format(summary.spend)}</span>
+            <span role="cell">${number.format(summary.conversions)}</span>
+            <span role="cell">${cpa ? currency.format(cpa) : '—'}</span>
+            <span role="cell">${currency.format(summary.wastedSpend)}</span>
+          </button>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderInsightCampaignRow(row, tone) {
+  const key = campaignKey(row);
+  const waste = row.wastedSpend || (row.spend > 0 && row.conversions === 0 ? row.spend : 0);
+  const metric = tone === 'winner'
+    ? `${number.format(row.conversions)} conv · ${formatCostPerConversion(row)}`
+    : `${currency.format(waste)} waste · ${currency.format(row.spend)} spend`;
+
+  return `
+    <button class="insight-campaign-row insight-campaign-row-${tone}" type="button" data-insight-campaign-key="${escapeHtml(key)}">
+      <span class="insight-campaign-main">
+        ${platformBadge(row.platform, true)}
+        <strong>${escapeHtml(row.campaign)}</strong>
+      </span>
+      <span class="insight-campaign-metric">${metric}</span>
+    </button>
+  `;
+}
+
+function renderWinnersBleeders() {
+  if (!elements.winnersBleeders) return;
+
+  const campaigns = filteredCampaignTableGroups();
+  const winners = campaigns
+    .filter((row) => row.conversions > 0)
+    .sort((a, b) => b.conversions - a.conversions || costPer(a) - costPer(b))
+    .slice(0, 3);
+  const bleeders = campaigns
+    .filter((row) => (row.wastedSpend || 0) > 0 || (row.spend > 0 && row.conversions === 0))
+    .sort((a, b) => (b.wastedSpend || b.spend) - (a.wastedSpend || a.spend))
+    .slice(0, 3);
+
+  elements.winnersBleeders.innerHTML = `
+    <div class="winners-bleeders-grid">
+      <section class="winners-bleeders-column">
+        <h3>Top performers</h3>
+        ${winners.length
+    ? winners.map((row) => renderInsightCampaignRow(row, 'winner')).join('')
+    : '<p class="empty-state">No converting campaigns for this filter.</p>'}
+      </section>
+      <section class="winners-bleeders-column bleeders">
+        <h3>Bleeding spend</h3>
+        ${bleeders.length
+    ? bleeders.map((row) => renderInsightCampaignRow(row, 'bleeder')).join('')
+    : '<p class="empty-state">No wasted campaign spend for this filter.</p>'}
+      </section>
+    </div>
+  `;
+}
+
+function applyFilterPreset(preset) {
+  filters.platform.value = preset.values.platform;
+  filters.datePreset.value = preset.values.datePreset;
+  filters.conversionMetric.value = preset.values.conversionMetric;
+  filters.account.value = 'all';
+  filters.campaign.value = 'all';
+  filters.location.value = 'all';
+  filters.status.value = 'all';
+  filters.locationType.value = 'delivered';
+  selectedCampaignKey = '';
+  campaignSearchQuery = '';
+  if (elements.campaignSearch) elements.campaignSearch.value = '';
+  setDatePreset(preset.values.datePreset);
+  syncFilterDependencies();
+  saveDashboardFilters();
+  renderDashboard();
+}
+
+function setupFilterPresets() {
+  if (!elements.filterPresets) return;
+
+  elements.filterPresets.innerHTML = filterPresets.map((preset) => `
+    <button class="filter-preset-chip" type="button" data-filter-preset="${preset.id}">${escapeHtml(preset.label)}</button>
+  `).join('');
+}
+
 function renderPlanningTools(rows) {
   const targets = getTargets();
   const summary = summarize(rows);
@@ -2785,7 +2977,13 @@ function renderCountryMap(rows) {
 }
 
 function renderTable() {
-  const campaignRows = filteredCampaignTableGroups();
+  const query = campaignSearchQuery.trim().toLowerCase();
+  const campaignRows = filteredCampaignTableGroups().filter((row) => {
+    if (!query) return true;
+    return row.campaign.toLowerCase().includes(query) ||
+      row.account.toLowerCase().includes(query) ||
+      row.platform.toLowerCase().includes(query);
+  });
   updateToggle('campaigns', campaignRows.length);
 
   elements.campaignRows.innerHTML = visibleRows(campaignRows, 'campaigns').map((row) => {
@@ -2856,7 +3054,10 @@ function renderDashboard() {
   const locationRows = getFilteredLocationRows();
   renderFilterNotice(rows);
   renderKpis(rows);
+  renderTodayPulse();
   renderExecutiveSnapshot(rows);
+  renderPlatformScorecard(rows);
+  renderWinnersBleeders();
   renderPlanningTools(rows);
   renderAnomalies();
   renderManagementSummary(rows);
@@ -3159,6 +3360,8 @@ function resetFilters() {
   });
 
   selectedCampaignKey = '';
+  campaignSearchQuery = '';
+  if (elements.campaignSearch) elements.campaignSearch.value = '';
   elements.filterPanel.hidden = false;
   elements.filterShell?.classList.remove('is-open');
   elements.toggleFilters?.setAttribute('aria-expanded', 'true');
@@ -3280,6 +3483,14 @@ function setupDashboardInteractions() {
     elements.copyNegativesList.addEventListener('click', copyNegativesList);
   }
 
+  if (elements.campaignSearch) {
+    elements.campaignSearch.addEventListener('input', () => {
+      campaignSearchQuery = elements.campaignSearch.value;
+      saveDashboardFilters();
+      renderTable();
+    });
+  }
+
   [filters.monthlyBudget, filters.targetCpa, filters.targetCpc, filters.targetCvr, filters.wasteAlertThreshold].filter(Boolean).forEach((input) => {
     input.addEventListener('input', () => {
       if (input === filters.wasteAlertThreshold) {
@@ -3338,6 +3549,21 @@ function setupDashboardInteractions() {
       return;
     }
 
+    const presetTarget = event.target.closest('[data-filter-preset]');
+    if (presetTarget) {
+      const preset = filterPresets.find((item) => item.id === presetTarget.dataset.filterPreset);
+      if (preset) applyFilterPreset(preset);
+      return;
+    }
+
+    const insightCampaign = event.target.closest('[data-insight-campaign-key]');
+    if (insightCampaign) {
+      selectedCampaignKey = insightCampaign.dataset.insightCampaignKey;
+      renderDashboard();
+      elements.campaignDrilldown?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
     const accountTarget = event.target.closest('[data-account-filter]');
     if (accountTarget) {
       filters.account.value = accountTarget.dataset.accountFilter;
@@ -3367,6 +3593,7 @@ async function initDashboard() {
 
   await loadSyncedRows();
   setupFilters();
+  setupFilterPresets();
   Object.values(filters).forEach((filter) => filter.addEventListener('change', () => {
     if (filter === filters.datePreset) {
       setDatePreset(filters.datePreset.value);
@@ -3390,7 +3617,6 @@ async function initDashboard() {
   elements.printReport.addEventListener('click', printDashboardReport);
   elements.copySummary.addEventListener('click', copySummary);
   elements.toggleFilters.addEventListener('click', toggleFilters);
-  elements.resetFilters.addEventListener('click', resetFilters);
   if (elements.resetFiltersCompact) {
     elements.resetFiltersCompact.addEventListener('click', resetFilters);
   }

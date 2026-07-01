@@ -44,6 +44,7 @@ function routeRewritePlugin() {
       rewriteTrailingIndex(req, '/zh') ||
       rewriteTrailingIndex(req, '/en') ||
       rewriteTrailingIndex(req, '/v2') ||
+      rewriteTrailingIndex(req, '/agt') ||
       rewriteTrailingIndex(req, '/dashboard')
     ) {
       next();
@@ -74,6 +75,7 @@ module.exports = defineConfig({
         main: 'src/main.js',
         go: 'src/go.jsx',
         v2: 'src/v2.jsx',
+        agt: 'src/agt.js',
         dashboard: 'src/dashboard.js'
       },
       output: {

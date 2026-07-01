@@ -2,7 +2,7 @@
   <div class="container hero-grid">
     <div class="hero-copy">
       <p class="badge"><span class="text-icon" aria-hidden="true">TP</span> <%= t.hero.badge %></p>
-      <h1 class="hero-title"><%= t.hero.h1a %><span><%= t.hero.h1b %></span></h1>
+      <h1 class="hero-title"><%= t.hero.h1a %><span><%= t.hero.h1b %></span><% if (t.hero.h1c) { %> <em class="hero-title-sub"><%= t.hero.h1c %></em><% } %></h1>
       <p class="hero-sub"><%= t.hero.sub %></p>
       <div class="button-row">
         <a class="btn-primary" href="<%= telegramUrl %>" data-track-cta="<%= t.hero.cta1 %>"><%= t.hero.cta1 %></a>

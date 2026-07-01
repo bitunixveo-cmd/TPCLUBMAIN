@@ -280,19 +280,11 @@ select {
   padding: 0 16px;
 }
 
-.filter-shell:not(.is-scrolled) .reset-button-compact {
-  display: none;
-}
-
 .filter-shell.is-scrolled .filter-expanded-only {
   display: none;
 }
 
 .filter-shell.is-scrolled .filter-panel {
-  display: none;
-}
-
-.filter-shell.is-scrolled #resetFilters {
   display: none;
 }
 
@@ -359,6 +351,7 @@ select {
 
 .filter-toolbar {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
   justify-content: space-between;
@@ -934,6 +927,242 @@ body.dashboard-focus-mode .action-bar {
 
 .exec-sep {
   opacity: 0.45;
+}
+
+.filter-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.filter-preset-chip {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.filter-preset-chip:hover {
+  border-color: rgba(170, 255, 0, 0.28);
+  background: rgba(170, 255, 0, 0.08);
+}
+
+.today-pulse {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-color: rgba(170, 255, 0, 0.18);
+  background: linear-gradient(135deg, rgba(170, 255, 0, 0.08), rgba(255, 255, 255, 0.02));
+}
+
+.today-pulse-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.today-pulse-label {
+  margin: 0;
+  color: var(--green);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.today-pulse-date {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.today-pulse-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.today-pulse-metrics strong {
+  color: var(--text);
+}
+
+.today-pulse-metrics em {
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.today-pulse-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.insight-panel.compact-head .panel-head,
+.panel-head.compact-head {
+  margin-bottom: 12px;
+}
+
+.panel-head.compact-head h2 {
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+
+.insight-panel-wide {
+  min-width: 0;
+}
+
+.platform-scorecard-table {
+  display: grid;
+  gap: 8px;
+}
+
+.platform-scorecard-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 1.2fr) repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-size: 0.84rem;
+  text-align: left;
+}
+
+.platform-scorecard-row-head,
+.platform-scorecard-head {
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted-soft);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+button.platform-scorecard-row:not(.platform-scorecard-head) {
+  cursor: pointer;
+}
+
+button.platform-scorecard-row:not(.platform-scorecard-head):hover {
+  border-color: rgba(170, 255, 0, 0.24);
+  background: rgba(170, 255, 0, 0.06);
+}
+
+.platform-scorecard-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.winners-bleeders-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.winners-bleeders-column h3 {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+}
+
+.winners-bleeders-column.bleeders h3 {
+  color: #ff9db8;
+}
+
+.insight-campaign-row {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.insight-campaign-row:hover {
+  border-color: rgba(170, 255, 0, 0.22);
+  background: rgba(170, 255, 0, 0.05);
+}
+
+.insight-campaign-row-bleeder:hover {
+  border-color: rgba(255, 120, 150, 0.28);
+  background: rgba(255, 120, 150, 0.06);
+}
+
+.insight-campaign-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.insight-campaign-main strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.insight-campaign-metric {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.campaign-search {
+  display: grid;
+  gap: 0;
+  width: min(100%, 260px);
+}
+
+.campaign-search input {
+  min-height: 40px;
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  padding: 0 12px;
+  font-size: 0.88rem;
+}
+
+.campaign-search input::placeholder {
+  color: var(--muted);
 }
 
 .main-charts {
@@ -2437,8 +2666,8 @@ tr:last-child td {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .reset-button {
-    grid-column: span 3;
+  .insight-grid {
+    grid-template-columns: 1fr;
   }
 
   .kpi-grid {
@@ -2567,10 +2796,38 @@ tr:last-child td {
     flex-direction: column;
   }
 
+  .filter-presets {
+    justify-content: flex-start;
+  }
+
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .winners-bleeders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .platform-scorecard-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .platform-scorecard-head {
+    display: none;
+  }
+
+  .platform-scorecard-name {
+    grid-column: 1 / -1;
+  }
+
+  .campaign-search {
+    width: 100%;
+  }
+
   .filter-panel label,
   .filter-panel label:nth-child(3),
-  .filter-panel label:nth-child(4),
-  .reset-button {
+  .filter-panel label:nth-child(4) {
     grid-column: span 1;
   }
 

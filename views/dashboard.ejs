@@ -58,6 +58,7 @@
 
         <div class="filter-toolbar filter-expanded-only">
           <span>Use filters to narrow platform, date, campaign, country, and conversion views.</span>
+          <div id="filterPresets" class="filter-presets" aria-label="Quick filter presets"></div>
         </div>
 
         <section id="dashboardFilters" class="filter-panel" aria-label="Dashboard filters">
@@ -135,7 +136,6 @@
           <span>To</span>
           <input id="toDate" type="date">
         </label>
-        <button id="resetFilters" class="reset-button" type="button">Reset</button>
         </section>
       </div>
 
@@ -214,8 +214,33 @@
         </article>
       </section>
 
+      <section id="todayPulse" class="today-pulse panel" aria-label="Today's pulse" hidden></section>
+
       <section class="panel executive-strip">
         <div id="executiveSnapshot" class="executive-scorecard" aria-label="Executive scorecard"></div>
+      </section>
+
+      <section class="insight-grid" aria-label="Performance insights">
+        <article id="platformScorecardPanel" class="panel insight-panel" data-platform-only="compare" hidden>
+          <div class="panel-head compact-head">
+            <div>
+              <p class="panel-label">Platform benchmark</p>
+              <h2>Google vs Meta scorecard</h2>
+            </div>
+          </div>
+          <div id="platformScorecard" class="platform-scorecard"></div>
+        </article>
+
+        <article class="panel insight-panel insight-panel-wide">
+          <div class="panel-head compact-head">
+            <div>
+              <p class="panel-label">Campaign movers</p>
+              <h2>Winners &amp; bleeders</h2>
+              <p class="panel-helper">Top performers and highest waste for the current filter.</p>
+            </div>
+          </div>
+          <div id="winnersBleeders" class="winners-bleeders"></div>
+        </article>
       </section>
 
       <details class="dashboard-drawer" data-focus-hide>
@@ -467,6 +492,10 @@
             <h2>Campaign performance</h2>
           </div>
           <div class="table-actions">
+            <label class="campaign-search">
+              <span class="sr-only">Search campaigns</span>
+              <input id="campaignSearch" type="search" placeholder="Search campaigns…" autocomplete="off" spellcheck="false">
+            </label>
             <p class="table-note">Sorted by conversions and cost per conversion.</p>
             <button class="show-toggle" type="button" data-toggle-list="campaigns">Show all</button>
           </div>

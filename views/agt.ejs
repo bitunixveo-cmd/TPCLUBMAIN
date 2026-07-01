@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MXWHXVKS');</script>
+    <!-- End Google Tag Manager -->
+    <title>TP Club | 加入中文交易社群 · Live Trading &amp; Daily Signals</title>
+    <meta name="description" content="Join TP Club's free Chinese Telegram community for live trading, XAUUSD signals, TradingView tools, cash giveaways, and 24/7 mentor support.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#9be11a">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="/css/agt.css?v=<%= cssVersion %>">
+  </head>
+  <body class="agt-page">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXWHXVKS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main class="agt-shell">
+      <header class="agt-logo" aria-label="TP Club Trading Community">
+        <img src="/images/logo.png" alt="TP Club" width="168" height="48" loading="eager" decoding="async">
+        <div class="agt-logo-sub">TP Club · 中文加密货币社群</div>
+      </header>
+
+      <section class="agt-hero-copy" aria-labelledby="agt-hero-title">
+        <p class="agt-hero-kicker">TP Club 免费教育社群</p>
+        <h1 id="agt-hero-title">
+          加入 TP Club 社群，让你的交易更有信心
+          <span>Join the TP Club community and trade with confidence.</span>
+        </h1>
+      </section>
+
+      <figure class="agt-hero-media">
+        <img src="<%= heroImage %>" alt="TP Club live trading setup with dual monitors" width="576" height="1024" loading="eager" decoding="async">
+        <figcaption class="agt-hero-caption">
+          <strong>TP Club Live Trading Setup</strong>
+          <span>Real Setup · Live Every Day</span>
+        </figcaption>
+      </figure>
+
+      <section class="agt-features" aria-label="TP Club community benefits">
+        <% const features = [
+          {
+            n: '01',
+            zh: '每晚现金抽奖活动',
+            en: 'Daily Cash Giveaways',
+            desc: 'TP Club 活跃会员可获得现金奖励与专属福利',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10l1 5H6l1-5z"/><path d="M8 9c0 2.2 1.8 4 4 4s4-1.8 4-4"/></svg>'
+          },
+          {
+            n: '02',
+            zh: '免费 TP Club TradingView 指标',
+            en: 'Free TP Club TradingView Indicator',
+            desc: '专为 MT4 / MT5 打造的黄金交易专属指标',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>'
+          },
+          {
+            n: '03',
+            zh: '每天 3 - 5 组信号',
+            en: '3-5 Daily Signals',
+            desc: '清晰提供 XAUUSD 入场点、TP &amp; SL',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M6 12h12M8 18h8"/></svg>'
+          },
+          {
+            n: '04',
+            zh: '免费 Live Trading 直播',
+            en: 'Free Live Trading',
+            desc: 'TP Club 每天实盘带单，包含进场、管理与出场策略',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg>'
+          },
+          {
+            n: '05',
+            zh: 'TP Club 群组支援',
+            en: '24/7 Community Support',
+            desc: '全天候 Q&amp;A，导师随时在线协助',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 14v3a2 2 0 0 0 2 2h2l3 3V5L8 8H6a2 2 0 0 0-2 2z"/><path d="M18 9a4 4 0 0 1 0 6"/></svg>'
+          },
+          {
+            n: '06',
+            zh: '教学 &amp; 线上研讨会',
+            en: 'Education &amp; Webinars',
+            desc: 'TP Club 每周学习课程，适合所有交易水平',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 0 3 2 6 2s6-2 6-2v-5"/></svg>'
+          }
+        ]; %>
+        <% features.forEach((item) => { %>
+          <article class="agt-feature">
+            <div class="agt-feature-icon"><%- item.icon %></div>
+            <div class="agt-feature-copy">
+              <p class="agt-feature-title"><%- item.zh %></p>
+              <p class="agt-feature-en"><%- item.en %></p>
+              <p class="agt-feature-desc"><%- item.desc %></p>
+            </div>
+            <div class="agt-feature-num" aria-hidden="true"><%= item.n %></div>
+          </article>
+        <% }) %>
+      </section>
+
+      <section class="agt-cta-block" aria-label="Join TP Club Telegram">
+        <a class="agt-cta" href="<%= telegramUrl %>" data-track-cta="Join TP Club Telegram">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.8 4.2 2.9 11.1c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.7.4.9 1 .9.6 0 .8-.2 1.1-.7l2.6-2.5 5.4 4c1 .6 1.7.3 1.9-1.1L23 5.5c.3-1.3-.5-1.9-1.2-1.3z"/></svg>
+          立即加入 TP Club Telegram · Join TP Club Telegram Now
+        </a>
+        <p class="agt-cta-note">
+          永久免费 · 无隐藏收费
+          <span>Forever Free • No Hidden Fees</span>
+        </p>
+      </section>
+
+      <section class="agt-feedback" aria-labelledby="agt-feedback-title">
+        <div class="agt-feedback-head">
+          <h2 id="agt-feedback-title">
+            TP Club 学员真实反馈
+            <span>Real TP Club Member Feedback</span>
+          </h2>
+          <p>真实 Telegram 社群截图，来自 TP Club 群内日常学习与互动。</p>
+        </div>
+        <div class="agt-feedback-marquee" aria-label="TP Club member feedback screenshots">
+          <div class="agt-feedback-track">
+            <% for (let loop = 0; loop < 2; loop += 1) { %>
+              <% screenshots.forEach((shot) => { %>
+                <figure class="agt-feedback-card">
+                  <img
+                    src="<%= shot.src %>"
+                    alt="<%= shot.alt %>"
+                    width="148"
+                    height="320"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                </figure>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <footer class="agt-footer">
+        <p>© 2026 TP Club</p>
+        <p>TP Club 仅提供教育内容与社群学习，不构成投资建议。All content is for educational purposes only.</p>
+        <div class="agt-footer-links">
+          <a href="<%= termsUrl %>">Terms &amp; Conditions</a>
+          <span aria-hidden="true">·</span>
+          <a href="<%= privacyUrl %>">Privacy Policy</a>
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="/assets/agt.js?v=<%= cssVersion %>"></script>
+  </body>
+</html>

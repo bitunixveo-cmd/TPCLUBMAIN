@@ -12,6 +12,7 @@
     <!-- End Google Tag Manager -->
     <title><%= typeof pageTitle !== 'undefined' ? `${pageTitle} | TP Club` : t.meta.title %></title>
     <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : t.meta.description %>">
+    <% if (t.meta.keywords) { %><meta name="keywords" content="<%= t.meta.keywords %>"><% } %>
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="author" content="TP Club">
     <meta name="theme-color" content="#9be11a">
@@ -52,6 +53,7 @@
       .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr); gap: clamp(28px, 4vw, 56px); align-items: center; }
       .hero-title { max-width: 720px; margin: 14px 0; font-size: clamp(2.55rem, 5.1vw, 4.45rem); line-height: 0.98; letter-spacing: -0.065em; }
       .hero-title span { display: block; background: linear-gradient(135deg, var(--neon), var(--neon-dim), var(--neon-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .hero-title-sub { display: block; margin-top: 10px; font-size: clamp(1.15rem, 2.8vw, 1.65rem); font-style: normal; font-weight: 700; line-height: 1.2; letter-spacing: -0.03em; color: var(--muted); }
       .hero .button-row { margin-top: 22px; }
       .hero .microcopy { margin-top: 12px; }
       .hero .hero-proof-row { margin-top: 16px; }
